@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" data-style="modern-corporate-flat" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LombokCharts — Gallery (styled with LombokCSS)</title>
+<!-- LombokCSS: token-first component framework (our own) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<style>
+  /* App-specific only; everything else comes from LombokCSS tokens/utilities. */
+  .chartbox { height: 280px; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <span class="navbar-brand">LombokCharts</span>
+  <span class="badge badge-primary badge-pill">+ LombokCSS</span>
+  <span class="text-muted text-sm">Zero deps · Canvas + SVG · grammar-of-graphics</span>
+  <div class="flex items-center gap-2" style="margin-inline-start:auto">
+    <select id="style" class="select select-sm" aria-label="Design style">
+      <option value="modern-corporate-flat">Modern Corporate</option>
+      <option value="resonant-stark">Resonant Stark</option>
+      <option value="neo-brutalism">Neo Brutalism</option>
+      <option value="semantic-minimalist">Semantic Minimalist</option>
+      <option value="glassmorphism">Glassmorphism</option>
+    </select>
+    <button id="theme" class="btn btn-soft btn-sm">Dark mode</button>
+  </div>
+</nav>
+
+<main class="container section">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Column (Bar)</h2><div class="chartbox" id="bar"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Grouped Bar</h2><div class="chartbox" id="grouped"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Stacked Bar</h2><div class="chartbox" id="stacked"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Line (multi-series)</h2><div class="chartbox" id="line"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Spline + Area</h2><div class="chartbox" id="area"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Pie</h2><div class="chartbox" id="pie"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Donut</h2><div class="chartbox" id="donut"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Gauge</h2><div class="chartbox" id="gauge"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Scatter</h2><div class="chartbox" id="scatter"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Bubble</h2><div class="chartbox" id="bubble"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Heatmap</h2><div class="chartbox" id="heatmap"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Radar</h2><div class="chartbox" id="radar"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Candlestick</h2><div class="chartbox" id="candle"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Histogram</h2><div class="chartbox" id="hist"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Box Plot</h2><div class="chartbox" id="box"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Funnel</h2><div class="chartbox" id="funnel"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Treemap</h2><div class="chartbox" id="treemap"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Sankey</h2><div class="chartbox" id="sankey"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm">Waterfall</h2><div class="chartbox" id="waterfall"></div></div></div>
+  </div>
+</main>
+
+<!-- Classic <script> + UMD global works over file:// and http -->
+<script src="../dist/lombok-charts.umd.js"></script>
+<script>
+const { chart } = LombokCharts;
+const root = document.documentElement;
+const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug'];
+const charts = [];
+
+// LombokCharts theme follows LombokCSS: dark when data-theme=dark OR the style is the dark "resonant-stark".
+function chartTheme() {
+  const cs = getComputedStyle(document.documentElement);
+  const g = (n, f) => { const v = cs.getPropertyValue(n); return (v && v.trim()) || f; };
+  // read live LombokCSS tokens so charts match ANY data-style / data-theme
+  return { colors: { background: 'transparent', surface: g('--lc-surface', '#fff'), text: g('--lc-text', '#212529'), muted: g('--lc-muted', '#868e96'), grid: g('--lc-border', '#e9ecef'), axis: g('--lc-muted', '#868e96'), tooltipBg: g('--lc-text', '#212529'), tooltipText: g('--lc-surface', '#fff') } };
+}
+
+function build() {
+  charts.forEach(c => c.destroy()); charts.length = 0;
+  const theme = chartTheme();
+  const bars = months.map((m,i) => ({ label: m, value: [30,80,45,60,90,55,70,40][i] }));
+
+  charts.push(chart('#bar', { data: bars, mark: 'bar', theme }));
+  charts.push(chart('#grouped', { data: months.map((m,i)=>({label:m, a:40+i*3, b:25+((i*7)%30)})), x:'label', series:[{key:'a',label:'2023'},{key:'b',label:'2024'}], mark:'grouped-bar', theme }));
+  charts.push(chart('#stacked', { data: months.map((m,i)=>({label:m, a:20+i, b:15+((i*5)%20), c:10+((i*3)%15)})), x:'label', series:[{key:'a',label:'A'},{key:'b',label:'B'},{key:'c',label:'C'}], mark:'stacked-bar', theme }));
+  charts.push(chart('#line', { data: months.map((m,i)=>({label:m, a:Math.sin(i/2)*30+50, b:Math.cos(i/2)*20+40})), x:'label', series:[{key:'a',label:'Revenue'},{key:'b',label:'Cost'}], mark:'line', theme }));
+  charts.push(chart('#area', { data: months.map((m,i)=>({label:m, value:Math.sin(i/1.5)*25+50})), mark:'spline', theme }));
+  charts.push(chart('#pie', { data: [{label:'Chrome',value:64},{label:'Safari',value:19},{label:'Edge',value:10},{label:'Other',value:7}], mark:'pie', theme }));
+  charts.push(chart('#donut', { data: [{label:'A',value:35},{label:'B',value:25},{label:'C',value:40}], mark:'donut', theme }));
+  charts.push(chart('#gauge', { data: [{label:'cpu',value:72}], mark:{type:'gauge', value:72, min:0, max:100}, theme }));
+  const scatter = Array.from({length:120},()=>({x:Math.random()*100, y:Math.random()*100}));
+  charts.push(chart('#scatter', { data: scatter, x:'x', y:'y', mark:'scatter', theme }));
+  const bubble = Array.from({length:40},()=>({x:Math.random()*100, y:Math.random()*100, s:Math.random()*100}));
+  charts.push(chart('#bubble', { data: bubble, x:'x', y:'y', size:'s', mark:'bubble', theme }));
+  const heat = []; for (const r of ['Mon','Tue','Wed','Thu','Fri']) for (const c of ['9','12','15','18']) heat.push({x:c+':00', y:r, value:Math.round(Math.random()*100)});
+  charts.push(chart('#heatmap', { data: heat, mark:'heatmap', theme }));
+  charts.push(chart('#radar', { data: [{axis:'Speed',a:80,b:50},{axis:'Power',a:60,b:70},{axis:'Range',a:75,b:55},{axis:'Eco',a:40,b:85},{axis:'Price',a:65,b:60}], x:'axis', series:[{key:'a',label:'EV-1'},{key:'b',label:'EV-2'}], mark:'radar', theme }));
+  let p=100; const ohlc = Array.from({length:30},(_,i)=>{const o=p,c=p+(Math.random()-0.5)*6;const h=Math.max(o,c)+Math.random()*3,l=Math.min(o,c)-Math.random()*3;p=c;return {x:i,open:o,high:h,low:l,close:c};});
+  charts.push(chart('#candle', { data: ohlc, mark:'candlestick', theme }));
+  const vals = Array.from({length:500},()=>({value: (Math.random()+Math.random()+Math.random())/3*100}));
+  charts.push(chart('#hist', { data: vals, mark:{type:'histogram', value:'value', bins:18}, theme }));
+  charts.push(chart('#box', { mark:{type:'boxplot', groups:[
+    {label:'A', values:Array.from({length:60},()=>Math.random()*40+30)},
+    {label:'B', values:Array.from({length:60},()=>Math.random()*60+20)},
+    {label:'C', values:Array.from({length:60},()=>Math.random()*30+50)},
+  ]}, data:[{}], theme }));
+  charts.push(chart('#funnel', { data:[{label:'Visits',value:1000},{label:'Signups',value:620},{label:'Trials',value:310},{label:'Paid',value:120}], mark:'funnel', theme }));
+  charts.push(chart('#treemap', { data:[{label:'Eng',value:45},{label:'Sales',value:30},{label:'Ops',value:15},{label:'HR',value:10},{label:'Legal',value:6}], mark:'treemap', theme }));
+  charts.push(chart('#sankey', { data:[{}], mark:{type:'sankey',
+    nodes:[{id:'a',name:'Source'},{id:'b',name:'Process'},{id:'c',name:'Sales'},{id:'d',name:'Loss'}],
+    links:[{source:'a',target:'b',value:10},{source:'b',target:'c',value:7},{source:'b',target:'d',value:3}] }, theme }));
+  charts.push(chart('#waterfall', { data:[{label:'Start',value:100},{label:'Q1',value:30},{label:'Q2',value:-20},{label:'Q3',value:25},{label:'Q4',value:-10}], mark:'waterfall', theme }));
+}
+
+function start() {
+  if (typeof LombokCharts === 'undefined') { setTimeout(start, 30); return; }
+  build();
+  document.getElementById('theme').onclick = (e) => {
+    const dark = root.getAttribute('data-theme') === 'dark';
+    root.setAttribute('data-theme', dark ? 'light' : 'dark');
+    e.target.textContent = dark ? 'Dark mode' : 'Light mode';
+    build();
+  };
+  document.getElementById('style').onchange = (e) => { root.setAttribute('data-style', e.target.value); build(); };
+}
+start();
+</script>
+</body>
+</html>

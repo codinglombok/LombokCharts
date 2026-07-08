@@ -1,0 +1,63 @@
+{
+  "name": "lombok-charts",
+  "version": "0.1.0",
+  "description": "Zero-dependency, tree-shakeable chart library: grammar-of-graphics pipeline, Canvas/SVG renderers, LTTB decimation and real-time streaming. Scales from a few points to millions.",
+  "type": "module",
+  "main": "./dist/lombok-charts.cjs",
+  "module": "./src/lombok-charts.js",
+  "browser": "./dist/lombok-charts.umd.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./src/lombok-charts.js",
+      "require": "./dist/lombok-charts.cjs",
+      "default": "./dist/lombok-charts.esm.js"
+    },
+    "./dist/*": "./dist/*"
+  },
+  "sideEffects": false,
+  "files": [
+    "src",
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js --watch",
+    "test": "node tests/run.js",
+    "typecheck": "tsc -p jsconfig.json --noEmit || true",
+    "lint": "eslint src --ext .js || true",
+    "types": "tsc --allowJs --declaration --emitDeclarationOnly -p jsconfig.json",
+    "prepublishOnly": "npm run build",
+    "site": "node site/build-site.mjs",
+    "standalone": "node templates/build-standalone.mjs",
+    "pack:release": "node scripts/pack-release.mjs",
+    "test:visual": "playwright test",
+    "test:visual:update": "playwright test --update-snapshots"
+  },
+  "keywords": [
+    "chart",
+    "charts",
+    "visualization",
+    "canvas",
+    "svg",
+    "realtime",
+    "lttb",
+    "zero-dependency",
+    "lombok"
+  ],
+  "author": "codinglombok",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/codinglombok/LombokCharts.git"
+  },
+  "homepage": "https://github.com/codinglombok/LombokCharts#readme",
+  "devDependencies": {
+    "@playwright/test": "1.56.0",
+    "esbuild": "0.21.5",
+    "marked": "^18.0.5"
+  }
+}

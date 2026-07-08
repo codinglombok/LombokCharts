@@ -1,0 +1,57 @@
+name: Bug report
+description: Report a rendering, data, or API problem
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for the report! A minimal reproduction (data + config) helps a lot.
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: The smallest data + `chart(...)` config that shows the issue.
+      render: javascript
+    validations:
+      required: true
+  - type: dropdown
+    id: mark
+    attributes:
+      label: Chart type / mark
+      options:
+        - bar / column / grouped / stacked / waterfall
+        - line / step / spline
+        - area / stacked / streamgraph
+        - scatter / bubble
+        - pie / donut / gauge / radial-bar
+        - radar / heatmap / histogram / boxplot
+        - candlestick / funnel / treemap / sankey
+        - not chart-type specific
+    validations:
+      required: true
+  - type: dropdown
+    id: renderer
+    attributes:
+      label: Renderer
+      options: [canvas, svg, both]
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: LombokCharts version
+      placeholder: 0.1.0
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Browser / environment
+      placeholder: Chrome 130 on macOS

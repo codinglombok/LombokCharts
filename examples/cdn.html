@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" data-style="modern-corporate-flat" data-theme="light">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LombokCharts — CDN / &lt;script&gt; (no build step)</title>
+<!-- LombokCSS (styling) + LombokCharts (charts), both via CDN, no bundler -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<style> .chartbox { height: 360px; } </style>
+</head>
+<body>
+<nav class="navbar">
+  <span class="navbar-brand">LombokCharts</span>
+  <span class="badge badge-primary badge-pill">CDN</span>
+</nav>
+
+<main class="container section">
+  <div class="max-w-2xl mx-auto">
+    <h1 class="text-2xl font-semibold tracking-tight">Plain &lt;script&gt; — no build step</h1>
+    <p class="lead text-muted">LombokCSS for styling and LombokCharts for the chart, both from jsDelivr.</p>
+
+    <div class="alert alert-info my-4">
+      <span class="alert-title">Tip</span>
+      Pin a version in production, e.g.
+      <code>lombok-charts@0.1.0/dist/lombok-charts.umd.min.js</code>.
+    </div>
+
+    <div class="card"><div class="card-body">
+      <h2 class="card-title text-sm">Quarterly Revenue</h2>
+      <div class="chartbox" id="demo"></div>
+    </div></div>
+  </div>
+</main>
+
+<!-- In production: https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js -->
+<script src="../dist/lombok-charts.umd.min.js"></script>
+<script>
+  var data = [
+    { label: 'Q1', value: 120 }, { label: 'Q2', value: 200 },
+    { label: 'Q3', value: 150 }, { label: 'Q4', value: 280 }
+  ];
+  // Global API: LombokCharts.chart(...) — transparent bg blends with the LombokCSS card.
+  LombokCharts.chart('#demo', { data: data, mark: 'bar', title: 'Quarterly Revenue', yLabel: 'USD (k)', theme: { colors: { background: 'transparent' } } });
+</script>
+</body>
+</html>

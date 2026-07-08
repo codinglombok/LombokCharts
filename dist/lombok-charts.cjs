@@ -1,0 +1,2915 @@
+/* LombokCharts v0.1.0 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// src/lombok-charts.js
+var lombok_charts_exports = {};
+__export(lombok_charts_exports, {
+  ArcMark: () => ArcMark,
+  AreaMark: () => AreaMark,
+  BarMark: () => BarMark,
+  BoxPlotMark: () => BoxPlotMark,
+  CandlestickMark: () => CandlestickMark,
+  CanvasRenderer: () => CanvasRenderer,
+  Chart: () => Chart,
+  FunnelMark: () => FunnelMark,
+  HeatmapMark: () => HeatmapMark,
+  HistogramMark: () => HistogramMark,
+  LineMark: () => LineMark,
+  Mark: () => Mark,
+  PointMark: () => PointMark,
+  RadarMark: () => RadarMark,
+  Renderer: () => Renderer,
+  RingBuffer: () => RingBuffer,
+  SankeyMark: () => SankeyMark,
+  SvgRenderer: () => SvgRenderer,
+  TreemapMark: () => TreemapMark,
+  bandScale: () => bandScale,
+  categoricalScale: () => categoricalScale,
+  chart: () => chart,
+  darkTheme: () => darkTheme,
+  default: () => lombok_charts_default,
+  getMark: () => getMark,
+  hasMark: () => hasMark,
+  lightTheme: () => lightTheme,
+  linearScale: () => linearScale,
+  listMarks: () => listMarks,
+  logScale: () => logScale,
+  lttb: () => lttb,
+  minMaxDecimate: () => minMaxDecimate,
+  polarToCartesian: () => polarToCartesian,
+  radialScale: () => radialScale,
+  registerMark: () => registerMark,
+  sequentialScale: () => sequentialScale,
+  sqrtScale: () => sqrtScale,
+  timeScale: () => timeScale,
+  version: () => version
+});
+module.exports = __toCommonJS(lombok_charts_exports);
+
+// src/core/Renderer.js
+var Renderer = class {
+  /** @param {HTMLElement} container @param {{width:number,height:number}} size */
+  constructor(container, size) {
+    this.container = container;
+    this.width = size.width;
+    this.height = size.height;
+    this.type = "abstract";
+  }
+  /* eslint-disable no-unused-vars */
+  mount() {
+    throw new Error("Renderer.mount not implemented");
+  }
+  resize(w, h) {
+    this.width = w;
+    this.height = h;
+  }
+  beginFrame() {
+  }
+  endFrame() {
+  }
+  clear() {
+  }
+  rect(x, y, w, h, style) {
+  }
+  line(x1, y1, x2, y2, style) {
+  }
+  polyline(pts, style) {
+  }
+  polylineTyped(xs, ys, count, sx, sy, style) {
+  }
+  pointsTyped(xs, ys, count, sx, sy, r, style) {
+  }
+  circle(cx, cy, r, style) {
+  }
+  arcSlice(cx, cy, rIn, rOut, a0, a1, style) {
+  }
+  pathCmds(cmds, style) {
+  }
+  text(x, y, str, style) {
+  }
+  /** @returns {string|null} data URL (PNG) — Canvas only. */
+  toDataURL() {
+    return null;
+  }
+  /** @returns {string|null} serialized SVG markup — SVG only. */
+  toSVGString() {
+    return null;
+  }
+  destroy() {
+  }
+  /* eslint-enable no-unused-vars */
+};
+
+// src/utils/dpr.js
+function getDPR() {
+  return typeof devicePixelRatio === "number" && devicePixelRatio > 0 ? devicePixelRatio : 1;
+}
+function sizeCanvas(canvas, cssW, cssH, dpr) {
+  canvas.width = Math.max(1, Math.round(cssW * dpr));
+  canvas.height = Math.max(1, Math.round(cssH * dpr));
+  canvas.style.width = cssW + "px";
+  canvas.style.height = cssH + "px";
+}
+
+// src/core/CanvasRenderer.js
+var CanvasRenderer = class extends Renderer {
+  constructor(container, size) {
+    super(container, size);
+    this.type = "canvas";
+    this.dpr = getDPR();
+    this.canvas = document.createElement("canvas");
+    this.canvas.style.display = "block";
+    this.ctx = /** @type {CanvasRenderingContext2D} */
+    this.canvas.getContext("2d");
+  }
+  mount() {
+    this.container.appendChild(this.canvas);
+    this.resize(this.width, this.height);
+    return this;
+  }
+  resize(w, h) {
+    this.width = w;
+    this.height = h;
+    this.dpr = getDPR();
+    sizeCanvas(this.canvas, w, h, this.dpr);
+  }
+  beginFrame() {
+    const ctx = this.ctx;
+    ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+    ctx.clearRect(0, 0, this.width, this.height);
+  }
+  // Live mode: keep existing pixels, only set up the transform.
+  beginIncremental() {
+    this.ctx.setTransform(this.dpr, 0, 0, this.dpr, 0, 0);
+  }
+  endFrame() {
+  }
+  clear() {
+    this.beginFrame();
+  }
+  _apply(style) {
+    const ctx = this.ctx;
+    ctx.globalAlpha = style.opacity != null ? style.opacity : 1;
+    if (style.dash) ctx.setLineDash(style.dash);
+    else ctx.setLineDash([]);
+    ctx.lineWidth = style.width != null ? style.width : 1;
+  }
+  rect(x, y, w, h, style = {}) {
+    const ctx = this.ctx;
+    this._apply(style);
+    const r = style.radius || 0;
+    if (r > 0) {
+      const rr = Math.min(r, Math.abs(w) / 2, Math.abs(h) / 2);
+      ctx.beginPath();
+      ctx.moveTo(x + rr, y);
+      ctx.arcTo(x + w, y, x + w, y + h, rr);
+      ctx.arcTo(x + w, y + h, x, y + h, rr);
+      ctx.arcTo(x, y + h, x, y, rr);
+      ctx.arcTo(x, y, x + w, y, rr);
+      ctx.closePath();
+      if (style.fill) {
+        ctx.fillStyle = style.fill;
+        ctx.fill();
+      }
+      if (style.stroke) {
+        ctx.strokeStyle = style.stroke;
+        ctx.stroke();
+      }
+    } else {
+      if (style.fill) {
+        ctx.fillStyle = style.fill;
+        ctx.fillRect(x, y, w, h);
+      }
+      if (style.stroke) {
+        ctx.strokeStyle = style.stroke;
+        ctx.strokeRect(x, y, w, h);
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  line(x1, y1, x2, y2, style = {}) {
+    const ctx = this.ctx;
+    this._apply(style);
+    ctx.strokeStyle = style.stroke || "#000";
+    ctx.beginPath();
+    ctx.moveTo(x1, y1);
+    ctx.lineTo(x2, y2);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.globalAlpha = 1;
+  }
+  polyline(pts, style = {}) {
+    if (pts.length < 4) return;
+    const ctx = this.ctx;
+    this._apply(style);
+    ctx.beginPath();
+    ctx.moveTo(pts[0], pts[1]);
+    for (let i = 2; i < pts.length; i += 2) ctx.lineTo(pts[i], pts[i + 1]);
+    if (style.closed) ctx.closePath();
+    if (style.fill) {
+      ctx.fillStyle = style.fill;
+      ctx.fill();
+    }
+    if (style.stroke) {
+      ctx.strokeStyle = style.stroke;
+      ctx.lineJoin = "round";
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  // FAST PATH: whole series as one path. xs/ys are typed arrays; sx/sy are scale fns.
+  polylineTyped(xs, ys, count, sx, sy, style = {}) {
+    if (count < 2) return;
+    const ctx = this.ctx;
+    this._apply(style);
+    ctx.beginPath();
+    ctx.moveTo(sx(xs[0]), sy(ys[0]));
+    for (let i = 1; i < count; i++) ctx.lineTo(sx(xs[i]), sy(ys[i]));
+    if (style.fillTo != null) {
+      ctx.lineTo(sx(xs[count - 1]), style.fillTo);
+      ctx.lineTo(sx(xs[0]), style.fillTo);
+      ctx.closePath();
+      if (style.fill) {
+        ctx.fillStyle = style.fill;
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.moveTo(sx(xs[0]), sy(ys[0]));
+      for (let i = 1; i < count; i++) ctx.lineTo(sx(xs[i]), sy(ys[i]));
+    }
+    if (style.stroke) {
+      ctx.strokeStyle = style.stroke;
+      ctx.lineJoin = "round";
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  pointsTyped(xs, ys, count, sx, sy, r, style = {}) {
+    const ctx = this.ctx;
+    this._apply(style);
+    ctx.fillStyle = style.fill || "#000";
+    const rr = r || 2;
+    if (count > 2e3 || rr <= 2) {
+      const d = rr * 2;
+      for (let i = 0; i < count; i++) ctx.fillRect(sx(xs[i]) - rr, sy(ys[i]) - rr, d, d);
+    } else {
+      for (let i = 0; i < count; i++) {
+        ctx.beginPath();
+        ctx.arc(sx(xs[i]), sy(ys[i]), rr, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+  circle(cx, cy, r, style = {}) {
+    const ctx = this.ctx;
+    this._apply(style);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    if (style.fill) {
+      ctx.fillStyle = style.fill;
+      ctx.fill();
+    }
+    if (style.stroke) {
+      ctx.strokeStyle = style.stroke;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  arcSlice(cx, cy, rIn, rOut, a0, a1, style = {}) {
+    const ctx = this.ctx;
+    this._apply(style);
+    ctx.beginPath();
+    ctx.arc(cx, cy, rOut, a0, a1, false);
+    if (rIn > 0) ctx.arc(cx, cy, rIn, a1, a0, true);
+    else ctx.lineTo(cx, cy);
+    ctx.closePath();
+    if (style.fill) {
+      ctx.fillStyle = style.fill;
+      ctx.fill();
+    }
+    if (style.stroke) {
+      ctx.strokeStyle = style.stroke;
+      ctx.lineWidth = style.width || 1;
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  // Tiny path command interpreter: ['M',x,y]['L',x,y]['Q',cx,cy,x,y]['C',..]['Z']
+  pathCmds(cmds, style = {}) {
+    const ctx = this.ctx;
+    this._apply(style);
+    ctx.beginPath();
+    for (const c of cmds) {
+      const t = c[0];
+      if (t === "M") ctx.moveTo(c[1], c[2]);
+      else if (t === "L") ctx.lineTo(c[1], c[2]);
+      else if (t === "Q") ctx.quadraticCurveTo(c[1], c[2], c[3], c[4]);
+      else if (t === "C") ctx.bezierCurveTo(c[1], c[2], c[3], c[4], c[5], c[6]);
+      else if (t === "Z") ctx.closePath();
+    }
+    if (style.fill) {
+      ctx.fillStyle = style.fill;
+      ctx.fill();
+    }
+    if (style.stroke) {
+      ctx.strokeStyle = style.stroke;
+      ctx.lineJoin = "round";
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+  }
+  text(x, y, str, style = {}) {
+    const ctx = this.ctx;
+    ctx.globalAlpha = style.opacity != null ? style.opacity : 1;
+    ctx.fillStyle = style.fill || "#000";
+    ctx.font = `${style.weight ? style.weight + " " : ""}${style.size || 12}px ${style.family || "sans-serif"}`;
+    ctx.textAlign = style.align || "start";
+    ctx.textBaseline = style.baseline || "alphabetic";
+    if (style.rotate) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.rotate(style.rotate);
+      ctx.fillText(str, 0, 0);
+      ctx.restore();
+    } else {
+      ctx.fillText(str, x, y);
+    }
+    ctx.globalAlpha = 1;
+  }
+  measureText(str, style = {}) {
+    this.ctx.font = `${style.size || 12}px ${style.family || "sans-serif"}`;
+    return this.ctx.measureText(str).width;
+  }
+  toDataURL(type = "image/png") {
+    return this.canvas.toDataURL(type);
+  }
+  destroy() {
+    if (this.canvas.parentNode) this.canvas.parentNode.removeChild(this.canvas);
+  }
+};
+
+// src/core/SvgRenderer.js
+var NS = "http://www.w3.org/2000/svg";
+var esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+var SvgRenderer = class extends Renderer {
+  constructor(container, size) {
+    super(container, size);
+    this.type = "svg";
+    this.svg = document.createElementNS(NS, "svg");
+    this.svg.style.display = "block";
+    this._buf = [];
+  }
+  mount() {
+    this.container.appendChild(this.svg);
+    this.resize(this.width, this.height);
+    return this;
+  }
+  resize(w, h) {
+    this.width = w;
+    this.height = h;
+    this.svg.setAttribute("width", String(w));
+    this.svg.setAttribute("height", String(h));
+    this.svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+  }
+  beginFrame() {
+    this._buf = [];
+  }
+  beginIncremental() {
+    this._buf = [];
+  }
+  endFrame() {
+    this.svg.innerHTML = this._buf.join("");
+  }
+  clear() {
+    this._buf = [];
+    this.svg.innerHTML = "";
+  }
+  _common(style) {
+    let s = "";
+    if (style.fill) s += ` fill="${style.fill}"`;
+    else s += ' fill="none"';
+    if (style.stroke) s += ` stroke="${style.stroke}"`;
+    if (style.width != null) s += ` stroke-width="${style.width}"`;
+    if (style.opacity != null) s += ` opacity="${style.opacity}"`;
+    if (style.dash) s += ` stroke-dasharray="${style.dash.join(",")}"`;
+    return s;
+  }
+  rect(x, y, w, h, style = {}) {
+    const r = style.radius ? ` rx="${style.radius}"` : "";
+    this._buf.push(`<rect x="${x}" y="${y}" width="${w}" height="${h}"${r}${this._common(style)}/>`);
+  }
+  line(x1, y1, x2, y2, style = {}) {
+    this._buf.push(`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}"${this._common({ ...style, fill: void 0 })}/>`);
+  }
+  polyline(pts, style = {}) {
+    let d = "";
+    for (let i = 0; i < pts.length; i += 2) d += (i === 0 ? "M" : "L") + pts[i] + " " + pts[i + 1] + " ";
+    if (style.closed) d += "Z";
+    this._buf.push(`<path d="${d}"${this._common(style)}/>`);
+  }
+  polylineTyped(xs, ys, count, sx, sy, style = {}) {
+    if (count < 2) return;
+    let d = "M" + sx(xs[0]) + " " + sy(ys[0]);
+    for (let i = 1; i < count; i++) d += "L" + sx(xs[i]) + " " + sy(ys[i]);
+    if (style.fillTo != null && style.fill) {
+      const area = d + "L" + sx(xs[count - 1]) + " " + style.fillTo + "L" + sx(xs[0]) + " " + style.fillTo + "Z";
+      this._buf.push(`<path d="${area}" fill="${style.fill}" stroke="none"/>`);
+    }
+    if (style.stroke) this._buf.push(`<path d="${d}" fill="none" stroke="${style.stroke}" stroke-width="${style.width || 1}" stroke-linejoin="round"/>`);
+  }
+  pointsTyped(xs, ys, count, sx, sy, r, style = {}) {
+    const rr = r || 2;
+    const fill = style.fill || "#000";
+    let d = "";
+    for (let i = 0; i < count; i++) {
+      const x = sx(xs[i]) - rr;
+      const y = sy(ys[i]) - rr;
+      const s = rr * 2;
+      d += `M${x} ${y}h${s}v${s}h${-s}z`;
+    }
+    this._buf.push(`<path d="${d}" fill="${fill}" stroke="none"${style.opacity != null ? ` opacity="${style.opacity}"` : ""}/>`);
+  }
+  circle(cx, cy, r, style = {}) {
+    this._buf.push(`<circle cx="${cx}" cy="${cy}" r="${r}"${this._common(style)}/>`);
+  }
+  arcSlice(cx, cy, rIn, rOut, a0, a1, style = {}) {
+    const large = a1 - a0 > Math.PI ? 1 : 0;
+    const x0 = cx + rOut * Math.cos(a0), y0 = cy + rOut * Math.sin(a0);
+    const x1 = cx + rOut * Math.cos(a1), y1 = cy + rOut * Math.sin(a1);
+    let d;
+    if (rIn > 0) {
+      const xi0 = cx + rIn * Math.cos(a1), yi0 = cy + rIn * Math.sin(a1);
+      const xi1 = cx + rIn * Math.cos(a0), yi1 = cy + rIn * Math.sin(a0);
+      d = `M${x0} ${y0}A${rOut} ${rOut} 0 ${large} 1 ${x1} ${y1}L${xi0} ${yi0}A${rIn} ${rIn} 0 ${large} 0 ${xi1} ${yi1}Z`;
+    } else {
+      d = `M${cx} ${cy}L${x0} ${y0}A${rOut} ${rOut} 0 ${large} 1 ${x1} ${y1}Z`;
+    }
+    this._buf.push(`<path d="${d}"${this._common(style)}/>`);
+  }
+  pathCmds(cmds, style = {}) {
+    let d = "";
+    for (const c of cmds) {
+      const t = c[0];
+      if (t === "M") d += `M${c[1]} ${c[2]}`;
+      else if (t === "L") d += `L${c[1]} ${c[2]}`;
+      else if (t === "Q") d += `Q${c[1]} ${c[2]} ${c[3]} ${c[4]}`;
+      else if (t === "C") d += `C${c[1]} ${c[2]} ${c[3]} ${c[4]} ${c[5]} ${c[6]}`;
+      else if (t === "Z") d += "Z";
+    }
+    this._buf.push(`<path d="${d}"${this._common(style)}/>`);
+  }
+  text(x, y, str, style = {}) {
+    const anchor = style.align === "center" ? "middle" : style.align === "end" ? "end" : "start";
+    const baseline = style.baseline === "middle" ? "central" : style.baseline === "top" ? "hanging" : "auto";
+    const rot = style.rotate ? ` transform="rotate(${style.rotate * 180 / Math.PI} ${x} ${y})"` : "";
+    this._buf.push(
+      `<text x="${x}" y="${y}" fill="${style.fill || "#000"}" font-size="${style.size || 12}" font-family="${esc(style.family || "sans-serif")}" text-anchor="${anchor}" dominant-baseline="${baseline}"${style.weight ? ` font-weight="${style.weight}"` : ""}${rot}>${esc(str)}</text>`
+    );
+  }
+  // SVG text measurement without DOM layout: estimate ~0.55em advance.
+  measureText(str, style = {}) {
+    return String(str).length * (style.size || 12) * 0.55;
+  }
+  toSVGString() {
+    return `<svg xmlns="${NS}" width="${this.width}" height="${this.height}" viewBox="0 0 ${this.width} ${this.height}">${this._buf.join("")}</svg>`;
+  }
+  destroy() {
+    if (this.svg.parentNode) this.svg.parentNode.removeChild(this.svg);
+  }
+};
+
+// src/core/Scene.js
+var Scene = class {
+  /** @param {import('../theme/tokens.js').Theme} theme */
+  constructor(theme) {
+    this.theme = theme;
+    this._dirty = null;
+  }
+  setTheme(theme) {
+    this.theme = theme;
+  }
+  /** Compute the inner plot rectangle given total size and axis presence. */
+  computePlotArea(width, height, margins) {
+    const m = margins;
+    return {
+      x: m.left,
+      y: m.top,
+      width: Math.max(1, width - m.left - m.right),
+      height: Math.max(1, height - m.top - m.bottom)
+    };
+  }
+  markDirty(rect) {
+    if (this._dirty === "all") return;
+    if (!rect) {
+      this._dirty = "all";
+      return;
+    }
+    if (!this._dirty) {
+      this._dirty = { ...rect };
+      return;
+    }
+    const a = this._dirty;
+    const x = Math.min(a.x, rect.x);
+    const y = Math.min(a.y, rect.y);
+    const r = Math.max(a.x + a.w, rect.x + rect.w);
+    const b = Math.max(a.y + a.h, rect.y + rect.h);
+    this._dirty = { x, y, w: r - x, h: b - y };
+  }
+  consumeDirty() {
+    const d = this._dirty;
+    this._dirty = null;
+    return d;
+  }
+  /**
+   * Draw grid + axes for a cartesian chart.
+   * @param {import('./Renderer.js').Renderer} r
+   * @param {PlotArea} area
+   * @param {{x:any, y:any}} scales  scale functions (x may be band/linear/time)
+   * @param {{showGrid?:boolean, xLabel?:string, yLabel?:string, yTickFormat?:Function, xTickFormat?:Function}} opts
+   */
+  drawAxes(r, area, scales, opts = {}) {
+    const t = this.theme;
+    const { x: sx, y: sy } = scales;
+    const fontAxis = { size: t.typography.axisSize, family: t.typography.family, fill: t.colors.muted };
+    const bottom = area.y + area.height;
+    if (sy && sy.ticks) {
+      const yIsBand = sy.kind === "band";
+      const yticks = sy.ticks(6);
+      for (const v of yticks) {
+        const py = Math.round(yIsBand ? sy.center(v) : sy(v)) + 0.5;
+        if (py < area.y - 1 || py > bottom + 1) continue;
+        if (!yIsBand && opts.showGrid !== false) r.line(area.x, py, area.x + area.width, py, { stroke: t.colors.grid, width: 1 });
+        const label = typeof v === "number" ? opts.yTickFormat ? opts.yTickFormat(v) : formatNumber(v) : String(v);
+        r.text(area.x - 6, py, label, { ...fontAxis, align: "end", baseline: "middle" });
+      }
+    }
+    if (sx && sx.ticks) {
+      const xticks = sx.ticks(8);
+      const isBand = sx.kind === "band";
+      const maxLabels = Math.max(2, Math.floor(area.width / 60));
+      const stride = Math.max(1, Math.ceil(xticks.length / maxLabels));
+      xticks.forEach((v, i) => {
+        if (i % stride !== 0 && i !== xticks.length - 1) return;
+        const px = Math.round(isBand ? sx.center(v) : sx(v)) + 0.5;
+        if (px < area.x - 1 || px > area.x + area.width + 1) return;
+        if (!isBand && opts.showGrid === "both") r.line(px, area.y, px, bottom, { stroke: t.colors.grid, width: 1 });
+        r.line(px, bottom, px, bottom + t.spacing.tickLength, { stroke: t.colors.axis, width: 1 });
+        const label = typeof v !== "number" ? String(v) : opts.xTickFormat ? opts.xTickFormat(v) : sx.tickFormat ? sx.tickFormat(v) : formatNumber(v);
+        r.text(px, bottom + t.spacing.tickLength + 3, label, { ...fontAxis, align: "center", baseline: "top" });
+      });
+    }
+    r.line(area.x, area.y, area.x, bottom, { stroke: t.colors.axis, width: 1 });
+    r.line(area.x, bottom, area.x + area.width, bottom, { stroke: t.colors.axis, width: 1 });
+    if (opts.yLabel) r.text(12, area.y + area.height / 2, opts.yLabel, { ...fontAxis, fill: t.colors.text, align: "center", baseline: "middle", rotate: -Math.PI / 2 });
+    if (opts.xLabel) r.text(area.x + area.width / 2, bottom + 28, opts.xLabel, { ...fontAxis, fill: t.colors.text, align: "center", baseline: "top" });
+  }
+};
+function formatNumber(v) {
+  const abs = Math.abs(v);
+  if (abs >= 1e9) return (v / 1e9).toFixed(1).replace(/\.0$/, "") + "B";
+  if (abs >= 1e6) return (v / 1e6).toFixed(1).replace(/\.0$/, "") + "M";
+  if (abs >= 1e3) return (v / 1e3).toFixed(1).replace(/\.0$/, "") + "k";
+  if (Number.isInteger(v)) return String(v);
+  return v.toFixed(2).replace(/\.?0+$/, "");
+}
+
+// src/core/events.js
+var Emitter = class {
+  constructor() {
+    this._h = /* @__PURE__ */ new Map();
+  }
+  on(type, fn) {
+    if (!this._h.has(type)) this._h.set(type, /* @__PURE__ */ new Set());
+    this._h.get(type).add(fn);
+    return () => this.off(type, fn);
+  }
+  off(type, fn) {
+    const s = this._h.get(type);
+    if (s) s.delete(fn);
+  }
+  emit(type, payload) {
+    const s = this._h.get(type);
+    if (s) for (const fn of s) fn(payload);
+  }
+  clear() {
+    this._h.clear();
+  }
+};
+
+// src/registry.js
+var marks = /* @__PURE__ */ new Map();
+function registerMark(type, MarkClass) {
+  marks.set(type, MarkClass);
+}
+function getMark(type) {
+  return marks.get(type);
+}
+function hasMark(type) {
+  return marks.has(type);
+}
+function listMarks() {
+  return [...marks.keys()];
+}
+
+// src/utils/math.js
+function lerp(a, b, t) {
+  return a + (b - a) * t;
+}
+function extentTyped(arr, n) {
+  let min = Infinity;
+  let max = -Infinity;
+  for (let i = 0; i < n; i++) {
+    const v = arr[i];
+    if (v < min) min = v;
+    if (v > max) max = v;
+  }
+  if (min === Infinity) return [0, 1];
+  if (min === max) return [min - 1, max + 1];
+  return [min, max];
+}
+function ticks(min, max, count = 6) {
+  if (min === max) return [min];
+  const span = max - min;
+  const step0 = span / count;
+  const mag = Math.pow(10, Math.floor(Math.log10(step0)));
+  const norm = step0 / mag;
+  let step;
+  if (norm < 1.5) step = 1;
+  else if (norm < 3) step = 2;
+  else if (norm < 7) step = 5;
+  else step = 10;
+  step *= mag;
+  const start = Math.ceil(min / step) * step;
+  const out = [];
+  for (let v = start; v <= max + step * 1e-9; v += step) {
+    out.push(Math.round(v / step) * step);
+  }
+  return out;
+}
+function deepMerge(target, source) {
+  if (!source) return target;
+  const out = Array.isArray(target) ? target.slice() : { ...target };
+  for (const key of Object.keys(source)) {
+    const sv = source[key];
+    const tv = out[key];
+    if (sv && typeof sv === "object" && !Array.isArray(sv) && tv && typeof tv === "object") {
+      out[key] = deepMerge(tv, sv);
+    } else {
+      out[key] = sv;
+    }
+  }
+  return out;
+}
+function sum(arr) {
+  let s = 0;
+  for (let i = 0; i < arr.length; i++) s += arr[i];
+  return s;
+}
+function quantileSorted(sorted, p) {
+  if (sorted.length === 0) return NaN;
+  if (sorted.length === 1) return sorted[0];
+  const idx = (sorted.length - 1) * p;
+  const lo = Math.floor(idx);
+  const hi = Math.ceil(idx);
+  if (lo === hi) return sorted[lo];
+  return lerp(sorted[lo], sorted[hi], idx - lo);
+}
+
+// src/data/adapter.js
+function accessor(key) {
+  if (typeof key === "function") return key;
+  return (d) => d[key];
+}
+function toSeries(data, xKey, yKey) {
+  const xa = accessor(xKey);
+  const ya = accessor(yKey);
+  const n = data.length;
+  const xs = new Float64Array(n);
+  const ys = new Float64Array(n);
+  let categorical = false;
+  for (let i = 0; i < n; i++) {
+    const xv = xa(data[i], i);
+    if (typeof xv !== "number") categorical = true;
+    ys[i] = +ya(data[i], i);
+  }
+  let categories = null;
+  if (categorical) {
+    categories = data.map((d, i) => String(xa(d, i)));
+    for (let i = 0; i < n; i++) xs[i] = i;
+  } else {
+    for (let i = 0; i < n; i++) xs[i] = +xa(data[i], i);
+  }
+  return { xs, ys, count: n, categories, xAccessor: xa };
+}
+
+// src/data/ringbuffer.js
+var RingBuffer = class {
+  /** @param {number} capacity */
+  constructor(capacity) {
+    this.capacity = Math.max(1, capacity | 0);
+    this.xs = new Float64Array(this.capacity);
+    this.ys = new Float64Array(this.capacity);
+    this._head = 0;
+    this._size = 0;
+  }
+  get size() {
+    return this._size;
+  }
+  get full() {
+    return this._size === this.capacity;
+  }
+  /** @param {number} x @param {number} y */
+  push(x, y) {
+    this.xs[this._head] = x;
+    this.ys[this._head] = y;
+    this._head = (this._head + 1) % this.capacity;
+    if (this._size < this.capacity) this._size++;
+  }
+  /** Logical index (0 = oldest) -> physical index. */
+  _phys(i) {
+    const start = this.full ? this._head : 0;
+    return (start + i) % this.capacity;
+  }
+  x(i) {
+    return this.xs[this._phys(i)];
+  }
+  y(i) {
+    return this.ys[this._phys(i)];
+  }
+  /**
+   * Copy logical-order data into contiguous typed arrays for rendering.
+   * @returns {{xs:Float64Array, ys:Float64Array, count:number}}
+   */
+  toArrays() {
+    const n = this._size;
+    const ox = new Float64Array(n);
+    const oy = new Float64Array(n);
+    for (let i = 0; i < n; i++) {
+      const p = this._phys(i);
+      ox[i] = this.xs[p];
+      oy[i] = this.ys[p];
+    }
+    return { xs: ox, ys: oy, count: n };
+  }
+  clear() {
+    this._head = 0;
+    this._size = 0;
+  }
+};
+
+// src/scales/linear.js
+function linearScale(domain, range) {
+  let [d0, d1] = domain;
+  const [r0, r1] = range;
+  if (d0 === d1) {
+    d0 -= 0.5;
+    d1 += 0.5;
+  }
+  const m = (r1 - r0) / (d1 - d0);
+  const scale = (v) => r0 + (v - d0) * m;
+  scale.invert = (px) => d0 + (px - r0) / m;
+  scale.domain = [d0, d1];
+  scale.range = [r0, r1];
+  scale.bandwidth = 0;
+  scale.ticks = (n = 6) => ticks(d0, d1, n);
+  scale.kind = "linear";
+  return scale;
+}
+
+// src/scales/log.js
+function logScale(domain, range, base = 10) {
+  let [d0, d1] = domain;
+  const [r0, r1] = range;
+  d0 = d0 <= 0 ? 1e-6 : d0;
+  d1 = d1 <= 0 ? 1e-6 : d1;
+  const logb = (x) => Math.log(x) / Math.log(base);
+  const l0 = logb(d0);
+  const l1 = logb(d1);
+  const m = (r1 - r0) / (l1 - l0 || 1);
+  const scale = (v) => r0 + (logb(v <= 0 ? 1e-6 : v) - l0) * m;
+  scale.invert = (px) => Math.pow(base, l0 + (px - r0) / m);
+  scale.domain = [d0, d1];
+  scale.range = [r0, r1];
+  scale.bandwidth = 0;
+  scale.kind = "log";
+  scale.ticks = () => {
+    const out = [];
+    const start = Math.floor(l0);
+    const end = Math.ceil(l1);
+    for (let e = start; e <= end; e++) out.push(Math.pow(base, e));
+    return out.filter((v) => v >= d0 && v <= d1);
+  };
+  return scale;
+}
+
+// src/scales/time.js
+var STEPS = [
+  1e3,
+  5e3,
+  15e3,
+  3e4,
+  // seconds
+  6e4,
+  3e5,
+  9e5,
+  18e5,
+  // minutes
+  36e5,
+  108e5,
+  216e5,
+  // hours
+  864e5,
+  6048e5,
+  // day, week
+  2592e6,
+  31536e6
+  // ~month, ~year
+];
+function timeScale(domain, range) {
+  const base = linearScale(domain, range);
+  const scale = (v) => base(+v);
+  scale.invert = (px) => base.invert(px);
+  scale.domain = base.domain;
+  scale.range = base.range;
+  scale.bandwidth = 0;
+  scale.kind = "time";
+  scale.ticks = (n = 6) => {
+    const [t0, t1] = base.domain;
+    const span = t1 - t0;
+    const target = span / n;
+    let step = STEPS[STEPS.length - 1];
+    for (const s of STEPS) {
+      if (s >= target) {
+        step = s;
+        break;
+      }
+    }
+    const start = Math.ceil(t0 / step) * step;
+    const out = [];
+    for (let t = start; t <= t1; t += step) out.push(t);
+    return out;
+  };
+  scale.tickFormat = (t) => {
+    const d = new Date(t);
+    const span = base.domain[1] - base.domain[0];
+    if (span < 864e5) return d.toLocaleTimeString();
+    if (span < 31536e6) return `${d.getMonth() + 1}/${d.getDate()}`;
+    return String(d.getFullYear());
+  };
+  return scale;
+}
+
+// src/scales/band.js
+function bandScale(categories, range, opts = {}) {
+  const [r0, r1] = range;
+  const n = categories.length;
+  const paddingInner = opts.paddingInner != null ? opts.paddingInner : opts.padding != null ? opts.padding : 0.1;
+  const paddingOuter = opts.paddingOuter != null ? opts.paddingOuter : opts.padding != null ? opts.padding : 0.1;
+  const width = r1 - r0;
+  const step = n > 0 ? width / (n - paddingInner + 2 * paddingOuter) : width;
+  const bandwidth = step * (1 - paddingInner);
+  const index = /* @__PURE__ */ new Map();
+  categories.forEach((c, i) => index.set(String(c), i));
+  const start = r0 + step * paddingOuter;
+  const scale = (cat) => {
+    const i = index.get(String(cat));
+    if (i == null) return NaN;
+    return start + i * step;
+  };
+  scale.bandwidth = bandwidth;
+  scale.step = step;
+  scale.domain = categories;
+  scale.range = [r0, r1];
+  scale.kind = "band";
+  scale.ticks = () => categories;
+  scale.center = (cat) => scale(cat) + bandwidth / 2;
+  scale.invert = (px) => {
+    const i = Math.floor((px - start) / step);
+    return categories[Math.max(0, Math.min(n - 1, i))];
+  };
+  return scale;
+}
+
+// src/scales/color.js
+function hexToRgb(hex) {
+  let h = hex.replace("#", "");
+  if (h.length === 3) h = h.split("").map((c) => c + c).join("");
+  const n = parseInt(h, 16);
+  return [n >> 16 & 255, n >> 8 & 255, n & 255];
+}
+function rgbToHex(r, g, b) {
+  const to = (x) => Math.round(Math.max(0, Math.min(255, x))).toString(16).padStart(2, "0");
+  return `#${to(r)}${to(g)}${to(b)}`;
+}
+function categoricalScale(palette) {
+  const cache = /* @__PURE__ */ new Map();
+  let next = 0;
+  const scale = (key) => {
+    const k = String(key);
+    if (!cache.has(k)) {
+      cache.set(k, palette[next % palette.length]);
+      next++;
+    }
+    return cache.get(k);
+  };
+  scale.byIndex = (i) => palette[i % palette.length];
+  scale.kind = "categorical";
+  return scale;
+}
+function sequentialScale(range, domain = [0, 1]) {
+  const c0 = hexToRgb(range[0]);
+  const c1 = hexToRgb(range[1]);
+  let [d0, d1] = domain;
+  if (d0 === d1) d1 = d0 + 1;
+  const scale = (v) => {
+    const t = Math.max(0, Math.min(1, (v - d0) / (d1 - d0)));
+    return rgbToHex(c0[0] + (c1[0] - c0[0]) * t, c0[1] + (c1[1] - c0[1]) * t, c0[2] + (c1[2] - c0[2]) * t);
+  };
+  scale.domain = [d0, d1];
+  scale.kind = "sequential";
+  return scale;
+}
+
+// src/theme/tokens.js
+var baseTokens = {
+  palette: ["#4f8cff", "#ff6b6b", "#36c5a0", "#ffa94d", "#a78bfa", "#f06595", "#74c0fc", "#ffd43b"],
+  semantic: { positive: "#36c5a0", negative: "#ff6b6b", neutral: "#868e96" },
+  typography: { family: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif", size: 13, axisSize: 11, labelSize: 12 },
+  spacing: { padding: 12, tickLength: 5, radius: 4 },
+  motion: { duration: 450, easing: easeCubicOut }
+};
+function easeCubicOut(t) {
+  const u = 1 - t;
+  return 1 - u * u * u;
+}
+
+// src/theme/light.js
+var lightTheme = {
+  name: "light",
+  ...baseTokens,
+  colors: {
+    background: "#ffffff",
+    surface: "#f8f9fa",
+    text: "#212529",
+    muted: "#868e96",
+    grid: "#e9ecef",
+    axis: "#adb5bd",
+    tooltipBg: "rgba(33,37,41,0.92)",
+    tooltipText: "#ffffff"
+  },
+  sequential: ["#e7f0ff", "#1c5fd6"]
+};
+
+// src/theme/dark.js
+var darkTheme = {
+  name: "dark",
+  ...baseTokens,
+  palette: ["#5b9bff", "#ff7b7b", "#3ad6ad", "#ffb866", "#b69dff", "#f877a5", "#86c8ff", "#ffe066"],
+  colors: {
+    background: "#16181d",
+    surface: "#1e2128",
+    text: "#e9ecef",
+    muted: "#909296",
+    grid: "#2b2f37",
+    axis: "#4b515c",
+    tooltipBg: "rgba(248,249,250,0.95)",
+    tooltipText: "#16181d"
+  },
+  sequential: ["#10243f", "#5b9bff"]
+};
+
+// src/utils/raf.js
+var hasRAF = typeof requestAnimationFrame === "function";
+var raf = hasRAF ? (cb) => requestAnimationFrame(cb) : (cb) => setTimeout(() => cb(Date.now()), 16);
+var caf = hasRAF ? (id) => cancelAnimationFrame(id) : (id) => clearTimeout(id);
+var FrameScheduler = class {
+  constructor(task) {
+    this._task = task;
+    this._id = 0;
+    this._scheduled = false;
+    this._run = this._run.bind(this);
+  }
+  request() {
+    if (this._scheduled) return;
+    this._scheduled = true;
+    this._id = raf(this._run);
+  }
+  _run(ts) {
+    this._scheduled = false;
+    this._task(ts);
+  }
+  cancel() {
+    if (this._scheduled) caf(this._id);
+    this._scheduled = false;
+  }
+};
+
+// src/interaction/quadtree.js
+var QNode = class {
+  constructor(x0, y0, x1, y1) {
+    this.x0 = x0;
+    this.y0 = y0;
+    this.x1 = x1;
+    this.y1 = y1;
+    this.pts = [];
+    this.kids = null;
+  }
+};
+var Quadtree = class _Quadtree {
+  constructor(x0, y0, x1, y1, capacity = 16, maxDepth = 12) {
+    this.root = new QNode(x0, y0, x1, y1);
+    this.capacity = capacity;
+    this.maxDepth = maxDepth;
+  }
+  _insert(node, x, y, idx, depth) {
+    if (node.kids) {
+      this._insert(node.kids[this._quadrant(node, x, y)], x, y, idx, depth + 1);
+      return;
+    }
+    node.pts.push(x, y, idx);
+    if (node.pts.length / 3 > this.capacity && depth < this.maxDepth) this._subdivide(node, depth);
+  }
+  _quadrant(node, x, y) {
+    const mx = (node.x0 + node.x1) / 2;
+    const my = (node.y0 + node.y1) / 2;
+    return (x >= mx ? 1 : 0) + (y >= my ? 2 : 0);
+  }
+  _subdivide(node, depth) {
+    const mx = (node.x0 + node.x1) / 2;
+    const my = (node.y0 + node.y1) / 2;
+    node.kids = [
+      new QNode(node.x0, node.y0, mx, my),
+      new QNode(mx, node.y0, node.x1, my),
+      new QNode(node.x0, my, mx, node.y1),
+      new QNode(mx, my, node.x1, node.y1)
+    ];
+    const pts = node.pts;
+    node.pts = [];
+    for (let i = 0; i < pts.length; i += 3) this._insert(node, pts[i], pts[i + 1], pts[i + 2], depth);
+  }
+  insert(x, y, idx) {
+    this._insert(this.root, x, y, idx, 0);
+  }
+  /** Build from typed arrays already mapped to pixel space. */
+  static fromPixels(xs, ys, count, bounds) {
+    const qt = new _Quadtree(bounds.x0, bounds.y0, bounds.x1, bounds.y1);
+    for (let i = 0; i < count; i++) qt.insert(xs[i], ys[i], i);
+    return qt;
+  }
+  /** @returns {{index:number, x:number, y:number, dist:number}|null} */
+  nearest(px, py, radius = Infinity) {
+    let best = null;
+    let bestD2 = radius * radius;
+    const stack = [this.root];
+    while (stack.length) {
+      const node = stack.pop();
+      const dx = px < node.x0 ? node.x0 - px : px > node.x1 ? px - node.x1 : 0;
+      const dy = py < node.y0 ? node.y0 - py : py > node.y1 ? py - node.y1 : 0;
+      if (dx * dx + dy * dy > bestD2) continue;
+      if (node.kids) {
+        for (const k of node.kids) stack.push(k);
+        continue;
+      }
+      const pts = node.pts;
+      for (let i = 0; i < pts.length; i += 3) {
+        const ex = pts[i] - px, ey = pts[i + 1] - py;
+        const d2 = ex * ex + ey * ey;
+        if (d2 < bestD2) {
+          bestD2 = d2;
+          best = { index: pts[i + 2], x: pts[i], y: pts[i + 1], dist: Math.sqrt(d2) };
+        }
+      }
+    }
+    return best;
+  }
+};
+
+// src/interaction/tooltip.js
+var Tooltip = class {
+  constructor(container, theme) {
+    this.container = container;
+    this.theme = theme;
+    this.el = document.createElement("div");
+    Object.assign(this.el.style, {
+      position: "absolute",
+      pointerEvents: "none",
+      zIndex: "20",
+      opacity: "0",
+      transition: "opacity .12s",
+      padding: "6px 9px",
+      borderRadius: "6px",
+      font: `${theme.typography.labelSize}px ${theme.typography.family}`,
+      maxWidth: "240px",
+      transform: "translate(-50%, calc(-100% - 10px))",
+      whiteSpace: "nowrap"
+    });
+    this._applyTheme();
+    container.appendChild(this.el);
+  }
+  setTheme(theme) {
+    this.theme = theme;
+    this._applyTheme();
+  }
+  _applyTheme() {
+    this.el.style.background = this.theme.colors.tooltipBg;
+    this.el.style.color = this.theme.colors.tooltipText;
+    this.el.style.boxShadow = "0 2px 12px rgba(0,0,0,.25)";
+  }
+  show(x, y, html) {
+    this.el.innerHTML = html;
+    this.el.style.left = x + "px";
+    this.el.style.top = y + "px";
+    this.el.style.opacity = "1";
+  }
+  hide() {
+    this.el.style.opacity = "0";
+  }
+  destroy() {
+    if (this.el.parentNode) this.el.parentNode.removeChild(this.el);
+  }
+};
+
+// src/interaction/legend.js
+var Legend = class {
+  /** @param {HTMLElement} container @param {object} theme @param {(i:number,visible:boolean)=>void} onToggle */
+  constructor(container, theme, onToggle) {
+    this.container = container;
+    this.theme = theme;
+    this.onToggle = onToggle;
+    this.el = document.createElement("div");
+    Object.assign(this.el.style, {
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "12px",
+      padding: "8px 4px 2px",
+      font: `${theme.typography.labelSize}px ${theme.typography.family}`,
+      color: theme.colors.text
+    });
+    this.el.setAttribute("role", "list");
+    container.appendChild(this.el);
+    this.items = [];
+  }
+  setTheme(theme) {
+    this.theme = theme;
+    this.el.style.color = theme.colors.text;
+  }
+  /** @param {{label:string,color:string,visible:boolean}[]} entries */
+  render(entries) {
+    this.el.innerHTML = "";
+    this.items = entries.map((e, i) => {
+      const item = document.createElement("button");
+      item.type = "button";
+      item.setAttribute("role", "listitem");
+      item.setAttribute("aria-pressed", String(e.visible));
+      item.tabIndex = 0;
+      Object.assign(item.style, {
+        display: "inline-flex",
+        alignItems: "center",
+        gap: "6px",
+        cursor: "pointer",
+        background: "none",
+        border: "none",
+        padding: "2px 4px",
+        borderRadius: "4px",
+        color: "inherit",
+        font: "inherit",
+        opacity: e.visible ? "1" : "0.4"
+      });
+      const swatch = document.createElement("span");
+      Object.assign(swatch.style, { width: "11px", height: "11px", borderRadius: "3px", background: e.color, display: "inline-block" });
+      const text = document.createElement("span");
+      text.textContent = e.label;
+      item.appendChild(swatch);
+      item.appendChild(text);
+      const toggle = () => {
+        e.visible = !e.visible;
+        item.style.opacity = e.visible ? "1" : "0.4";
+        item.setAttribute("aria-pressed", String(e.visible));
+        this.onToggle(i, e.visible);
+      };
+      item.addEventListener("click", toggle);
+      item.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter" || ev.key === " ") {
+          ev.preventDefault();
+          toggle();
+        } else if (ev.key === "ArrowRight" || ev.key === "ArrowDown") {
+          ev.preventDefault();
+          const n = this.items[(i + 1) % this.items.length];
+          if (n) n.focus();
+        } else if (ev.key === "ArrowLeft" || ev.key === "ArrowUp") {
+          ev.preventDefault();
+          const p = this.items[(i - 1 + this.items.length) % this.items.length];
+          if (p) p.focus();
+        }
+      });
+      this.el.appendChild(item);
+      return item;
+    });
+  }
+  destroy() {
+    if (this.el.parentNode) this.el.parentNode.removeChild(this.el);
+  }
+};
+
+// src/interaction/zoom.js
+var ZoomPan = class {
+  /**
+   * @param {HTMLElement} target overlay element receiving pointer events
+   * @param {() => {x:[number,number], full:[number,number]}} getState
+   * @param {(xDomain:[number,number]) => void} onChange
+   */
+  constructor(target, getState, onChange) {
+    this.target = target;
+    this.getState = getState;
+    this.onChange = onChange;
+    this._dragging = false;
+    this._lastX = 0;
+    this._bind();
+  }
+  _bind() {
+    this._onWheel = (e) => {
+      e.preventDefault();
+      const { x, full } = this.getState();
+      const rect = this.target.getBoundingClientRect();
+      const frac = (e.clientX - rect.left) / rect.width;
+      const span = x[1] - x[0];
+      const factor = e.deltaY > 0 ? 1.15 : 1 / 1.15;
+      const newSpan = Math.min(full[1] - full[0], span * factor);
+      const center = x[0] + span * frac;
+      let lo = center - newSpan * frac;
+      let hi = center + newSpan * (1 - frac);
+      [lo, hi] = this._clamp(lo, hi, full);
+      this.onChange([lo, hi]);
+    };
+    this._onDown = (e) => {
+      this._dragging = true;
+      this._lastX = e.clientX;
+      this.target.style.cursor = "grabbing";
+    };
+    this._onMove = (e) => {
+      if (!this._dragging) return;
+      const { x, full } = this.getState();
+      const rect = this.target.getBoundingClientRect();
+      const dxFrac = (e.clientX - this._lastX) / rect.width;
+      this._lastX = e.clientX;
+      const span = x[1] - x[0];
+      let lo = x[0] - dxFrac * span;
+      let hi = x[1] - dxFrac * span;
+      [lo, hi] = this._clamp(lo, hi, full);
+      this.onChange([lo, hi]);
+    };
+    this._onUp = () => {
+      this._dragging = false;
+      this.target.style.cursor = "";
+    };
+    this.target.addEventListener("wheel", this._onWheel, { passive: false });
+    this.target.addEventListener("mousedown", this._onDown);
+    window.addEventListener("mousemove", this._onMove);
+    window.addEventListener("mouseup", this._onUp);
+  }
+  _clamp(lo, hi, full) {
+    const span = hi - lo;
+    if (lo < full[0]) {
+      lo = full[0];
+      hi = lo + span;
+    }
+    if (hi > full[1]) {
+      hi = full[1];
+      lo = hi - span;
+    }
+    if (lo < full[0]) lo = full[0];
+    return [lo, hi];
+  }
+  destroy() {
+    this.target.removeEventListener("wheel", this._onWheel);
+    this.target.removeEventListener("mousedown", this._onDown);
+    window.removeEventListener("mousemove", this._onMove);
+    window.removeEventListener("mouseup", this._onUp);
+  }
+};
+
+// src/stream/scheduler.js
+var StreamScheduler = class {
+  /** @param {(batch:Array<{x:number,y:number}>)=>void} flush */
+  constructor(flush) {
+    this._buffer = [];
+    this._flush = flush;
+    this._scheduler = new FrameScheduler(() => {
+      if (this._buffer.length === 0) return;
+      const batch = this._buffer;
+      this._buffer = [];
+      this._flush(batch);
+    });
+  }
+  /** @param {{x:number,y:number}|Array<{x:number,y:number}>} point */
+  push(point) {
+    if (Array.isArray(point)) for (const p of point) this._buffer.push(p);
+    else this._buffer.push(point);
+    this._scheduler.request();
+  }
+  cancel() {
+    this._scheduler.cancel();
+    this._buffer = [];
+  }
+};
+
+// src/stream/stream.js
+function connectStream(source, onPoint, map = (v) => v) {
+  let stopped = false;
+  const stop = () => {
+    stopped = true;
+    cleanup();
+  };
+  let cleanup = () => {
+  };
+  if (source && typeof source[Symbol.asyncIterator] === "function") {
+    (async () => {
+      for await (const raw of source) {
+        if (stopped) break;
+        onPoint(map(raw));
+      }
+    })();
+    return { stop };
+  }
+  if (typeof EventSource !== "undefined" && source instanceof EventSource) {
+    const handler = (e) => {
+      try {
+        onPoint(map(JSON.parse(e.data)));
+      } catch {
+        onPoint(map(e.data));
+      }
+    };
+    source.addEventListener("message", handler);
+    cleanup = () => source.removeEventListener("message", handler);
+    return { stop };
+  }
+  if (typeof WebSocket !== "undefined" && source instanceof WebSocket) {
+    const handler = (e) => {
+      try {
+        onPoint(map(JSON.parse(e.data)));
+      } catch {
+        onPoint(map(e.data));
+      }
+    };
+    source.addEventListener("message", handler);
+    cleanup = () => source.removeEventListener("message", handler);
+    return { stop };
+  }
+  if (typeof source === "function") {
+    source((raw) => {
+      if (!stopped) onPoint(map(raw));
+    }, () => stopped);
+    return { stop };
+  }
+  throw new Error("connectStream: unsupported source type");
+}
+
+// src/core/Chart.js
+var ALIASES = {
+  column: { type: "bar", mode: "vertical" },
+  bar: { type: "bar", mode: "vertical" },
+  hbar: { type: "bar", mode: "horizontal" },
+  stackedbar: { type: "bar", mode: "stacked" },
+  groupedbar: { type: "bar", mode: "grouped" },
+  waterfall: { type: "bar", mode: "waterfall" },
+  line: { type: "line", mode: "line" },
+  spline: { type: "line", mode: "spline" },
+  step: { type: "line", mode: "step" },
+  area: { type: "area", mode: "area" },
+  stackedarea: { type: "area", mode: "stacked" },
+  streamgraph: { type: "area", mode: "streamgraph" },
+  scatter: { type: "point", mode: "scatter" },
+  bubble: { type: "point", mode: "bubble" },
+  pie: { type: "arc", mode: "pie" },
+  donut: { type: "arc", mode: "donut" },
+  gauge: { type: "arc", mode: "gauge" },
+  radialbar: { type: "arc", mode: "radial-bar" }
+};
+var Chart = class {
+  /**
+   * @param {HTMLElement|string} container
+   * @param {Object} config
+   */
+  constructor(container, config) {
+    this.container = typeof container === "string" ? document.querySelector(container) : container;
+    if (!this.container) throw new Error("LombokCharts: container not found");
+    this.config = config || {};
+    this.emitter = new Emitter();
+    this._destroyed = false;
+    this._animT = 1;
+    this._xWindow = null;
+    this._hidden = /* @__PURE__ */ new Set();
+    this._hits = [];
+    this._crosshairX = null;
+    this._init();
+  }
+  on(type, fn) {
+    return this.emitter.on(type, fn);
+  }
+  _init() {
+    const c = this.container;
+    c.style.position = c.style.position || "relative";
+    this._wrap = document.createElement("div");
+    this._wrap.style.position = "relative";
+    c.appendChild(this._wrap);
+    this.theme = this._resolveTheme(this.config.theme);
+    this.scene = new Scene(this.theme);
+    this.color = categoricalScale(this.theme.palette);
+    const size = this._measure();
+    const RendererCls = this.config.renderer === "svg" ? SvgRenderer : CanvasRenderer;
+    this.renderer = new RendererCls(this._wrap, size).mount();
+    const el = this.renderer.canvas || this.renderer.svg;
+    el.setAttribute("role", "img");
+    el.setAttribute("aria-label", this.config.a11y && this.config.a11y.label || this.config.title || "Chart");
+    this._sr = document.createElement("div");
+    Object.assign(this._sr.style, { position: "absolute", width: "1px", height: "1px", overflow: "hidden", clip: "rect(0 0 0 0)" });
+    this._wrap.appendChild(this._sr);
+    if (this.config.tooltip !== false) this.tooltip = new Tooltip(this._wrap, this.theme);
+    this._bindPointer();
+    if (this.config.zoom) {
+      this.zoom = new ZoomPan(el, () => ({ x: this._xWindow || this._fullX, full: this._fullX }), (win) => {
+        this._xWindow = win;
+        this._draw(this.renderer);
+        this._buildQuadtree();
+      });
+    }
+    if (typeof ResizeObserver !== "undefined") {
+      this._ro = new ResizeObserver(() => this.resize());
+      this._ro.observe(c);
+    }
+    this._streamSched = new StreamScheduler((batch) => this._liveFlush(batch));
+    this._streamHandle = null;
+    this.render();
+  }
+  _resolveTheme(t) {
+    if (!t || t === "light") return lightTheme;
+    if (t === "dark") return darkTheme;
+    if (typeof t === "object") return deepMerge(t.name === "dark" ? darkTheme : lightTheme, t);
+    return lightTheme;
+  }
+  _measure() {
+    const rect = this.container.getBoundingClientRect();
+    const w = this.config.width || rect.width || 640;
+    const legendH = this.config.legend !== false && this._needsLegend() ? 30 : 0;
+    const h = (this.config.height || rect.height || 360) - legendH;
+    return { width: Math.max(1, w), height: Math.max(1, h) };
+  }
+  _needsLegend() {
+    const m = this._resolveMark();
+    if (this.config.legend === true) return true;
+    return ["arc", "radar"].includes(m.type) || this.config.series && this.config.series.length > 1;
+  }
+  _resolveMark() {
+    let m = this.config.mark || "line";
+    if (typeof m === "string") {
+      const key2 = m.toLowerCase().replace(/[-_\s]/g, "");
+      return { ...ALIASES[key2] || { type: key2, mode: void 0 } };
+    }
+    const key = String(m.type).toLowerCase().replace(/[-_\s]/g, "");
+    const base = ALIASES[key] || { type: m.type };
+    return { ...base, ...m, type: base.type };
+  }
+  _resolveSeries() {
+    const cfg = this.config;
+    if (cfg.xs && cfg.ys) {
+      return [{ key: "raw", label: cfg.label || "Series", xs: cfg.xs, ys: cfg.ys, count: cfg.count != null ? cfg.count : cfg.ys.length, categories: null, color: cfg.color, visible: !this._hidden.has(0) }];
+    }
+    const data = cfg.data || [];
+    if (cfg.series && cfg.series.length) {
+      return cfg.series.map((sd, i) => {
+        const s2 = toSeries(data, cfg.x || "x", sd.y || sd.key);
+        return { key: sd.key || sd.y, label: sd.label || sd.key || sd.y, xs: s2.xs, ys: s2.ys, count: s2.count, categories: s2.categories, color: sd.color, visible: !this._hidden.has(i) };
+      });
+    }
+    const s = toSeries(data, cfg.x || "label", cfg.y || "value");
+    const out = { key: "value", label: cfg.label || "value", xs: s.xs, ys: s.ys, count: s.count, categories: s.categories, color: cfg.color, visible: !this._hidden.has(0) };
+    if (cfg.size) {
+      const sz = toSeries(data, cfg.x || "label", cfg.size);
+      out.sizes = sz.ys;
+    }
+    return [out];
+  }
+  _buildScale(hint, range) {
+    if (!hint) return linearScale([0, 1], range);
+    if (hint.type === "band") return bandScale(hint.values, range, { padding: 0.18 });
+    if (hint.type === "time") return timeScale(hint.domain, range);
+    if (hint.type === "log") return logScale(hint.domain, range);
+    return linearScale(hint.domain, range);
+  }
+  _layout() {
+    const t = this.theme;
+    const hasTitle = !!this.config.title;
+    const markDef = this._resolveMark();
+    const horizontal = markDef.type === "bar" && markDef.mode === "horizontal";
+    const def = { top: hasTitle ? 34 : 14, right: 16, bottom: 38, left: horizontal ? 90 : 56 };
+    const m = { ...def, ...this.config.margins || {} };
+    return this.scene.computePlotArea(this.renderer.width, this.renderer.height, m);
+  }
+  _draw(renderer) {
+    const t = this.theme;
+    renderer.beginFrame();
+    if (renderer.type === "canvas") {
+      renderer.rect(0, 0, renderer.width, renderer.height, { fill: t.colors.background });
+    }
+    const markDef = this._resolveMark();
+    const MarkCls = getMark(markDef.type);
+    if (!MarkCls) {
+      this._error(renderer, `Unknown mark: ${markDef.type}`);
+      return;
+    }
+    const mark = new MarkCls(markDef);
+    const series = this._resolveSeries();
+    const rawData = this.config.data || [];
+    if (!series.length || series[0].count === 0 && rawData.length === 0) {
+      this._empty(renderer);
+      renderer.endFrame();
+      return;
+    }
+    const area = this._layout();
+    const coord = mark.coordinate();
+    const hits = [];
+    const ctx = { r: renderer, series, opts: markDef, color: this.color, theme: t, area, hits, t: this._animT, rawData, width: renderer.width, height: renderer.height };
+    if (this.config.title) renderer.text(area.x, 20, this.config.title, { fill: t.colors.text, size: 15, weight: "bold", family: t.typography.family, baseline: "middle" });
+    let mainSx = null;
+    if (coord === "cartesian") {
+      const horizontal = markDef.type === "bar" && markDef.mode === "horizontal";
+      const domains = mark.domains(series, markDef, rawData);
+      let sx, sy;
+      if (horizontal) {
+        sx = linearScale(domains.y.domain, [area.x, area.x + area.width]);
+        sy = bandScale(domains.x.values, [area.y, area.y + area.height], { padding: 0.18 });
+      } else {
+        let xdom = domains.x;
+        if (this.config.xPad && xdom && xdom.type !== "band" && xdom.domain) {
+          const p = this.config.xPad;
+          xdom = Object.assign({}, xdom, { domain: [xdom.domain[0] - p, xdom.domain[1] + p] });
+        }
+        sx = this._buildScale(xdom, [area.x, area.x + area.width]);
+        sy = linearScale(domains.y.domain, [area.y + area.height, area.y]);
+      }
+      if (sx.kind !== "band") {
+        this._fullX = sx.domain.slice();
+        if (this._xWindow) sx = (domains.x.type === "time" ? timeScale : domains.x.type === "log" ? logScale : linearScale)(this._xWindow, [area.x, area.x + area.width]);
+      }
+      ctx.sx = sx;
+      ctx.sy = sy;
+      mainSx = sx;
+      if (this.config.axes !== false) this.scene.drawAxes(renderer, area, { x: sx, y: sy }, {
+        xLabel: this.config.xLabel,
+        yLabel: this.config.yLabel,
+        showGrid: this.config.grid !== false
+      });
+      mark.draw(ctx);
+      if (this._crosshairX != null) {
+        const cx = sx(this._crosshairX);
+        if (cx >= area.x - 1 && cx <= area.x + area.width + 1) renderer.line(cx, area.y, cx, area.y + area.height, { stroke: t.colors.text, width: 1, opacity: 0.5, dash: [4, 4] });
+      }
+    } else {
+      mark.draw(ctx);
+    }
+    renderer.endFrame();
+    if (renderer === this.renderer) {
+      this._hits = hits;
+      this._lastMark = mark;
+      this.lastStats = ctx.stats || { drawn: 0 };
+      this._sxMain = mainSx;
+      this._plotArea = area;
+      this._coordMain = coord;
+      this._updateA11y(series, mark);
+      if (this.config.legend !== false && this._needsLegend()) this._renderLegend(mark, series, ctx);
+    }
+  }
+  _error(renderer, msg) {
+    renderer.text(renderer.width / 2, renderer.height / 2, msg, { fill: this.theme.semantic.negative, size: 14, align: "center", baseline: "middle", family: this.theme.typography.family });
+    renderer.endFrame();
+  }
+  _empty(renderer) {
+    renderer.text(renderer.width / 2, renderer.height / 2, this.config.emptyText || "No data", { fill: this.theme.colors.muted, size: 14, align: "center", baseline: "middle", family: this.theme.typography.family });
+  }
+  _updateA11y(series, mark) {
+    const total = series.reduce((s, x) => s + x.count, 0);
+    const summary = `${this.config.title || "Chart"}: ${this._resolveMark().type} with ${series.length} series, ${total} data points.`;
+    this._sr.textContent = this.config.a11y && this.config.a11y.description || summary;
+    const el = this.renderer.canvas || this.renderer.svg;
+    el.setAttribute("aria-label", summary);
+  }
+  _renderLegend(mark, series, ctx) {
+    const items = mark.legendItems ? mark.legendItems(series, ctx) : null;
+    if (!items) {
+      if (this.legend) {
+        this.legend.destroy();
+        this.legend = null;
+      }
+      return;
+    }
+    if (!this.legend) this.legend = new Legend(this.container, this.theme, (i, visible) => {
+      if (visible) this._hidden.delete(i);
+      else this._hidden.add(i);
+      this.render(false);
+    });
+    this.legend.render(items.map((it, i) => ({ ...it, visible: !this._hidden.has(i) })));
+  }
+  _buildQuadtree() {
+    const area = this._layout();
+    this._qt = new Quadtree(area.x - 5, 0, area.x + area.width + 5, this.renderer.height);
+    for (const h of this._hits) this._qt.insert(h.x, h.y, this._hitsIndex(h));
+    this._qtHits = this._hits;
+  }
+  _hitsIndex(h) {
+    return this._hits.indexOf(h);
+  }
+  _bindPointer() {
+    const el = this.renderer.canvas || this.renderer.svg;
+    this._onMove = (e) => {
+      const rect = el.getBoundingClientRect();
+      const px = e.clientX - rect.left, py = e.clientY - rect.top;
+      if (this._qt && this.tooltip) {
+        const hit = this._qt.nearest(px, py, 40);
+        if (hit) {
+          const h = this._qtHits[hit.index];
+          const valTxt = typeof h.value === "number" ? formatNumber(h.value) : h.value;
+          this.tooltip.show(h.x, h.y, `<strong>${h.label != null ? h.label : ""}</strong><br>${valTxt}${h.extra ? "<br>" + h.extra : ""}`);
+          this.emitter.emit("hover", h);
+        } else this.tooltip.hide();
+      }
+      if (this.config.crosshair && this._coordMain === "cartesian" && this._sxMain) {
+        const dx = this._domainXAt(px);
+        if (dx !== this._crosshairX) {
+          this._crosshairX = dx;
+          this._draw(this.renderer);
+          this.emitter.emit("crosshair", { x: dx, px });
+        }
+      }
+    };
+    this._onLeave = () => {
+      if (this.tooltip) this.tooltip.hide();
+      if (this.config.crosshair && this._crosshairX != null) {
+        this._crosshairX = null;
+        this._draw(this.renderer);
+        this.emitter.emit("crosshair", null);
+      }
+    };
+    this._onClick = (e) => {
+      if (!this._qt) return;
+      const rect = el.getBoundingClientRect();
+      const hit = this._qt.nearest(e.clientX - rect.left, e.clientY - rect.top, 40);
+      if (hit) this.emitter.emit("select", this._qtHits[hit.index]);
+    };
+    el.addEventListener("mousemove", this._onMove);
+    el.addEventListener("mouseleave", this._onLeave);
+    el.addEventListener("click", this._onClick);
+  }
+  /** Map a pixel x to a domain x using the last-drawn x scale. @param {number} px */
+  _domainXAt(px) {
+    const sx = this._sxMain;
+    if (!sx) return null;
+    if (typeof sx.invert === "function") return sx.invert(px);
+    if (sx.kind === "band" && typeof sx.center === "function" && Array.isArray(sx.domain)) {
+      let best = null, bd = Infinity;
+      for (const cat of sx.domain) {
+        const d = Math.abs(sx.center(cat) - px);
+        if (d < bd) {
+          bd = d;
+          best = cat;
+        }
+      }
+      return best;
+    }
+    return null;
+  }
+  /**
+   * Draw (or clear) a vertical crosshair at a domain-x value without emitting an
+   * event — used to mirror a crosshair from another chart (multi-panel sync).
+   * @param {number|string|null} x
+   */
+  setCrosshair(x) {
+    if (this._destroyed) return this;
+    this._crosshairX = x;
+    this._draw(this.renderer);
+    return this;
+  }
+  /* ---------------------------- public API ---------------------------- */
+  /** Full render. @param {boolean} [animate] */
+  render(animate) {
+    if (this._destroyed) return this;
+    const total = this._resolveSeries().reduce((s, x) => s + x.count, 0);
+    const doAnim = animate !== false && this.config.animate !== false && total <= 5e4 && this._lastMark === void 0;
+    if (doAnim) {
+      const start = performance.now();
+      const dur = this.theme.motion.duration;
+      const tick = (now) => {
+        const p = Math.min(1, (now - start) / dur);
+        this._animT = this.theme.motion.easing(p);
+        this._draw(this.renderer);
+        if (p < 1 && !this._destroyed) raf(tick);
+        else {
+          this._animT = 1;
+          this._buildQuadtree();
+          this._fitLegend();
+        }
+      };
+      raf(tick);
+    } else {
+      this._animT = 1;
+      this._draw(this.renderer);
+      this._buildQuadtree();
+    }
+    this._scheduleFitLegend();
+    return this;
+  }
+  /** Replace data and re-render. @param {Array<any>|{xs:Float64Array,ys:Float64Array,count?:number}} newData */
+  update(newData) {
+    if (Array.isArray(newData)) this.config.data = newData;
+    else if (newData && newData.xs) {
+      this.config.xs = newData.xs;
+      this.config.ys = newData.ys;
+      this.config.count = newData.count;
+    }
+    this._lastMark = void 0;
+    this.render();
+    return this;
+  }
+  /**
+   * Append data point(s) for live charts. Throttled to one redraw per frame.
+   * @param {{x:number,y:number}|Array<{x:number,y:number}>} point
+   */
+  appendData(point) {
+    this._ensureLiveStore();
+    this._streamSched.push(point);
+    return this;
+  }
+  _ensureLiveStore() {
+    if (this._live) return;
+    const max = this.config.maxPoints || 0;
+    if (max > 0) {
+      this._live = { ring: new RingBuffer(max) };
+      const s = this._resolveSeries()[0];
+      if (s) for (let i = 0; i < s.count; i++) this._live.ring.push(s.xs[i], s.ys[i]);
+    } else {
+      const s = this._resolveSeries()[0];
+      const cap = Math.max(64, (s ? s.count : 0) * 2);
+      this._live = { xs: growFrom(s, "xs", cap), ys: growFrom(s, "ys", cap), count: s ? s.count : 0 };
+    }
+  }
+  _liveFlush(batch) {
+    if (this._destroyed) return;
+    const L = this._live;
+    if (L.ring) {
+      for (const p of batch) L.ring.push(p.x, p.y);
+      const a = L.ring.toArrays();
+      this.config.xs = a.xs;
+      this.config.ys = a.ys;
+      this.config.count = a.count;
+    } else {
+      for (const p of batch) {
+        if (L.count >= L.xs.length) {
+          L.xs = grow(L.xs);
+          L.ys = grow(L.ys);
+        }
+        L.xs[L.count] = p.x;
+        L.ys[L.count] = p.y;
+        L.count++;
+      }
+      this.config.xs = L.xs;
+      this.config.ys = L.ys;
+      this.config.count = L.count;
+    }
+    this._animT = 1;
+    this._draw(this.renderer);
+    this._buildQuadtree();
+    this.emitter.emit("append", batch);
+  }
+  /** Connect a streaming source. @param {any} source @param {(raw:any)=>{x:number,y:number}} [map] */
+  stream(source, map) {
+    this._ensureLiveStore();
+    this._streamHandle = connectStream(source, (p) => this.appendData(p), map);
+    return this;
+  }
+  stopStream() {
+    if (this._streamHandle) this._streamHandle.stop();
+    this._streamHandle = null;
+    return this;
+  }
+  /** @param {'light'|'dark'|object} theme */
+  setTheme(theme) {
+    this.theme = this._resolveTheme(theme);
+    this.color = categoricalScale(this.theme.palette);
+    this.scene.setTheme(this.theme);
+    if (this.tooltip) this.tooltip.setTheme(this.theme);
+    if (this.legend) this.legend.setTheme(this.theme);
+    this._lastMark = void 0;
+    this.render(false);
+    return this;
+  }
+  resize() {
+    if (this._destroyed) return this;
+    const size = this._measure();
+    this.renderer.resize(size.width, size.height);
+    this._draw(this.renderer);
+    this._buildQuadtree();
+    this._scheduleFitLegend();
+    return this;
+  }
+  /** Reconcile canvas height with the legend's real height so it never clips. */
+  _scheduleFitLegend() {
+    if (typeof requestAnimationFrame === "undefined") return;
+    requestAnimationFrame(() => this._fitLegend());
+  }
+  _fitLegend() {
+    if (this._destroyed || !this.legend || !this.legend.el) return;
+    const lh = this.legend.el.offsetHeight || 0;
+    if (!lh) return;
+    const rect = this.container.getBoundingClientRect();
+    const target = Math.max(48, (this.config.height || rect.height || 0) - lh);
+    if (target && Math.abs(this.renderer.height - target) > 2) {
+      this.renderer.resize(this.renderer.width, target);
+      this._draw(this.renderer);
+      this._buildQuadtree();
+    }
+  }
+  /** @returns {string} PNG data URL. */
+  toPNG() {
+    if (this.renderer.type === "canvas") {
+      this._draw(this.renderer);
+      return this.renderer.toDataURL();
+    }
+    const tmp = new CanvasRenderer(document.createElement("div"), { width: this.renderer.width, height: this.renderer.height });
+    tmp.mount();
+    const saveHits = this._hits;
+    this._draw(tmp);
+    this._hits = saveHits;
+    const url = tmp.toDataURL();
+    tmp.destroy();
+    return url;
+  }
+  /** @returns {string} serialized SVG markup. */
+  toSVG() {
+    const tmp = new SvgRenderer(document.createElement("div"), { width: this.renderer.width, height: this.renderer.height });
+    tmp.mount();
+    const saveHits = this._hits;
+    this._draw(tmp);
+    this._hits = saveHits;
+    const svg = tmp.toSVGString();
+    tmp.destroy();
+    return svg;
+  }
+  destroy() {
+    this._destroyed = true;
+    this._streamSched.cancel();
+    this.stopStream();
+    if (this._ro) this._ro.disconnect();
+    const el = this.renderer.canvas || this.renderer.svg;
+    el.removeEventListener("mousemove", this._onMove);
+    el.removeEventListener("mouseleave", this._onLeave);
+    el.removeEventListener("click", this._onClick);
+    if (this.zoom) this.zoom.destroy();
+    if (this.tooltip) this.tooltip.destroy();
+    if (this.legend) this.legend.destroy();
+    this.renderer.destroy();
+    if (this._wrap.parentNode) this._wrap.parentNode.removeChild(this._wrap);
+    this.emitter.clear();
+  }
+};
+function grow(arr) {
+  const n = new Float64Array(arr.length * 2);
+  n.set(arr);
+  return n;
+}
+function growFrom(series, key, cap) {
+  const n = new Float64Array(cap);
+  if (series && series[key]) n.set(series[key].subarray(0, series.count));
+  return n;
+}
+
+// src/marks/Mark.js
+var Mark = class {
+  constructor(options = {}) {
+    this.options = options;
+  }
+  /** @returns {'cartesian'|'polar'|'none'} */
+  coordinate() {
+    return "cartesian";
+  }
+  /**
+   * Domain hints so the Chart can build cartesian scales.
+   * @returns {{x:{type:string,values?:string[],domain?:number[]}, y:{domain:number[]}}|null}
+   */
+  domains() {
+    return null;
+  }
+  /** @param {import('../core/Chart.js').DrawContext} ctx */
+  draw() {
+    throw new Error("Mark.draw not implemented");
+  }
+  /** @returns {{label:string,color:string}[]|null} */
+  legendItems() {
+    return null;
+  }
+};
+
+// src/marks/core/BarMark.js
+var BarMark = class extends Mark {
+  domains(series, opts) {
+    const cats = series[0].categories || series[0].xs;
+    const mode = opts.mode || "vertical";
+    let ymin = 0, ymax = -Infinity;
+    if (mode === "stacked") {
+      const n = series[0].count;
+      for (let i = 0; i < n; i++) {
+        let pos = 0, neg = 0;
+        for (const s of series) {
+          const v = s.ys[i];
+          if (v >= 0) pos += v;
+          else neg += v;
+        }
+        if (pos > ymax) ymax = pos;
+        if (neg < ymin) ymin = neg;
+      }
+    } else if (mode === "waterfall") {
+      let acc = 0;
+      const s = series[0];
+      for (let i = 0; i < s.count; i++) {
+        acc += s.ys[i];
+        if (acc > ymax) ymax = acc;
+        if (acc < ymin) ymin = acc;
+      }
+    } else {
+      for (const s of series) for (let i = 0; i < s.count; i++) {
+        const v = s.ys[i];
+        if (v > ymax) ymax = v;
+        if (v < ymin) ymin = v;
+      }
+    }
+    if (ymax < 0) ymax = 0;
+    const values = (series[0].categories || []).map((c) => c);
+    return { x: { type: "band", values }, y: { domain: [ymin, ymax * 1.05] } };
+  }
+  draw(ctx) {
+    const { r, sx, sy, series, opts, area, theme } = ctx;
+    const mode = opts.mode || "vertical";
+    const cats = series[0].categories || [];
+    const band = sx.bandwidth;
+    const y0 = sy(0);
+    const radius = opts.radius != null ? opts.radius : theme.spacing.radius;
+    let drawn = 0;
+    if (mode === "stacked") {
+      const n = series[0].count;
+      for (let i = 0; i < n; i++) {
+        const bx = sx(cats[i]);
+        let pos = 0, neg = 0;
+        series.forEach((s, si) => {
+          if (s.visible === false) return;
+          const v = s.ys[i];
+          const base = v >= 0 ? pos : neg;
+          const top = base + v;
+          const yTop = sy(Math.max(base, top));
+          const yBot = sy(Math.min(base, top));
+          const color = s.color || ctx.color.byIndex(si);
+          r.rect(bx, yTop, band, yBot - yTop, { fill: color });
+          drawn++;
+          ctx.hits.push({ x: bx + band / 2, y: yTop, seriesIndex: si, index: i, label: s.label, value: v, color });
+          if (v >= 0) pos = top;
+          else neg = top;
+        });
+      }
+    } else if (mode === "waterfall") {
+      const s = series[0];
+      let acc = 0;
+      for (let i = 0; i < s.count; i++) {
+        const v = s.ys[i];
+        const start = acc;
+        const end = acc + v;
+        const bx = sx(cats[i]);
+        const yTop = sy(Math.max(start, end));
+        const yBot = sy(Math.min(start, end));
+        const color = v >= 0 ? theme.semantic.positive : theme.semantic.negative;
+        r.rect(bx, yTop, band, Math.max(1, yBot - yTop), { fill: color, radius });
+        drawn++;
+        ctx.hits.push({ x: bx + band / 2, y: yTop, seriesIndex: 0, index: i, label: cats[i], value: v, color });
+        acc = end;
+      }
+    } else if (mode === "horizontal") {
+      const n = series[0].count;
+      const groups = series.filter((s) => s.visible !== false);
+      const each = sy.bandwidth / Math.max(1, groups.length);
+      const x0 = sx(0);
+      series.forEach((s, si) => {
+        if (s.visible === false) return;
+        const gi = groups.indexOf(s);
+        const color = s.color || ctx.color.byIndex(si);
+        for (let i = 0; i < n; i++) {
+          const by = sy(cats[i]) + gi * each;
+          const v = s.ys[i];
+          const xv = sx(v);
+          const left = Math.min(x0, xv);
+          r.rect(left, by, Math.abs(xv - x0), each * 0.85, { fill: color, radius });
+          drawn++;
+          ctx.hits.push({ x: xv, y: by + each / 2, seriesIndex: si, index: i, label: s.label, value: v, color });
+        }
+      });
+    } else {
+      const groups = series.filter((s) => s.visible !== false);
+      const each = mode === "grouped" && groups.length > 1 ? band / groups.length : band;
+      const n = series[0].count;
+      series.forEach((s, si) => {
+        if (s.visible === false) return;
+        const color = s.color || ctx.color.byIndex(si);
+        const gi = groups.indexOf(s);
+        for (let i = 0; i < n; i++) {
+          const bx = sx(cats[i]) + (mode === "grouped" ? gi * each : 0);
+          const v = s.ys[i];
+          const yTop = sy(Math.max(0, v));
+          const h = Math.abs(sy(v) - y0);
+          r.rect(bx, yTop, each * (mode === "grouped" ? 0.9 : 1), Math.max(1, h), { fill: color, radius });
+          drawn++;
+          ctx.hits.push({ x: bx + each / 2, y: yTop, seriesIndex: si, index: i, label: s.label, value: v, color });
+        }
+      });
+    }
+    ctx.stats = { drawn };
+  }
+  legendItems(series, ctx) {
+    if (series.length <= 1 && (this.options.mode || "vertical") !== "grouped" && this.options.mode !== "stacked") return null;
+    return series.map((s, i) => ({ label: s.label || `Series ${i + 1}`, color: s.color || ctx.color.byIndex(i) }));
+  }
+};
+
+// src/data/decimate.js
+function lttb(xs, ys, n, threshold) {
+  if (threshold >= n || threshold <= 2) {
+    const ox = new Float64Array(n);
+    const oy = new Float64Array(n);
+    for (let i = 0; i < n; i++) {
+      ox[i] = xs[i];
+      oy[i] = ys[i];
+    }
+    return { xs: ox, ys: oy, count: n };
+  }
+  const sampledX = new Float64Array(threshold);
+  const sampledY = new Float64Array(threshold);
+  let sampledIndex = 0;
+  const every = (n - 2) / (threshold - 2);
+  let a = 0;
+  sampledX[sampledIndex] = xs[0];
+  sampledY[sampledIndex] = ys[0];
+  sampledIndex++;
+  for (let i = 0; i < threshold - 2; i++) {
+    let avgX = 0;
+    let avgY = 0;
+    let avgRangeStart = Math.floor((i + 1) * every) + 1;
+    let avgRangeEnd = Math.floor((i + 2) * every) + 1;
+    avgRangeEnd = avgRangeEnd < n ? avgRangeEnd : n;
+    const avgRangeLength = avgRangeEnd - avgRangeStart;
+    for (; avgRangeStart < avgRangeEnd; avgRangeStart++) {
+      avgX += xs[avgRangeStart];
+      avgY += ys[avgRangeStart];
+    }
+    avgX /= avgRangeLength || 1;
+    avgY /= avgRangeLength || 1;
+    let rangeOffs = Math.floor(i * every) + 1;
+    const rangeTo = Math.floor((i + 1) * every) + 1;
+    const pointAX = xs[a];
+    const pointAY = ys[a];
+    let maxArea = -1;
+    let nextA = rangeOffs;
+    for (; rangeOffs < rangeTo; rangeOffs++) {
+      const area = Math.abs(
+        (pointAX - avgX) * (ys[rangeOffs] - pointAY) - (pointAX - xs[rangeOffs]) * (avgY - pointAY)
+      ) * 0.5;
+      if (area > maxArea) {
+        maxArea = area;
+        nextA = rangeOffs;
+      }
+    }
+    sampledX[sampledIndex] = xs[nextA];
+    sampledY[sampledIndex] = ys[nextA];
+    sampledIndex++;
+    a = nextA;
+  }
+  sampledX[sampledIndex] = xs[n - 1];
+  sampledY[sampledIndex] = ys[n - 1];
+  sampledIndex++;
+  return { xs: sampledX, ys: sampledY, count: sampledIndex };
+}
+function minMaxDecimate(xs, ys, n, threshold) {
+  if (threshold >= n) {
+    const ox2 = new Float64Array(n);
+    const oy2 = new Float64Array(n);
+    for (let i = 0; i < n; i++) {
+      ox2[i] = xs[i];
+      oy2[i] = ys[i];
+    }
+    return { xs: ox2, ys: oy2, count: n };
+  }
+  const buckets = Math.floor(threshold / 2);
+  const size = n / buckets;
+  const ox = new Float64Array(buckets * 2);
+  const oy = new Float64Array(buckets * 2);
+  let k = 0;
+  for (let b = 0; b < buckets; b++) {
+    const s = Math.floor(b * size);
+    const e = Math.min(n, Math.floor((b + 1) * size));
+    let minI = s;
+    let maxI = s;
+    for (let i = s; i < e; i++) {
+      if (ys[i] < ys[minI]) minI = i;
+      if (ys[i] > ys[maxI]) maxI = i;
+    }
+    const first = Math.min(minI, maxI);
+    const second = Math.max(minI, maxI);
+    ox[k] = xs[first];
+    oy[k] = ys[first];
+    k++;
+    ox[k] = xs[second];
+    oy[k] = ys[second];
+    k++;
+  }
+  return { xs: ox, ys: oy, count: k };
+}
+
+// src/marks/core/LineMark.js
+var LineMark = class extends Mark {
+  domains(series, opts) {
+    let xmin = Infinity, xmax = -Infinity, ymin = Infinity, ymax = -Infinity;
+    let categorical = null;
+    for (const s of series) {
+      if (s.categories) categorical = s.categories;
+      const [a, b] = extentTyped(s.xs, s.count);
+      const [c, d] = extentTyped(s.ys, s.count);
+      if (a < xmin) xmin = a;
+      if (b > xmax) xmax = b;
+      if (c < ymin) ymin = c;
+      if (d > ymax) ymax = d;
+    }
+    const pad = (ymax - ymin) * 0.05 || 1;
+    return {
+      x: categorical ? { type: "band", values: categorical } : { type: opts.xScale || "linear", domain: [xmin, xmax] },
+      y: { domain: [opts.baseline === 0 ? Math.min(0, ymin) : ymin - pad, ymax + pad] }
+    };
+  }
+  draw(ctx) {
+    const { r, sx, sy, series, opts, area } = ctx;
+    const mode = opts.mode || "line";
+    let drawn = 0;
+    const xPix = sx.kind === "band" ? (v, i) => sx.center(series[0].categories[i]) : (v) => sx(v);
+    series.forEach((s, si) => {
+      if (s.visible === false) return;
+      let xs = s.xs, ys = s.ys, count = s.count;
+      const target = Math.max(2, Math.floor(area.width * 2));
+      let mapIdx = null;
+      if (opts.decimate !== false && count > target && sx.kind !== "band") {
+        const dec = lttb(xs, ys, count, target);
+        xs = dec.xs;
+        ys = dec.ys;
+        count = dec.count;
+      }
+      const color = s.color || ctx.color.byIndex(si);
+      drawn += count;
+      if (mode === "spline") {
+        const cmds = catmullRom(xs, ys, count, (v, i) => xPix(v, i), (v) => sy(v));
+        r.pathCmds(cmds, { stroke: color, width: opts.width || 2 });
+      } else if (mode === "step") {
+        const pts = [];
+        for (let i = 0; i < count; i++) {
+          const px = xPix(xs[i], i), py = sy(ys[i]);
+          if (i > 0) pts.push(px, sy(ys[i - 1]));
+          pts.push(px, py);
+        }
+        r.polyline(pts, { stroke: color, width: opts.width || 2 });
+      } else {
+        r.polylineTyped(xs, ys, count, (v) => sx.kind === "band" ? sx.center(series[si].categories[Math.round(v)]) : sx(v), sy, { stroke: color, width: opts.width || 2 });
+      }
+      if (count <= 2e3) {
+        for (let i = 0; i < count; i++) {
+          const px = xPix(xs[i], i), py = sy(ys[i]);
+          if (opts.points) r.circle(px, py, opts.pointRadius || 3, { fill: color });
+          ctx.hits.push({ x: px, y: py, seriesIndex: si, index: i, label: s.label, value: ys[i], color });
+        }
+      }
+    });
+    ctx.stats = { drawn };
+  }
+  legendItems(series, ctx) {
+    return series.map((s, i) => ({ label: s.label || `Series ${i + 1}`, color: s.color || ctx.color.byIndex(i) }));
+  }
+};
+function catmullRom(xs, ys, n, fx, fy) {
+  const cmds = [["M", fx(xs[0], 0), fy(ys[0])]];
+  for (let i = 0; i < n - 1; i++) {
+    const x0 = fx(xs[Math.max(0, i - 1)], Math.max(0, i - 1)), y0 = fy(ys[Math.max(0, i - 1)]);
+    const x1 = fx(xs[i], i), y1 = fy(ys[i]);
+    const x2 = fx(xs[i + 1], i + 1), y2 = fy(ys[i + 1]);
+    const x3 = fx(xs[Math.min(n - 1, i + 2)], Math.min(n - 1, i + 2)), y3 = fy(ys[Math.min(n - 1, i + 2)]);
+    cmds.push(["C", x1 + (x2 - x0) / 6, y1 + (y2 - y0) / 6, x2 - (x3 - x1) / 6, y2 - (y3 - y1) / 6, x2, y2]);
+  }
+  return cmds;
+}
+
+// src/marks/core/AreaMark.js
+var AreaMark = class extends Mark {
+  domains(series, opts) {
+    const mode = opts.mode || "area";
+    let xmin = Infinity, xmax = -Infinity, ymin = Infinity, ymax = -Infinity;
+    let categorical = series[0].categories;
+    if (mode === "stacked" || mode === "streamgraph") {
+      const n = series[0].count;
+      for (let i = 0; i < n; i++) {
+        let tot = 0;
+        for (const s of series) tot += s.ys[i];
+        if (tot > ymax) ymax = tot;
+      }
+      ymin = mode === "streamgraph" ? -ymax / 2 : 0;
+      const [a, b] = extentTyped(series[0].xs, series[0].count);
+      xmin = a;
+      xmax = b;
+    } else {
+      for (const s of series) {
+        const [a, b] = extentTyped(s.xs, s.count);
+        const [c, d] = extentTyped(s.ys, s.count);
+        if (a < xmin) xmin = a;
+        if (b > xmax) xmax = b;
+        if (c < ymin) ymin = c;
+        if (d > ymax) ymax = d;
+      }
+      ymin = Math.min(0, ymin);
+    }
+    return {
+      x: categorical ? { type: "band", values: categorical } : { type: opts.xScale || "linear", domain: [xmin, xmax] },
+      y: { domain: [ymin, ymax * 1.05] }
+    };
+  }
+  draw(ctx) {
+    const { r, sx, sy, series, opts, area } = ctx;
+    const mode = opts.mode || "area";
+    let drawn = 0;
+    const xPix = (v, i) => sx.kind === "band" ? sx.center(series[0].categories[i]) : sx(v);
+    if (mode === "stacked" || mode === "streamgraph") {
+      const n = series[0].count;
+      const baseArr = new Float64Array(n);
+      if (mode === "streamgraph") for (let i = 0; i < n; i++) {
+        let t = 0;
+        for (const s of series) t += s.ys[i];
+        baseArr[i] = -t / 2;
+      }
+      const visible = series.filter((s) => s.visible !== false);
+      visible.forEach((s, si) => {
+        const top = [];
+        const bottom = [];
+        for (let i = 0; i < n; i++) {
+          const px = xPix(s.xs[i], i);
+          const b = baseArr[i];
+          const t = b + s.ys[i];
+          top.push(px, sy(t));
+          bottom.unshift(px, sy(b));
+          baseArr[i] = t;
+        }
+        const color = s.color || ctx.color.byIndex(series.indexOf(s));
+        r.polyline(top.concat(bottom), { fill: color, opacity: 0.85, closed: true });
+        drawn += n;
+        for (let i = 0; i < n; i++) ctx.hits.push({ x: top[i * 2], y: top[i * 2 + 1], seriesIndex: series.indexOf(s), index: i, label: s.label, value: s.ys[i], color });
+      });
+    } else {
+      const y0 = sy(0);
+      series.forEach((s, si) => {
+        if (s.visible === false) return;
+        let xs = s.xs, ys = s.ys, count = s.count;
+        const target = Math.max(2, Math.floor(area.width * 2));
+        if (opts.decimate !== false && count > target && sx.kind !== "band") {
+          const d = lttb(xs, ys, count, target);
+          xs = d.xs;
+          ys = d.ys;
+          count = d.count;
+        }
+        const color = s.color || ctx.color.byIndex(si);
+        r.polylineTyped(xs, ys, count, (v) => sx.kind === "band" ? sx.center(series[si].categories[Math.round(v)]) : sx(v), sy, { stroke: color, width: opts.width || 2, fill: hexA(color, 0.25), fillTo: y0 });
+        drawn += count;
+        if (count <= 2e3) for (let i = 0; i < count; i++) ctx.hits.push({ x: xPix(xs[i], i), y: sy(ys[i]), seriesIndex: si, index: i, label: s.label, value: ys[i], color });
+      });
+    }
+    ctx.stats = { drawn };
+  }
+  legendItems(series, ctx) {
+    if (series.length <= 1) return null;
+    return series.map((s, i) => ({ label: s.label || `Series ${i + 1}`, color: s.color || ctx.color.byIndex(i) }));
+  }
+};
+function hexA(hex, a) {
+  const h = hex.replace("#", "");
+  const f = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const n = parseInt(f, 16);
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`;
+}
+
+// src/scales/sqrt.js
+function sqrtScale(domain, range) {
+  let [d0, d1] = domain;
+  const [r0, r1] = range;
+  if (d0 === d1) d1 = d0 + 1;
+  const s0 = Math.sqrt(Math.max(0, d0));
+  const s1 = Math.sqrt(Math.max(0, d1));
+  const m = (r1 - r0) / (s1 - s0 || 1);
+  const scale = (v) => r0 + (Math.sqrt(Math.max(0, v)) - s0) * m;
+  scale.invert = (px) => {
+    const s = s0 + (px - r0) / m;
+    return s * s;
+  };
+  scale.domain = [d0, d1];
+  scale.range = [r0, r1];
+  scale.kind = "sqrt";
+  scale.ticks = (n = 4) => {
+    const out = [];
+    for (let i = 0; i <= n; i++) out.push(d0 + (d1 - d0) * (i / n));
+    return out;
+  };
+  return scale;
+}
+
+// src/marks/core/PointMark.js
+var PointMark = class extends Mark {
+  domains(series, opts) {
+    let xmin = Infinity, xmax = -Infinity, ymin = Infinity, ymax = -Infinity;
+    for (const s of series) {
+      const [a, b] = extentTyped(s.xs, s.count);
+      const [c, d] = extentTyped(s.ys, s.count);
+      if (a < xmin) xmin = a;
+      if (b > xmax) xmax = b;
+      if (c < ymin) ymin = c;
+      if (d > ymax) ymax = d;
+    }
+    const px = (xmax - xmin) * 0.05 || 1;
+    const py = (ymax - ymin) * 0.05 || 1;
+    return { x: { type: opts.xScale || "linear", domain: [xmin - px, xmax + px] }, y: { domain: [ymin - py, ymax + py] } };
+  }
+  draw(ctx) {
+    const { r, sx, sy, series, opts } = ctx;
+    const mode = opts.mode || "scatter";
+    let drawn = 0;
+    series.forEach((s, si) => {
+      if (s.visible === false) return;
+      const color = s.color || ctx.color.byIndex(si);
+      if (mode === "bubble" && s.sizes) {
+        const [smin, smax] = extentTyped(s.sizes, s.count);
+        const rscale = sqrtScale([smin, smax], [opts.minRadius || 4, opts.maxRadius || 28]);
+        for (let i = 0; i < s.count; i++) {
+          const px = sx(s.xs[i]), py = sy(s.ys[i]);
+          r.circle(px, py, rscale(s.sizes[i]), { fill: color, opacity: 0.6, stroke: color });
+          ctx.hits.push({ x: px, y: py, seriesIndex: si, index: i, label: s.label, value: s.ys[i], color });
+        }
+        drawn += s.count;
+      } else {
+        const rad = opts.pointRadius || 3;
+        r.pointsTyped(s.xs, s.ys, s.count, sx, sy, rad, { fill: color, opacity: s.count > 5e3 ? 0.5 : 0.8 });
+        drawn += s.count;
+        if (s.count <= 4e3) for (let i = 0; i < s.count; i++) ctx.hits.push({ x: sx(s.xs[i]), y: sy(s.ys[i]), seriesIndex: si, index: i, label: s.label, value: s.ys[i], color });
+      }
+    });
+    ctx.stats = { drawn };
+  }
+  legendItems(series, ctx) {
+    if (series.length <= 1) return null;
+    return series.map((s, i) => ({ label: s.label || `Series ${i + 1}`, color: s.color || ctx.color.byIndex(i) }));
+  }
+};
+
+// src/scales/radial.js
+function radialScale(domain, angleRange = [-Math.PI / 2, Math.PI * 1.5]) {
+  let [d0, d1] = domain;
+  const [a0, a1] = angleRange;
+  if (d0 === d1) d1 = d0 + 1;
+  const m = (a1 - a0) / (d1 - d0);
+  const scale = (v) => a0 + (v - d0) * m;
+  scale.invert = (a) => d0 + (a - a0) / m;
+  scale.domain = [d0, d1];
+  scale.range = angleRange;
+  scale.kind = "radial";
+  scale.ticks = (n = 5) => {
+    const out = [];
+    for (let i = 0; i <= n; i++) out.push(d0 + (d1 - d0) * (i / n));
+    return out;
+  };
+  return scale;
+}
+function polarToCartesian(cx, cy, r, angle) {
+  return { x: cx + r * Math.cos(angle), y: cy + r * Math.sin(angle) };
+}
+
+// src/marks/core/ArcMark.js
+var ArcMark = class extends Mark {
+  coordinate() {
+    return "none";
+  }
+  draw(ctx) {
+    const { r, area, opts, theme } = ctx;
+    const mode = opts.mode || "pie";
+    const cx = area.x + area.width / 2;
+    const cy = area.y + area.height / 2;
+    const maxR = Math.min(area.width, area.height) / 2 - 8;
+    const s = ctx.series[0];
+    const vals = [];
+    for (let i = 0; i < s.count; i++) vals.push(s.ys[i]);
+    const labels = s.categories || vals.map((_, i) => String(i));
+    let drawn = 0;
+    if (mode === "gauge") {
+      const value = opts.value != null ? opts.value : vals[0];
+      const min = opts.min != null ? opts.min : 0;
+      const max = opts.max != null ? opts.max : 100;
+      const a0 = Math.PI * 0.75, a1 = Math.PI * 2.25;
+      const t2 = Math.max(0, Math.min(1, (value - min) / (max - min)));
+      const rIn2 = maxR * 0.62;
+      r.arcSlice(cx, cy, rIn2, maxR, a0, a1, { fill: theme.colors.grid });
+      r.arcSlice(cx, cy, rIn2, maxR, a0, a0 + (a1 - a0) * t2, { fill: s.color || ctx.color.byIndex(0) });
+      r.text(cx, cy, String(value), { fill: theme.colors.text, size: maxR * 0.4, align: "center", baseline: "middle", family: theme.typography.family, weight: "bold" });
+      ctx.hits.push({ x: cx, y: cy, seriesIndex: 0, index: 0, label: "value", value, color: s.color || ctx.color.byIndex(0) });
+      ctx.stats = { drawn: 2 };
+      return;
+    }
+    if (mode === "radial-bar") {
+      const maxV = Math.max(...vals);
+      const ring = maxR * 0.75 / vals.length;
+      vals.forEach((v, i) => {
+        const rr = maxR - i * ring;
+        const color = ctx.color.byIndex(i);
+        r.arcSlice(cx, cy, rr - ring * 0.8, rr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * v / maxV, { fill: color });
+        r.arcSlice(cx, cy, rr - ring * 0.8, rr, -Math.PI / 2, Math.PI * 1.5, { stroke: theme.colors.grid, width: 1 });
+        const p = polarToCartesian(cx, cy, rr - ring * 0.4, -Math.PI / 2 + Math.PI * 2 * v / maxV);
+        ctx.hits.push({ x: p.x, y: p.y, seriesIndex: 0, index: i, label: labels[i], value: v, color });
+        drawn++;
+      });
+      ctx.stats = { drawn };
+      return;
+    }
+    const total = sum(vals) || 1;
+    const rIn = mode === "donut" ? maxR * (opts.innerRatio || 0.55) : 0;
+    let angle = -Math.PI / 2;
+    const t = ctx.t != null ? ctx.t : 1;
+    vals.forEach((v, i) => {
+      const sweep = v / total * Math.PI * 2 * t;
+      const color = s.color && Array.isArray(s.color) ? s.color[i] : ctx.color.byIndex(i);
+      r.arcSlice(cx, cy, rIn, maxR, angle, angle + sweep, { fill: color, stroke: theme.colors.background, width: 2 });
+      const mid = angle + sweep / 2;
+      const lp = polarToCartesian(cx, cy, (rIn + maxR) / 2, mid);
+      if (sweep > 0.35) r.text(lp.x, lp.y, Math.round(v / total * 100) + "%", { fill: contrastColor(color), size: theme.typography.labelSize, align: "center", baseline: "middle", family: theme.typography.family, weight: "bold" });
+      ctx.hits.push({ x: lp.x, y: lp.y, seriesIndex: 0, index: i, label: labels[i], value: v, color });
+      angle += sweep;
+      drawn++;
+    });
+    if (mode === "donut" && opts.centerLabel) {
+      r.text(cx, cy, opts.centerLabel, { fill: theme.colors.text, size: 18, align: "center", baseline: "middle", family: theme.typography.family, weight: "bold" });
+    }
+    ctx.stats = { drawn };
+  }
+  legendItems(series, ctx) {
+    const s = series[0];
+    const labels = s.categories || [];
+    return labels.map((l, i) => ({ label: l, color: ctx.color.byIndex(i) }));
+  }
+};
+function contrastColor(c) {
+  if (typeof c !== "string" || c[0] !== "#") return "#fff";
+  let h = c.slice(1);
+  if (h.length === 3) h = h.split("").map((x) => x + x).join("");
+  const n = parseInt(h, 16);
+  const r = n >> 16 & 255, g = n >> 8 & 255, b = n & 255;
+  const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+  return lum > 0.6 ? "#111" : "#fff";
+}
+
+// src/marks/extended/RadarMark.js
+var RadarMark = class extends Mark {
+  coordinate() {
+    return "none";
+  }
+  draw(ctx) {
+    const { r, area, series, theme, opts } = ctx;
+    const cx = area.x + area.width / 2, cy = area.y + area.height / 2;
+    const maxR = Math.min(area.width, area.height) / 2 - 20;
+    const axes = series[0].categories || series[0].ys.map((_, i) => "A" + i);
+    const n = axes.length;
+    let max = -Infinity;
+    for (const s of series) {
+      const [, b] = extentTyped(s.ys, s.count);
+      if (b > max) max = b;
+    }
+    max = opts.max || max || 1;
+    const ang = (i) => -Math.PI / 2 + i / n * Math.PI * 2;
+    const rings = opts.rings || 4;
+    for (let g = 1; g <= rings; g++) {
+      const rr = maxR * g / rings;
+      const pts = [];
+      for (let i = 0; i <= n; i++) {
+        const p = polarToCartesian(cx, cy, rr, ang(i % n));
+        pts.push(p.x, p.y);
+      }
+      r.polyline(pts, { stroke: theme.colors.grid, width: 1 });
+    }
+    for (let i = 0; i < n; i++) {
+      const p = polarToCartesian(cx, cy, maxR, ang(i));
+      r.line(cx, cy, p.x, p.y, { stroke: theme.colors.grid, width: 1 });
+      const lp = polarToCartesian(cx, cy, maxR + 12, ang(i));
+      r.text(lp.x, lp.y, axes[i], { fill: theme.colors.muted, size: theme.typography.axisSize, align: "center", baseline: "middle", family: theme.typography.family });
+    }
+    series.forEach((s, si) => {
+      if (s.visible === false) return;
+      const color = s.color || ctx.color.byIndex(si);
+      const pts = [];
+      for (let i = 0; i < n; i++) {
+        const rr = s.ys[i] / max * maxR;
+        const p = polarToCartesian(cx, cy, rr, ang(i));
+        pts.push(p.x, p.y);
+        ctx.hits.push({ x: p.x, y: p.y, seriesIndex: si, index: i, label: axes[i], value: s.ys[i], color });
+      }
+      r.polyline(pts, { fill: hexA2(color, 0.18), stroke: color, width: 2, closed: true });
+    });
+    ctx.stats = { drawn: series.length };
+  }
+  legendItems(series, ctx) {
+    return series.length > 1 ? series.map((s, i) => ({ label: s.label || "Series " + (i + 1), color: s.color || ctx.color.byIndex(i) })) : null;
+  }
+};
+function hexA2(hex, a) {
+  const h = hex.replace("#", "");
+  const f = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const n = parseInt(f, 16);
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`;
+}
+
+// src/marks/extended/HeatmapMark.js
+var HeatmapMark = class extends Mark {
+  coordinate() {
+    return "none";
+  }
+  draw(ctx) {
+    const { r, area, theme, opts } = ctx;
+    const data = ctx.rawData || [];
+    const xk = opts.x || "x", yk = opts.y || "y", vk = opts.value || "value";
+    const cols = [...new Set(data.map((d) => String(d[xk])))];
+    const rows = [...new Set(data.map((d) => String(d[yk])))];
+    let vmin = Infinity, vmax = -Infinity;
+    for (const d of data) {
+      const v = +d[vk];
+      if (v < vmin) vmin = v;
+      if (v > vmax) vmax = v;
+    }
+    const pad = { l: 70, b: 28 };
+    const gx = bandScale(cols, [area.x + pad.l, area.x + area.width], { padding: 0.04 });
+    const gy = bandScale(rows, [area.y, area.y + area.height - pad.b], { padding: 0.04 });
+    const cscale = sequentialScale(opts.colors || theme.sequential, [vmin, vmax]);
+    for (const d of data) {
+      const x = gx(String(d[xk])), y = gy(String(d[yk]));
+      const v = +d[vk];
+      r.rect(x, y, gx.bandwidth, gy.bandwidth, { fill: cscale(v), radius: 2 });
+      ctx.hits.push({ x: x + gx.bandwidth / 2, y: y + gy.bandwidth / 2, seriesIndex: 0, index: 0, label: `${d[yk]} \xB7 ${d[xk]}`, value: v, color: cscale(v) });
+    }
+    cols.forEach((c) => r.text(gx.center(c), area.y + area.height - pad.b + 6, c, { fill: theme.colors.muted, size: theme.typography.axisSize, align: "center", baseline: "top", family: theme.typography.family }));
+    rows.forEach((rw) => r.text(area.x + pad.l - 6, gy.center(rw), rw, { fill: theme.colors.muted, size: theme.typography.axisSize, align: "end", baseline: "middle", family: theme.typography.family }));
+    ctx.stats = { drawn: data.length };
+  }
+};
+
+// src/marks/extended/BoxPlotMark.js
+var BoxPlotMark = class extends Mark {
+  _groups(ctx) {
+    if (this.options.groups) return this.options.groups.map((g) => ({ label: g.label, values: [...g.values].sort((a, b) => a - b) }));
+    const data = ctx.rawData || [];
+    const gk = this.options.group || "group", vk = this.options.value || "value";
+    const map = /* @__PURE__ */ new Map();
+    for (const d of data) {
+      const k = String(d[gk]);
+      if (!map.has(k)) map.set(k, []);
+      map.get(k).push(+d[vk]);
+    }
+    return [...map.entries()].map(([label, values]) => ({ label, values: values.sort((a, b) => a - b) }));
+  }
+  domains(series, opts, rawData) {
+    const groups = this._groups({ rawData });
+    let min = Infinity, max = -Infinity;
+    for (const g of groups) {
+      min = Math.min(min, g.values[0]);
+      max = Math.max(max, g.values[g.values.length - 1]);
+    }
+    const pad = (max - min) * 0.08 || 1;
+    return { x: { type: "band", values: groups.map((g) => g.label) }, y: { domain: [min - pad, max + pad] } };
+  }
+  draw(ctx) {
+    const { r, sx, sy, theme } = ctx;
+    const groups = this._groups(ctx);
+    const bw = Math.min(sx.bandwidth, 60);
+    groups.forEach((g, i) => {
+      const v = g.values;
+      const q1 = quantileSorted(v, 0.25), q2 = quantileSorted(v, 0.5), q3 = quantileSorted(v, 0.75);
+      const iqr = q3 - q1;
+      const lo = Math.max(v[0], q1 - 1.5 * iqr), hi = Math.min(v[v.length - 1], q3 + 1.5 * iqr);
+      const cx = sx.center(g.label);
+      const color = this.options.color || ctx.color.byIndex(i);
+      r.line(cx, sy(lo), cx, sy(hi), { stroke: color, width: 1 });
+      r.line(cx - bw / 4, sy(hi), cx + bw / 4, sy(hi), { stroke: color, width: 1 });
+      r.line(cx - bw / 4, sy(lo), cx + bw / 4, sy(lo), { stroke: color, width: 1 });
+      r.rect(cx - bw / 2, sy(q3), bw, sy(q1) - sy(q3), { fill: hexA3(color, 0.3), stroke: color, width: 1.5, radius: 2 });
+      r.line(cx - bw / 2, sy(q2), cx + bw / 2, sy(q2), { stroke: color, width: 2 });
+      for (const pt of v) if (pt < lo || pt > hi) r.circle(cx, sy(pt), 2, { fill: theme.semantic.negative });
+      ctx.hits.push({ x: cx, y: sy(q2), seriesIndex: 0, index: i, label: g.label, value: q2, color, extra: `Q1 ${q1.toFixed(1)} \xB7 Q3 ${q3.toFixed(1)}` });
+    });
+    ctx.stats = { drawn: groups.length };
+  }
+};
+function hexA3(hex, a) {
+  const h = hex.replace("#", "");
+  const f = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const n = parseInt(f, 16);
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`;
+}
+
+// src/marks/extended/HistogramMark.js
+var HistogramMark = class extends Mark {
+  _bins(ctx) {
+    const data = ctx.rawData || [];
+    const vk = (this.options || {}).value || "value";
+    const vals = data.map((d) => +d[vk]).filter((v) => !Number.isNaN(v));
+    const min = Math.min(...vals), max = Math.max(...vals);
+    const k = this.options.bins || Math.ceil(Math.sqrt(vals.length)) || 1;
+    const w = (max - min) / k || 1;
+    const counts = new Array(k).fill(0);
+    for (const v of vals) {
+      let i = Math.floor((v - min) / w);
+      if (i >= k) i = k - 1;
+      if (i < 0) i = 0;
+      counts[i]++;
+    }
+    return { min, max, w, k, counts };
+  }
+  domains(series, opts, rawData) {
+    const ctx = { rawData };
+    const b = this._bins(ctx);
+    return { x: { type: "linear", domain: [b.min, b.max] }, y: { domain: [0, Math.max(...b.counts) * 1.05] } };
+  }
+  draw(ctx) {
+    const { r, sx, sy, theme } = ctx;
+    const b = this._bins(ctx);
+    const color = this.options.color || ctx.color.byIndex(0);
+    const y0 = sy(0);
+    for (let i = 0; i < b.k; i++) {
+      const x0 = sx(b.min + i * b.w), x1 = sx(b.min + (i + 1) * b.w);
+      const h = y0 - sy(b.counts[i]);
+      r.rect(x0 + 1, sy(b.counts[i]), Math.max(1, x1 - x0 - 2), Math.max(0, h), { fill: color, radius: 2 });
+      ctx.hits.push({ x: (x0 + x1) / 2, y: sy(b.counts[i]), seriesIndex: 0, index: i, label: `${(b.min + i * b.w).toFixed(1)}\u2013${(b.min + (i + 1) * b.w).toFixed(1)}`, value: b.counts[i], color });
+    }
+    ctx.stats = { drawn: b.k };
+  }
+};
+
+// src/marks/extended/CandlestickMark.js
+var CandlestickMark = class extends Mark {
+  _rows(ctx) {
+    const data = ctx.rawData || [];
+    const o = this.options || {};
+    return data.map((d, i) => ({
+      x: typeof d[o.x || "x"] === "number" ? d[o.x || "x"] : d.t != null ? +d.t : i,
+      open: +d[o.open || "open"],
+      high: +d[o.high || "high"],
+      low: +d[o.low || "low"],
+      close: +d[o.close || "close"]
+    }));
+  }
+  domains(series, opts, rawData) {
+    const rows = this._rows({ rawData });
+    let lo = Infinity, hi = -Infinity, xmin = Infinity, xmax = -Infinity;
+    for (const r of rows) {
+      lo = Math.min(lo, r.low);
+      hi = Math.max(hi, r.high);
+      xmin = Math.min(xmin, r.x);
+      xmax = Math.max(xmax, r.x);
+    }
+    const pad = (hi - lo) * 0.05 || 1;
+    return { x: { type: opts.xScale || "linear", domain: [xmin, xmax] }, y: { domain: [lo - pad, hi + pad] } };
+  }
+  draw(ctx) {
+    const { r, sx, sy, theme } = ctx;
+    const rows = this._rows(ctx);
+    const up = theme.semantic.positive, down = theme.semantic.negative;
+    const step = rows.length > 1 ? Math.abs(sx(rows[1].x) - sx(rows[0].x)) : 8;
+    const cw = Math.max(1, Math.min(step * 0.7, 16));
+    for (let i = 0; i < rows.length; i++) {
+      const d = rows[i];
+      const cx = sx(d.x);
+      const color = d.close >= d.open ? up : down;
+      r.line(cx, sy(d.high), cx, sy(d.low), { stroke: color, width: 1 });
+      const yo = sy(d.open), yc = sy(d.close);
+      r.rect(cx - cw / 2, Math.min(yo, yc), cw, Math.max(1, Math.abs(yc - yo)), { fill: color });
+      ctx.hits.push({ x: cx, y: Math.min(yo, yc), seriesIndex: 0, index: i, label: "OHLC", value: d.close, color, extra: `O ${d.open} H ${d.high} L ${d.low} C ${d.close}` });
+    }
+    ctx.stats = { drawn: rows.length };
+  }
+};
+
+// src/marks/extended/FunnelMark.js
+var FunnelMark = class extends Mark {
+  coordinate() {
+    return "none";
+  }
+  draw(ctx) {
+    const { r, area, theme } = ctx;
+    const data = ctx.rawData || [];
+    const vk = (this.options || {}).value || "value", lk = (this.options || {}).label || "label";
+    const max = Math.max(...data.map((d) => +d[vk])) || 1;
+    const h = area.height / data.length;
+    const cx = area.x + area.width / 2;
+    let prevHalf = (data.length ? +data[0][vk] / max : 1) * (area.width / 2);
+    data.forEach((d, i) => {
+      const w0 = +d[vk] / max * (area.width / 2);
+      const next = i < data.length - 1 ? +data[i + 1][vk] / max * (area.width / 2) : w0 * 0.85;
+      const y0 = area.y + i * h, y1 = y0 + h * 0.92;
+      const color = ctx.color.byIndex(i);
+      r.pathCmds([["M", cx - w0, y0], ["L", cx + w0, y0], ["L", cx + next, y1], ["L", cx - next, y1], ["Z"]], { fill: color });
+      r.text(cx, (y0 + y1) / 2, `${d[lk]}: ${d[vk]}`, { fill: "#fff", size: theme.typography.labelSize, align: "center", baseline: "middle", family: theme.typography.family });
+      ctx.hits.push({ x: cx, y: (y0 + y1) / 2, seriesIndex: 0, index: i, label: d[lk], value: +d[vk], color });
+    });
+    ctx.stats = { drawn: data.length };
+  }
+};
+
+// src/marks/extended/TreemapMark.js
+var TreemapMark = class extends Mark {
+  coordinate() {
+    return "none";
+  }
+  draw(ctx) {
+    const { r, area, theme } = ctx;
+    const data = (ctx.rawData || []).slice();
+    const vk = (this.options || {}).value || "value", lk = (this.options || {}).label || "label";
+    const total = data.reduce((s, d) => s + +d[vk], 0) || 1;
+    const items = data.map((d, i) => ({ label: d[lk], value: +d[vk], i })).sort((a, b) => b.value - a.value);
+    const rects = squarify(items, total, { x: area.x, y: area.y, w: area.width, h: area.height });
+    rects.forEach((rc) => {
+      const color = ctx.color.byIndex(rc.i);
+      r.rect(rc.x, rc.y, rc.w, rc.h, { fill: color, stroke: theme.colors.background, width: 1 });
+      if (rc.w > 40 && rc.h > 18) r.text(rc.x + 4, rc.y + 13, `${rc.label}`, { fill: "#fff", size: theme.typography.labelSize, family: theme.typography.family });
+      ctx.hits.push({ x: rc.x + rc.w / 2, y: rc.y + rc.h / 2, seriesIndex: 0, index: rc.i, label: rc.label, value: rc.value, color });
+    });
+    ctx.stats = { drawn: rects.length };
+  }
+};
+function squarify(items, total, rect) {
+  const out = [];
+  let { x, y, w, h } = rect;
+  const scale = w * h / total;
+  let row = [];
+  let i = 0;
+  const worst = (r, len) => {
+    if (r.length === 0) return Infinity;
+    const s = r.reduce((a, b) => a + b.area, 0);
+    const max = Math.max(...r.map((b) => b.area)), min = Math.min(...r.map((b) => b.area));
+    return Math.max(len * len * max / (s * s), s * s / (len * len * min));
+  };
+  const layoutRow = (r, horizontal) => {
+    const s = r.reduce((a, b) => a + b.area, 0);
+    if (horizontal) {
+      const rh = s / w;
+      let cx = x;
+      for (const b of r) {
+        const bw = b.area / rh;
+        out.push({ x: cx, y, w: bw, h: rh, label: b.label, value: b.value, i: b.i });
+        cx += bw;
+      }
+      y += rh;
+      h -= rh;
+    } else {
+      const rw = s / h;
+      let cy = y;
+      for (const b of r) {
+        const bh = b.area / rw;
+        out.push({ x, y: cy, w: rw, h: bh, label: b.label, value: b.value, i: b.i });
+        cy += bh;
+      }
+      x += rw;
+      w -= rw;
+    }
+  };
+  const boxes = items.map((it) => ({ ...it, area: it.value * scale }));
+  while (i < boxes.length) {
+    const horizontal = w >= h;
+    const len = horizontal ? w : h;
+    const next = boxes[i];
+    if (row.length === 0 || worst([...row, next], len) <= worst(row, len)) {
+      row.push(next);
+      i++;
+    } else {
+      layoutRow(row, horizontal);
+      row = [];
+    }
+  }
+  if (row.length) layoutRow(row, w >= h);
+  return out;
+}
+
+// src/marks/extended/SankeyMark.js
+var SankeyMark = class extends Mark {
+  coordinate() {
+    return "none";
+  }
+  draw(ctx) {
+    const { r, area, theme } = ctx;
+    const o = this.options || {};
+    const nodes = (o.nodes || []).map((n, i) => ({ ...n, i, in: 0, out: 0, layer: 0 }));
+    const links = (o.links || []).map((l) => ({ ...l }));
+    const byId = new Map(nodes.map((n) => [n.id != null ? n.id : n.name, n]));
+    links.forEach((l) => {
+      const t = byId.get(l.target);
+      if (t) t.layer = Math.max(t.layer, (byId.get(l.source)?.layer ?? 0) + 1);
+    });
+    const maxLayer = Math.max(0, ...nodes.map((n) => n.layer));
+    nodes.forEach((n) => {
+      n.out = links.filter((l) => l.source === (n.id ?? n.name)).reduce((s, l) => s + l.value, 0);
+      n.in = links.filter((l) => l.target === (n.id ?? n.name)).reduce((s, l) => s + l.value, 0);
+      n.total = Math.max(n.in, n.out);
+    });
+    const colW = 16;
+    const layerX = (l) => area.x + (area.width - colW) * (maxLayer === 0 ? 0 : l / maxLayer);
+    const layers = [];
+    nodes.forEach((n) => {
+      (layers[n.layer] = layers[n.layer] || []).push(n);
+    });
+    const totalByLayer = layers.map((ns) => ns.reduce((s, n) => s + n.total, 0));
+    const maxTotal = Math.max(...totalByLayer, 1);
+    const scale = area.height * 0.9 / maxTotal;
+    layers.forEach((ns, li) => {
+      let y = area.y;
+      ns.forEach((n) => {
+        n.x = layerX(li);
+        n.y = y;
+        n.h = n.total * scale;
+        n.cursorOut = n.y;
+        n.cursorIn = n.y;
+        y += n.h + 12;
+      });
+    });
+    links.forEach((l) => {
+      const s = byId.get(l.source), t = byId.get(l.target);
+      if (!s || !t) return;
+      const sh = l.value * scale, th = l.value * scale;
+      const sy0 = s.cursorOut;
+      s.cursorOut += sh;
+      const ty0 = t.cursorIn;
+      t.cursorIn += th;
+      const x0 = s.x + colW, x1 = t.x;
+      const xm = (x0 + x1) / 2;
+      const color = ctx.color.byIndex(s.i);
+      r.pathCmds([
+        ["M", x0, sy0],
+        ["C", xm, sy0, xm, ty0, x1, ty0],
+        ["L", x1, ty0 + th],
+        ["C", xm, ty0 + th, xm, sy0 + sh, x0, sy0 + sh],
+        ["Z"]
+      ], { fill: hexA4(color, 0.35) });
+    });
+    nodes.forEach((n) => {
+      const color = ctx.color.byIndex(n.i);
+      r.rect(n.x, n.y, colW, Math.max(1, n.h), { fill: color });
+      r.text(n.x + (n.layer === maxLayer ? -4 : colW + 4), n.y + n.h / 2, n.name || String(n.id), { fill: theme.colors.text, size: theme.typography.labelSize, align: n.layer === maxLayer ? "end" : "start", baseline: "middle", family: theme.typography.family });
+      ctx.hits.push({ x: n.x + colW / 2, y: n.y + n.h / 2, seriesIndex: 0, index: n.i, label: n.name || n.id, value: n.total, color });
+    });
+    ctx.stats = { drawn: nodes.length + links.length };
+  }
+};
+function hexA4(hex, a) {
+  const h = hex.replace("#", "");
+  const f = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const n = parseInt(f, 16);
+  return `rgba(${n >> 16 & 255},${n >> 8 & 255},${n & 255},${a})`;
+}
+
+// src/lombok-charts.js
+registerMark("bar", BarMark);
+registerMark("line", LineMark);
+registerMark("area", AreaMark);
+registerMark("point", PointMark);
+registerMark("arc", ArcMark);
+registerMark("radar", RadarMark);
+registerMark("heatmap", HeatmapMark);
+registerMark("boxplot", BoxPlotMark);
+registerMark("histogram", HistogramMark);
+registerMark("candlestick", CandlestickMark);
+registerMark("funnel", FunnelMark);
+registerMark("treemap", TreemapMark);
+registerMark("sankey", SankeyMark);
+function chart(el, config) {
+  return new Chart(el, config);
+}
+var version = "0.1.0";
+var lombok_charts_default = { Chart, chart, registerMark, version };

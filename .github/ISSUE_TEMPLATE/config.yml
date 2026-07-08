@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/codinglombok/LombokCharts/tree/main/docs
+    about: API, theming, architecture, and porting guides.
+  - name: Question / discussion
+    url: https://github.com/codinglombok/LombokCharts/discussions
+    about: Ask usage questions or share what you built.

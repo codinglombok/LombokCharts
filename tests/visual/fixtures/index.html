@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en" data-style="modern-corporate-flat" data-theme="light">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LombokCharts — visual fixture (deterministic)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
+<style>
+  body { margin: 0; padding: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .cell { border: 1px solid var(--lc-border); border-radius: 10px; padding: 8px; background: var(--lc-surface); }
+  .cell h3 { margin: 0 0 6px; font-size: 12px; color: var(--lc-muted); font-weight: 600; }
+  .chart { height: 200px; }
+</style>
+</head>
+<body>
+<div class="grid" id="grid"></div>
+
+<script src="../../../templates/lombokcss-theme.js"></script>
+<script src="../../../dist/lombok-charts.umd.js"></script>
+<script>
+  // Apply style/theme from query params BEFORE building, for deterministic snapshots.
+  var q = new URLSearchParams(location.search);
+  var root = document.documentElement;
+  if (q.get('style')) root.setAttribute('data-style', q.get('style'));
+  root.setAttribute('data-theme', q.get('theme') === 'dark' ? 'dark' : 'light');
+
+  var C = LombokCharts;
+  var th = function () { return lombokTheme(); };
+  var grid = document.getElementById('grid');
+  function cell(title) {
+    var c = document.createElement('div'); c.className = 'cell';
+    var h = document.createElement('h3'); h.textContent = title; c.appendChild(h);
+    var d = document.createElement('div'); d.className = 'chart'; c.appendChild(d);
+    grid.appendChild(c); return d;
+  }
+  var base = { theme: th(), animate: false, tooltip: false };
+  function mk(title, cfg) { return C.chart(cell(title), Object.assign({}, base, cfg)); }
+
+  // Deterministic data (no Math.random)
+  var cat = [{label:'A',value:38},{label:'B',value:22},{label:'C',value:30},{label:'D',value:16},{label:'E',value:26}];
+  var xs = Float64Array.from(Array.from({length:24},function(_,i){return i;}));
+  var ys = Float64Array.from(Array.from({length:24},function(_,i){return Math.round(50+30*Math.sin(i/3)+i);}));
+  var ohlc = Array.from({length:20},function(_,i){var o=100+Math.round(8*Math.sin(i/2));var c=o+((i%3)-1)*4;var h=Math.max(o,c)+3;var l=Math.min(o,c)-3;return {x:i,open:o,high:h,low:l,close:c};});
+  var matrix=[]; for(var y=0;y<6;y++)for(var x=0;x<10;x++)matrix.push({x:x,y:y,value:((x*7+y*13)%17)});
+  var vals = Array.from({length:60},function(_,i){return 50+Math.round(20*Math.sin(i/5)+((i*7)%11));});
+  var flow = { nodes:[{id:'a',name:'A'},{id:'b',name:'B'},{id:'x',name:'X'},{id:'y',name:'Y'}],
+               links:[{source:'a',target:'x',value:12},{source:'a',target:'y',value:6},{source:'b',target:'x',value:5},{source:'b',target:'y',value:9}] };
+
+  mk('bar', { data: cat, mark: 'bar' });
+  mk('hbar', { data: cat, mark: 'hbar' });
+  mk('line', { xs: xs, ys: ys, count: 24, mark: 'line' });
+  mk('spline', { xs: xs, ys: ys, count: 24, mark: 'spline' });
+  mk('area', { xs: xs, ys: ys, count: 24, mark: 'area' });
+  mk('scatter', { data: cat.map(function(d,i){return {x:i,y:d.value,r:6};}), mark: 'point' });
+  mk('donut', { data: cat, mark: 'donut' });
+  mk('gauge', { data: [{value:68}], mark: { type:'gauge', min:0, max:100 } });
+  mk('radar', { data: [{axis:'Q',value:70},{axis:'W',value:40},{axis:'E',value:85},{axis:'R',value:55},{axis:'T',value:60}], mark: 'radar' });
+  mk('heatmap', { data: matrix, mark: 'heatmap' });
+  mk('histogram', { data: vals.map(function(v){return {value:v};}), mark: 'histogram' });
+  mk('candlestick', { data: ohlc, mark: 'candlestick', xPad: 1 });
+  mk('funnel', { data: [{label:'Lead',value:100},{label:'Qual',value:70},{label:'Prop',value:44},{label:'Won',value:22}], mark: 'funnel' });
+  mk('treemap', { data: cat, mark: 'treemap' });
+  mk('sankey', { data: [{}], mark: { type:'sankey', nodes: flow.nodes, links: flow.links } });
+
+  // Signal readiness for the test runner (animate:false -> drawn synchronously)
+  requestAnimationFrame(function(){ document.body.setAttribute('data-ready', '1'); });
+</script>
+</body>
+</html>

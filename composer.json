@@ -1,0 +1,15 @@
+{
+  "name": "codinglombok/lombok-charts",
+  "description": "Zero-dependency chart library: grammar-of-graphics pipeline, Canvas/SVG renderers, LTTB decimation, and real-time streaming. ~18 KB gzipped.",
+  "type": "library",
+  "keywords": ["chart", "charts", "visualization", "canvas", "svg", "realtime", "lttb", "zero-dependency", "lombok"],
+  "homepage": "https://github.com/codinglombok/LombokCharts",
+  "license": "Apache-2.0",
+  "authors": [
+    { "name": "codinglombok", "homepage": "https://github.com/codinglombok" }
+  ],
+  "support": {
+    "issues": "https://github.com/codinglombok/LombokCharts/issues",
+    "source": "https://github.com/codinglombok/LombokCharts"
+  }
+}

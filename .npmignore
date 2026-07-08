@@ -1,0 +1,8 @@
+examples/
+tests/
+docs/
+.github/
+*.config.js
+build.js
+.eslintrc.json
+jsconfig.json

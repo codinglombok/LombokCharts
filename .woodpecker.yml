@@ -1,0 +1,16 @@
+# Woodpecker CI for Codeberg (https://ci.codeberg.org). Mirrors the GitHub Actions CI.
+# Requires one-time onboarding: request access (Codeberg-e.V./requests), then enable the
+# repo at https://ci.codeberg.org/repos/add. Build target is linux/amd64.
+when:
+  - event: [push, pull_request]
+
+steps:
+  test-and-build:
+    image: node:22
+    commands:
+      - node --version
+      - npm ci || npm install
+      - npm run lint
+      - npm test
+      - npm run build
+      - git diff --exit-code -- dist || (echo "dist/ is stale — run 'npm run build' and commit" && exit 1)

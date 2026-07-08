@@ -1,0 +1,86 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    # Secrets mapped to env so steps can be gated on their presence (env is allowed in `if`).
+    env:
+      SF_SSH_KEY: ${{ secrets.SF_SSH_KEY }}
+      PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+      # ---- Everything below runs only when a release is actually cut ----
+      - uses: actions/checkout@v5
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: actions/setup-node@v5
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
+      - name: Install
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm ci || npm install
+      - name: Test & build
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm test && npm run build
+
+      # npm (provenance)
+      - name: Publish to npm
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      # Build the downloadable release archives (dist + src + docs + license)
+      - name: Package release archives
+        if: ${{ steps.release.outputs.release_created }}
+        run: npm run pack:release
+
+      # Attach archives to the GitHub Release (a CDN-free download mirror)
+      - name: Attach archives to GitHub Release
+        if: ${{ steps.release.outputs.release_created }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release upload "${{ steps.release.outputs.tag_name }}" \
+            .release/lombok-charts-*.zip .release/lombok-charts-*.tgz --clobber
+
+      # SourceForge File Release System (only if SF secrets are configured)
+      - name: Publish to SourceForge
+        if: ${{ steps.release.outputs.release_created && env.SF_SSH_KEY != '' }}
+        env:
+          SF_USER: ${{ secrets.SF_USER }}
+          SF_PROJECT: ${{ secrets.SF_PROJECT }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SF_SSH_KEY" > ~/.ssh/sf_key
+          chmod 600 ~/.ssh/sf_key
+          ver="${{ steps.release.outputs.tag_name }}"
+          rsync -e "ssh -i ~/.ssh/sf_key -o StrictHostKeyChecking=no" -av \
+            .release/lombok-charts-*.zip .release/lombok-charts-*.tgz \
+            "$SF_USER@frs.sourceforge.net:/home/frs/project/$SF_PROJECT/${ver}/"
+
+      # Force a Packagist update (belt-and-suspenders beyond the webhook)
+      - name: Ping Packagist
+        if: ${{ steps.release.outputs.release_created && env.PACKAGIST_TOKEN != '' }}
+        env:
+          PACKAGIST_USER: ${{ secrets.PACKAGIST_USER }}
+        run: |
+          curl -sf -XPOST -H 'content-type:application/json' \
+            "https://packagist.org/api/update-package?username=${PACKAGIST_USER}&apiToken=${PACKAGIST_TOKEN}" \
+            -d '{"repository":{"url":"https://github.com/codinglombok/LombokCharts"}}'

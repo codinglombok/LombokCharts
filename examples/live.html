@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" data-style="resonant-stark" data-theme="dark">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LombokCharts — Live / Real-time (styled with LombokCSS)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<style> .chartbox { height: 300px; } </style>
+</head>
+<body>
+<nav class="navbar">
+  <span class="navbar-brand">LombokCharts</span>
+  <span class="badge badge-info badge-pill">live</span>
+  <span class="text-muted text-sm">ring buffer · rAF-coalesced · 60fps target</span>
+  <button id="toggle" class="btn btn-soft btn-sm" style="margin-inline-start:auto">Pause</button>
+</nav>
+
+<main class="container section">
+  <div class="grid grid-cols-1 gap-4 max-w-2xl mx-auto">
+    <div class="card"><div class="card-body">
+      <h2 class="card-title text-sm">Live line — sliding window (constant memory)</h2>
+      <p class="text-muted text-sm">~1000 points/sec into a 2000-point ring buffer.</p>
+      <div class="chartbox" id="line"></div>
+    </div></div>
+    <div class="card"><div class="card-body">
+      <h2 class="card-title text-sm">Live candlestick — appended every 400ms</h2>
+      <div class="chartbox" id="candle"></div>
+    </div></div>
+  </div>
+</main>
+
+<script src="../dist/lombok-charts.umd.js"></script>
+<script>
+const { chart } = LombokCharts;
+const T = { name: 'dark', colors: { background: 'transparent' } };
+
+const line = chart('#line', { xs: new Float64Array([0]), ys: new Float64Array([0]), mark: 'line', theme: T, maxPoints: 2000, animate: false, color: '#5b9bff' });
+let t = 0, phase = 0, paused = false;
+function feedLine() {
+  if (paused) return;
+  const batch = [];
+  for (let i = 0; i < 17; i++) { t += 1; phase += 0.05; batch.push({ x: t, y: Math.sin(phase) * 30 + Math.sin(phase * 0.21) * 15 + (Math.random() - 0.5) * 6 + 50 }); }
+  line.appendData(batch);
+  requestAnimationFrame(feedLine);
+}
+requestAnimationFrame(feedLine);
+
+let price = 100; const candles = [];
+function mkCandle(i) { const o = price, c = price + (Math.random() - 0.5) * 6; const h = Math.max(o, c) + Math.random() * 3, l = Math.min(o, c) - Math.random() * 3; price = c; return { x: i, open: o, high: h, low: l, close: c }; }
+for (let i = 0; i < 30; i++) candles.push(mkCandle(i));
+const candle = chart('#candle', { data: candles, mark: 'candlestick', theme: T, animate: false });
+let ci = 30;
+setInterval(() => { if (paused) return; candles.push(mkCandle(ci++)); if (candles.length > 60) candles.shift(); candle.update(candles); }, 400);
+
+document.getElementById('toggle').onclick = (e) => { paused = !paused; e.target.textContent = paused ? 'Resume' : 'Pause'; if (!paused) requestAnimationFrame(feedLine); };
+</script>
+</body>
+</html>

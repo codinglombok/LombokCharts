@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" data-style="resonant-stark" data-theme="dark">
+<head>
+<meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LombokCharts — Stress Benchmark 1M &amp; 5M (styled with LombokCSS)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<style>
+  /* App-specific: chart sizing + overlay positioning only. */
+  .chartbox { height: 460px; }
+  .stage { position: relative; }
+  .overlay { position: absolute; top: 14px; right: 14px; min-width: 220px; }
+  .overlay .fps { font-size: 30px; font-weight: 700; line-height: 1.1; }
+  .num { font-variant-numeric: tabular-nums; }
+</style>
+</head>
+<body>
+<nav class="navbar">
+  <span class="navbar-brand">LombokCharts</span>
+  <span class="badge badge-warning badge-pill">stress</span>
+  <span class="text-muted text-sm">LTTB decimation · Canvas fast path</span>
+</nav>
+
+<main class="container section">
+  <div class="card mb-4"><div class="card-body">
+    <div class="flex flex-wrap items-center gap-3">
+      <div class="flex items-center gap-2"><span class="text-muted text-sm">Points</span>
+        <select id="count" class="select select-sm num">
+          <option value="100000">100,000</option>
+          <option value="1000000" selected>1,000,000</option>
+          <option value="5000000">5,000,000</option>
+        </select>
+      </div>
+      <div class="flex items-center gap-2"><span class="text-muted text-sm">Decimation</span>
+        <select id="dec" class="select select-sm"><option value="on" selected>LTTB on</option><option value="off">off (raw)</option></select>
+      </div>
+      <div class="flex items-center gap-2"><span class="text-muted text-sm">Renderer</span>
+        <select id="rend" class="select select-sm"><option value="canvas" selected>Canvas</option><option value="svg">SVG</option></select>
+      </div>
+      <button id="render" class="btn btn-primary btn-sm">Render</button>
+      <button id="fps" class="btn btn-soft btn-sm">Start FPS loop</button>
+      <button id="live" class="btn btn-soft btn-sm">Live append 1000/s</button>
+      <button id="compare" class="btn btn-outline btn-sm">Compare Canvas vs SVG</button>
+    </div>
+  </div></div>
+
+  <div class="card stage mb-4"><div class="card-body">
+    <div class="chartbox" id="chart"></div>
+    <div class="overlay card"><div class="card-body p-3">
+      <div class="fps text-success num"><span id="fpsv">—</span> <span class="text-muted" style="font-size:13px;font-weight:400">fps</span></div>
+      <div class="flex justify-between text-sm mt-2"><span class="text-muted">initial render</span><span class="num" id="rt">— ms</span></div>
+      <div class="flex justify-between text-sm"><span class="text-muted">raw points</span><span class="num" id="raw">—</span></div>
+      <div class="flex justify-between text-sm"><span class="text-muted">points drawn</span><span class="num" id="drawn">—</span></div>
+      <div class="flex justify-between text-sm"><span class="text-muted">renderer</span><span id="rv">—</span></div>
+    </div></div>
+  </div></div>
+
+  <div class="card"><div class="card-body">
+    <h2 class="card-title text-sm mb-2">Canvas vs SVG</h2>
+    <div class="table-wrap">
+      <table id="cmp" class="table table-bordered num">
+        <thead><tr><th>Scenario</th><th>Points</th><th>Decimation</th><th>Drawn</th><th>Canvas FPS</th><th>SVG FPS</th><th>Init ms (C/S)</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="text-muted text-sm mt-2" id="cmpnote">Comparison runs with LTTB on for both renderers (raw millions of nodes is infeasible for SVG). Numbers depend on your machine/GPU.</p>
+  </div></div>
+</main>
+
+<script src="../dist/lombok-charts.umd.js"></script>
+<script>
+const { chart, lttb } = LombokCharts;
+const $ = (id) => document.getElementById(id);
+const fmt = (n) => n.toLocaleString();
+const T = { name: 'dark', colors: { background: 'transparent' } };
+const cache = new Map();
+const fpsClass = (fps) => 'fps num ' + (fps >= 50 ? 'text-success' : fps >= 25 ? 'text-warning' : 'text-danger');
+
+function generate(n) {
+  if (cache.has(n)) return cache.get(n);
+  const xs = new Float64Array(n), ys = new Float64Array(n);
+  let v = 0;
+  for (let i = 0; i < n; i++) { v += (Math.random() - 0.5) * 2; let y = Math.sin(i / (n / 60)) * 40 + v; if (i % 250000 === 0) y += 120; xs[i] = i; ys[i] = y; }
+  const d = { xs, ys }; cache.set(n, d); return d;
+}
+
+let c = null, fpsRunning = false, liveRunning = false;
+function currentConfig() { return { n: +$('count').value, decOff: $('dec').value === 'off', renderer: $('rend').value }; }
+
+function render() {
+  stopFPS(); stopLive();
+  const { n, decOff, renderer } = currentConfig();
+  if (renderer === 'svg' && decOff && n > 200000) { alert('Raw (non-decimated) SVG is capped at 200k points to keep the tab responsive. Enable LTTB or use Canvas.'); return; }
+  const { xs, ys } = generate(n);
+  if (c) c.destroy();
+  c = chart('#chart', { xs, ys, count: n, mark: { type: 'line', decimate: !decOff }, renderer, theme: T, animate: false, color: '#5b9bff', tooltip: false });
+  const t0 = performance.now(); c._draw(c.renderer); const t1 = performance.now();
+  $('rt').textContent = (t1 - t0).toFixed(1) + ' ms';
+  $('raw').textContent = fmt(n); $('drawn').textContent = fmt(c.lastStats.drawn); $('rv').textContent = renderer; $('fpsv').textContent = '—';
+}
+
+function startFPS() {
+  if (!c) render();
+  fpsRunning = true; $('fps').textContent = 'Stop FPS loop';
+  let frames = 0, last = performance.now();
+  const loop = () => {
+    if (!fpsRunning) return;
+    c._draw(c.renderer); frames++;
+    const now = performance.now();
+    if (now - last >= 500) { const fps = Math.round(frames * 1000 / (now - last)); $('fpsv').textContent = fps; $('fpsv').parentElement.className = fpsClass(fps); frames = 0; last = now; }
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+}
+function stopFPS() { fpsRunning = false; $('fps').textContent = 'Start FPS loop'; }
+
+function startLive() {
+  stopFPS();
+  const { renderer } = currentConfig();
+  if (c) c.destroy();
+  c = chart('#chart', { xs: new Float64Array([0]), ys: new Float64Array([0]), mark: 'line', renderer, theme: T, animate: false, maxPoints: 5000, color: '#3ad6ad', tooltip: false });
+  $('raw').textContent = 'streaming'; $('rv').textContent = renderer;
+  liveRunning = true; $('live').textContent = 'Stop live';
+  let t = 0, ph = 0, frames = 0, last = performance.now();
+  const feed = () => {
+    if (!liveRunning) return;
+    const batch = []; for (let i = 0; i < 17; i++) { t++; ph += 0.04; batch.push({ x: t, y: Math.sin(ph) * 30 + (Math.random() - 0.5) * 8 + 50 }); }
+    c.appendData(batch); frames++;
+    const now = performance.now();
+    if (now - last >= 500) { const fps = Math.round(frames * 1000 / (now - last)); $('fpsv').textContent = fps; $('fpsv').parentElement.className = fpsClass(fps); $('drawn').textContent = fmt(c.config.count); frames = 0; last = now; }
+    requestAnimationFrame(feed);
+  };
+  requestAnimationFrame(feed);
+}
+function stopLive() { liveRunning = false; $('live').textContent = 'Live append 1000/s'; }
+
+function runFrames(ch) {
+  return new Promise((resolve) => {
+    const t0 = performance.now(); ch._draw(ch.renderer); const init = performance.now() - t0; const drawn = ch.lastStats.drawn;
+    let frames = 0; const start = performance.now();
+    const loop = () => { ch._draw(ch.renderer); frames++; if (performance.now() - start >= 700) resolve({ fps: Math.round(frames * 1000 / (performance.now() - start)), init, drawn }); else requestAnimationFrame(loop); };
+    requestAnimationFrame(loop);
+  });
+}
+async function compare() {
+  stopFPS(); stopLive();
+  const n = +$('count').value;
+  const mkHidden = () => { const d = document.createElement('div'); d.style.cssText = 'position:absolute;left:-99999px;width:900px;height:460px'; d.id = 'hidden_' + Math.random().toString(36).slice(2); document.body.appendChild(d); return d; };
+  const h1 = mkHidden(); const cCanvas = chart('#' + h1.id, { xs: generate(n).xs, ys: generate(n).ys, count: n, mark: 'line', renderer: 'canvas', theme: T, animate: false, tooltip: false });
+  const canv = await runFrames(cCanvas); cCanvas.destroy(); h1.remove();
+  const h2 = mkHidden(); const cSvg = chart('#' + h2.id, { xs: generate(n).xs, ys: generate(n).ys, count: n, mark: 'line', renderer: 'svg', theme: T, animate: false, tooltip: false });
+  const svgr = await runFrames(cSvg); cSvg.destroy(); h2.remove();
+  const row = document.createElement('tr');
+  row.innerHTML = `<td>Line</td><td>${fmt(n)}</td><td><span class="badge badge-success badge-pill">LTTB</span></td><td>${fmt(canv.drawn)}</td><td>${canv.fps}</td><td>${svgr.fps}</td><td>${canv.init.toFixed(0)} / ${svgr.init.toFixed(0)}</td>`;
+  $('cmp').querySelector('tbody').appendChild(row);
+}
+
+function start() {
+  if (typeof LombokCharts === 'undefined') { setTimeout(start, 30); return; }
+  $('render').onclick = render;
+  $('fps').onclick = () => fpsRunning ? stopFPS() : startFPS();
+  $('live').onclick = () => liveRunning ? stopLive() : startLive();
+  $('compare').onclick = compare;
+  render();
+}
+start();
+</script>
+</body>
+</html>

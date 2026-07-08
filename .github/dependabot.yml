@@ -1,0 +1,21 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 5
+    labels: ["dependencies"]
+    commit-message:
+      prefix: "chore"
+    ignore:
+      # keep in lockstep with the mcr.microsoft.com/playwright container tag
+      - dependency-name: "@playwright/test"
+      - dependency-name: "esbuild"  # pinned so committed dist stays byte-identical
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels: ["ci"]
+    commit-message:
+      prefix: "ci"
