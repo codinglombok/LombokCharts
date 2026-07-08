@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en" data-style="resonant-stark" data-theme="dark">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trading Terminal — LombokCharts × LombokCSS</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<nav class="navbar">
+  <span class="navbar-brand">Lombok<span class="text-muted">Terminal</span></span>
+  <select id="symbol" class="select select-sm" aria-label="Symbol"></select>
+  <div class="ticker" style="margin-inline-start:8px">
+    <span class="price" id="lastPrice">—</span>
+    <span class="badge badge-pill" id="change">—</span>
+    <span class="text-muted text-sm">24h H <span class="num" id="high">—</span></span>
+    <span class="text-muted text-sm">L <span class="num" id="low">—</span></span>
+    <span class="text-muted text-sm">Vol <span class="num" id="vol24">—</span></span>
+  </div>
+  <span class="badge badge-info badge-pill" style="margin-inline-start:auto">demo · simulated feed</span>
+</nav>
+
+<main class="container section" style="max-width:1400px">
+  <div class="term-grid">
+    <!-- Left: price + volume + RSI -->
+    <div class="flex flex-col gap-4" style="min-width:0">
+      <div class="card"><div class="card-body">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-3" style="min-width:0">
+            <h2 class="card-title text-sm" id="symbolName">BTC-USD</h2>
+            <span class="text-muted text-sm num" id="ohlc"></span>
+          </div>
+          <span class="badge badge-soft">Candlestick · 1m</span>
+        </div>
+        <div class="chart-price" id="priceChart"></div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <h2 class="card-title text-sm mb-2">Volume</h2>
+        <div class="chart-sub" id="vol"></div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <h2 class="card-title text-sm mb-2">RSI (14) — 30 / 70 bands</h2>
+        <div class="chart-sub" id="rsi"></div>
+      </div></div>
+    </div>
+
+    <!-- Right: order book + trade form + watchlist -->
+    <div class="flex flex-col gap-4" style="min-width:0">
+      <div class="card"><div class="card-body">
+        <h2 class="card-title text-sm mb-2">Order Book</h2>
+        <div class="ob-head"><span>Price</span><span class="sz" style="text-align:right">Size</span><span class="tot" style="text-align:right">Total</span></div>
+        <div id="asks"></div>
+        <div class="ob-spread" id="spread">—</div>
+        <div id="bids"></div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <h2 class="card-title text-sm mb-3">Place Order</h2>
+        <div class="btn-group mb-3" role="group" style="width:100%">
+          <button id="buyBtn" class="btn btn-sm btn-primary" style="flex:1">Buy</button>
+          <button id="sellBtn" class="btn btn-sm btn-soft" style="flex:1">Sell</button>
+        </div>
+        <div class="field mb-2">
+          <label class="label" for="ordType">Order type</label>
+          <select id="ordType" class="select select-sm"><option>Limit</option><option>Market</option></select>
+        </div>
+        <div class="field mb-2">
+          <label class="label" for="price">Price</label>
+          <input id="price" class="input input-sm num" inputmode="decimal" />
+        </div>
+        <div class="field mb-2">
+          <label class="label" for="amount">Amount</label>
+          <input id="amount" class="input input-sm num" inputmode="decimal" placeholder="0.00" />
+          <span class="help">Enter an amount, then place the order.</span>
+        </div>
+        <div class="field mb-3">
+          <label class="label" for="total">Total (USD)</label>
+          <input id="total" class="input input-sm num" readonly />
+        </div>
+        <button id="place" class="btn btn-block btn-primary">Buy BTC</button>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <h2 class="card-title text-sm mb-2">Watchlist</h2>
+        <div id="watchlist"></div>
+      </div></div>
+
+      <div class="card"><div class="card-body">
+        <h2 class="card-title text-sm mb-2">Your Orders</h2>
+        <div class="blotter" id="blotter"></div>
+      </div></div>
+    </div>
+  </div>
+
+  <p class="text-muted text-sm mt-6">
+    All data is simulated in the browser via <code>market-sim.js</code> (GBM candles, synthetic
+    order book, Wilder RSI). Charts by LombokCharts, UI by LombokCSS. Switch design styles by
+    changing <code>data-style</code> on &lt;html&gt;.
+  </p>
+</main>
+
+<!-- Order matters: sim + charts, then the wiring -->
+<script src="../lombokcss-theme.js"></script>
+<script src="market-sim.js"></script>
+<script src="../../dist/lombok-charts.umd.js"></script>
+<script src="dashboard.js"></script>
+</body>
+</html>

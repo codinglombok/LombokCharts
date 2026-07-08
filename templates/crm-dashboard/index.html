@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-style="modern-corporate-flat" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CRM Dashboard — LombokCharts × LombokCSS</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">Lombok<span class="text-muted">CRM</span></div>
+    <nav class="side-nav flex flex-col gap-1">
+      <a href="#" class="active" data-page="Dashboard">▦ Dashboard</a>
+      <a href="#" data-page="Contacts">◑ Contacts</a>
+      <a href="#" data-page="Deals">◆ Deals</a>
+      <a href="#" data-page="Reports">▤ Reports</a>
+      <a href="#" data-page="Settings">⚙ Settings</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="text-xl font-semibold" id="pageTitle">Dashboard</h1>
+      <div class="flex items-center gap-2">
+        <input class="input input-sm" placeholder="Search…" style="max-width:180px" />
+        <select id="style" class="select select-sm" aria-label="Design style">
+          <option value="modern-corporate-flat">Modern Corporate</option>
+          <option value="resonant-stark">Resonant Stark</option>
+          <option value="neo-brutalism">Neo Brutalism</option>
+          <option value="semantic-minimalist">Semantic Minimalist</option>
+          <option value="glassmorphism">Glassmorphism</option>
+        </select>
+        <button id="theme" class="btn btn-soft btn-sm">Dark</button>
+      </div>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid mb-4" id="kpis"></div>
+
+    <!-- Pipeline + Revenue -->
+    <div class="two mb-4">
+      <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Sales Pipeline</h2><div class="chart-md" id="pipeline"></div></div></div>
+      <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Revenue by Month</h2><div class="chart-md" id="revenue"></div></div></div>
+    </div>
+
+    <!-- Reps + Sources -->
+    <div class="two mb-4">
+      <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Deals Closed by Rep</h2><div class="chart-sm" id="reps"></div></div></div>
+      <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Lead Sources</h2><div class="chart-sm" id="sources"></div></div></div>
+    </div>
+
+    <!-- Lead flow (sankey) -->
+    <div class="card mb-4"><div class="card-body"><h2 class="card-title text-sm mb-2">Lead Flow — source → outcome</h2><div class="chart-wide" id="flow"></div></div></div>
+
+    <!-- Activity + Contacts -->
+    <div class="thirds mb-4">
+      <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Recent Activity</h2><div class="feed" id="feed"></div></div></div>
+      <div class="card"><div class="card-body">
+        <h2 class="card-title text-sm mb-2">Contacts</h2>
+        <div class="table-wrap">
+          <table id="contacts" class="table table-hover crm-table">
+            <thead><tr><th>Name</th><th>Company</th><th>Stage</th><th style="text-align:right">Value</th><th>Owner</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+      </div></div>
+    </div>
+
+    <p class="text-muted text-sm">Synthetic data via <code>crm-sim.js</code>. Charts by LombokCharts, UI by LombokCSS. Sidebar nav is illustrative.</p>
+  </div>
+</div>
+
+<script src="../lombokcss-theme.js"></script>
+<script src="crm-sim.js"></script>
+<script src="../../dist/lombok-charts.umd.js"></script>
+<script src="crm.js"></script>
+</body>
+</html>

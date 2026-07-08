@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" data-style="modern-corporate-flat" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Analytics Dashboard — LombokCharts × LombokCSS</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<nav class="navbar">
+  <span class="navbar-brand">Lombok<span class="text-muted">Analytics</span></span>
+  <div class="flex items-center gap-2" style="margin-inline-start:auto">
+    <select id="range" class="select select-sm" aria-label="Date range">
+      <option value="7">Last 7 days</option>
+      <option value="30" selected>Last 30 days</option>
+      <option value="90">Last 90 days</option>
+    </select>
+    <select id="style" class="select select-sm" aria-label="Design style">
+      <option value="modern-corporate-flat">Modern Corporate</option>
+      <option value="resonant-stark">Resonant Stark</option>
+      <option value="neo-brutalism">Neo Brutalism</option>
+      <option value="semantic-minimalist">Semantic Minimalist</option>
+      <option value="glassmorphism">Glassmorphism</option>
+    </select>
+    <button id="theme" class="btn btn-soft btn-sm">Dark mode</button>
+  </div>
+</nav>
+
+<main class="container section" style="max-width:1320px">
+  <!-- KPI row -->
+  <div class="kpi-grid mb-4" id="kpis"></div>
+
+  <!-- Charts -->
+  <div class="main-grid mb-4">
+    <div class="card"><div class="card-body">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="card-title text-sm">Revenue</h2>
+        <select id="revType" class="select select-sm">
+          <option value="area">Area</option>
+          <option value="line">Line</option>
+        </select>
+      </div>
+      <div class="chart-lg" id="revenue"></div>
+    </div></div>
+
+    <div class="card"><div class="card-body">
+      <h2 class="card-title text-sm mb-2">Traffic Sources</h2>
+      <div class="chart-lg" id="traffic"></div>
+    </div></div>
+
+    <div class="card"><div class="card-body">
+      <h2 class="card-title text-sm mb-2">Top Channels</h2>
+      <div class="chart-md" id="channels"></div>
+    </div></div>
+
+    <div class="card"><div class="card-body">
+      <h2 class="card-title text-sm mb-2">Sales by Category</h2>
+      <div class="chart-md" id="category"></div>
+    </div></div>
+
+    <div class="card col-span-2"><div class="card-body">
+      <h2 class="card-title text-sm mb-2">Activity Heatmap — hour × day</h2>
+      <div class="chart-md" id="activity"></div>
+    </div></div>
+  </div>
+
+  <!-- Recent orders -->
+  <div class="card"><div class="card-body">
+    <h2 class="card-title text-sm mb-2">Recent Orders</h2>
+    <div class="table-wrap">
+      <table id="orders" class="table table-hover orders">
+        <thead><tr><th>Order</th><th>Customer</th><th style="text-align:right">Amount</th><th>Status</th><th style="text-align:right">When</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div></div>
+
+  <p class="text-muted text-sm mt-6">
+    Synthetic data via <code>analytics-sim.js</code>. Charts by LombokCharts, UI by LombokCSS.
+    Try the design-style switcher and the date-range selector.
+  </p>
+</main>
+
+<script src="../lombokcss-theme.js"></script>
+<script src="analytics-sim.js"></script>
+<script src="../../dist/lombok-charts.umd.js"></script>
+<script src="analytics.js"></script>
+</body>
+</html>

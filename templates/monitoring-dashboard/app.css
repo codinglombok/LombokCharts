@@ -1,0 +1,16 @@
+/* app.css — layout glue only; colors/spacing from LombokCSS tokens. */
+.grid-3 { display:grid; grid-template-columns:1fr; gap:var(--lc-space-4); }
+@media(min-width:820px){ .grid-3{ grid-template-columns:repeat(3,1fr);} }
+.gauge { height: 180px; }
+.mini { height: 70px; margin-top: 6px; }
+.wide { height: 240px; }
+.spark { height: 34px; width: 120px; }
+.num { font-variant-numeric: tabular-nums; }
+.metric-val { font-size: 1.7rem; font-weight: 700; line-height: 1.1; }
+.hosts td, .hosts th { font-variant-numeric: tabular-nums; }
+.dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-inline-end:6px; }
+.dot.healthy { background: var(--lc-success,#2f9e44); }
+.dot.warn { background: var(--lc-warning,#f59f00); }
+.dot.down { background: var(--lc-danger,#e03131); }
+.pulse { animation: pulse 1.6s ease-in-out infinite; }
+@keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.35;} }
