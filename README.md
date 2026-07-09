@@ -6,7 +6,7 @@
 [![npm downloads](https://img.shields.io/npm/dm/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
 [![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg)](https://www.jsdelivr.com/package/npm/lombok-charts)
 [![gzip size](https://img.shields.io/badge/gzip-19%20KB-success.svg)](#)
-[![license](https://img.shields.io/npm/l/lombok-charts.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![SourceForge](https://img.shields.io/sourceforge/dt/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/)
 
 A zero-dependency charting library for the browser. It pairs a small grammar-of-graphics
@@ -206,3 +206,4 @@ test under a tiny headless DOM/Canvas shim, so integration regressions are caugh
 ## License
 
 Apache-2.0 © codinglombok — see [LICENSE](LICENSE) and [NOTICE](NOTICE).
+This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
