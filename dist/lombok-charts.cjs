@@ -367,7 +367,7 @@ var CanvasRenderer = class extends Renderer {
 
 // src/core/SvgRenderer.js
 var NS = "http://www.w3.org/2000/svg";
-var esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+var esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
 var SvgRenderer = class extends Renderer {
   constructor(container, size) {
     super(container, size);
