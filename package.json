@@ -6,10 +6,8 @@
   "main": "./dist/lombok-charts.cjs",
   "module": "./src/lombok-charts.js",
   "browser": "./dist/lombok-charts.umd.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
-      "types": "./dist/index.d.ts",
       "import": "./src/lombok-charts.js",
       "require": "./dist/lombok-charts.cjs",
       "default": "./dist/lombok-charts.esm.js"
