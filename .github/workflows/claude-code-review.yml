@@ -1,0 +1,56 @@
+name: Claude Code Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, ready_for_review]
+    paths:
+      - "app/**"
+      - "src/**"
+      - "database/**"
+      - "public/**"
+      - "**.php"
+
+jobs:
+  claude-review:
+    # Skip drafts and dependency-bot PRs
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      issues: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          track_progress: true
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            You are reviewing a PR for SIMATRA, a BMN (state asset) management
+            system for Universitas Mataram built on PHP 8.3 + MySQL 8.0 +
+            Redis + MinIO + Meilisearch. Review the diff with focus on:
+
+            1. Security — SQL injection, missing auth checks on the 8-role
+               hierarchy, IDOR on asset/transaction IDs, file upload handling
+               to MinIO, session/CSRF issues.
+            2. Approval workflow integrity — multi-level approval state
+               transitions must not be bypassable; approve/reject actions must
+               verify the actor's role and the transaction's current state.
+            3. Data integrity — KIB A–F categorization, foreign keys across
+               the 20-table schema, transaction atomicity on mutations.
+            4. Integration safety — SIMAN/SAKTI sync calls must keep the
+               fault-tolerant retry pattern; no blocking calls in request path.
+            5. Correctness & PHP 8.3 idioms — typed properties, null safety,
+               PhpSpreadsheet/mPDF resource cleanup on exports.
+
+            Post inline comments only on genuine issues. End with a short
+            summary: ✅ approve, or ⚠️ list of blocking items.
+          claude_args: |
+            --max-turns 15
