@@ -311,7 +311,10 @@ export class Chart {
         if (hit) {
           const h = this._qtHits[hit.index];
           const valTxt = typeof h.value === 'number' ? formatNumber(h.value) : h.value;
-          this.tooltip.show(h.x, h.y, `<strong>${h.label != null ? h.label : ''}</strong><br>${valTxt}${h.extra ? '<br>' + h.extra : ''}`);
+          
+         const esc = (v) => String(v).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+this.tooltip.show(h.x, h.y, `<strong>${h.label != null ? esc(h.label) : ''}</strong><br>${esc(valTxt)}${h.extra ? '<br>' + esc(h.extra) : ''}`);
+
           this.emitter.emit('hover', h);
         } else this.tooltip.hide();
       }
