@@ -1,7 +1,7 @@
 # LombokCharts
 
 [![CI](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml)
-[![Deploy Jekyll with GitHub Pages dependencies preinstalled](https://github.com/codinglombok/LombokCharts/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/jekyll-gh-pages.yml)
+[![Super-Linter](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml)
 [![Deploy docs](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml)
 [![npm version](https://img.shields.io/npm/v/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
 [![npm downloads](https://img.shields.io/npm/dm/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
