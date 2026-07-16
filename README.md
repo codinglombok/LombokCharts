@@ -28,6 +28,15 @@ line without changing shape.
 
 [![LombokCharts Preview](assets/social-preview.png)](https://codinglombok.github.io/LombokCharts/)
 
+
+| | |
+| --- | --- |
+| [![Trading Terminal](assets/previews/trading.png)](https://codinglombok.github.io/LombokCharts/templates/trading-dashboard/index.html) | [![Analytics Dashboard](assets/previews/analytics.png)](https://codinglombok.github.io/LombokCharts/templates/analytics-dashboard/index.html) |
+| [![Monitoring Dashboard](assets/previews/monitoring.png)](https://codinglombok.github.io/LombokCharts/templates/monitoring-dashboard/index.html) | [![CRM Dashboard](assets/previews/crm.png)](https://codinglombok.github.io/LombokCharts/templates/crm-dashboard/index.html) |
+| [![Examples Gallery](assets/previews/examples.png)](https://codinglombok.github.io/LombokCharts/examples/index.html) | [![Stress Benchmark](assets/previews/stress.png)](https://codinglombok.github.io/LombokCharts/examples/stress.html) |
+
+
+
 ## Install
 
 ```bash
