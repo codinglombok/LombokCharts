@@ -15,6 +15,8 @@ core (Data → Scale → Mark) with pluggable Canvas and SVG renderers, LTTB dec
 real-time streaming layer — so the same API draws a five-point bar chart or a five-million-point
 line without changing shape.
 
+![LombokCharts - Zero Dependency Charting Library](https://img.shields.io/badge/LombokCharts-Zero%20Dependency-brightgreen?style=for-the-badge)
+
 - **Zero runtime dependencies.** Native Canvas2D / SVG / `ResizeObserver` / `requestAnimationFrame` / typed arrays only.
 - **Two renderers, one API.** Canvas by default (fast path for huge series), SVG when you want crisp vector output or DOM-inspectable nodes.
 - **Scales from tiny to massive.** Typed-array pipeline plus Largest-Triangle-Three-Buckets (LTTB) decimation keeps million-point series interactive.
@@ -23,6 +25,8 @@ line without changing shape.
 - **~18 KB gzipped** for the full build with every mark registered; far less for a custom subset.
 
 > Status: `0.1.0`, early but functional. The full test suite and all five build targets pass.
+
+[![LombokCharts Preview](assets/social-preview.png)](https://codinglombok.github.io/LombokCharts/)
 
 ## Install
 
