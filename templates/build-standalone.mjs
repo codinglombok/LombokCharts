@@ -20,14 +20,25 @@ for (const d of dirs) {
   if (!fs.existsSync(indexPath)) continue;
   let html = fs.readFileSync(indexPath, 'utf8');
 
-  html = html.replace(/<script\s+src="([^"]+)"><\/script>/g, (m, src) => {
+//  html = html.replace(/<script\s+src="([^"]+)"><\/script>/g, (m, src) => {
+//    if (/^https?:\/\//.test(src)) return m; // keep CDN scripts
+//    const abs = path.resolve(dir, src);      // resolves ../../dist/... and local files
+//    if (!fs.existsSync(abs)) { console.warn('  ! missing', src, 'in', d); return m; }
+//    const code = esc(fs.readFileSync(abs, 'utf8'));
+//    return `<script>\n${code}\n</script>`;
+//  });
+// new update
+html = html.replace(
+  /<script\s+src=["']([^"']+)["']\s*>\s*<\/script\s*>/gi,
+  (m, src) => {
     if (/^https?:\/\//.test(src)) return m; // keep CDN scripts
-    const abs = path.resolve(dir, src);      // resolves ../../dist/... and local files
-    if (!fs.existsSync(abs)) { console.warn('  ! missing', src, 'in', d); return m; }
-    const code = esc(fs.readFileSync(abs, 'utf8'));
-    return `<script>\n${code}\n</script>`;
-  });
+    const abs = path.resolve(dir, src);
+    if (!fs.existsSync(abs)) { console.warn('! missing', src, 'in', d); return m; }
+    // ... inline logic
+  }
+);
 
+  
   // point the app.css <link> inline too, so the single file needs nothing local
   html = html.replace(/<link\s+rel="stylesheet"\s+href="app\.css"\s*\/?>/, () => {
     const cssPath = path.join(dir, 'app.css');
