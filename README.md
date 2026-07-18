@@ -59,18 +59,51 @@ chart('#app', {
 });
 ```
 
+### CDN (jsDelivr)
+
+- From npm:
+```html
+<script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"></script>
+```
+OR 
+```html
+<script src="https://cdn.jsdelivr.net/npm/lombok-charts@0.1.1/dist/lombok-charts.umd.min.js"></script>
+```
+ - From GitHub (works before an npm release, since `dist/` is committed):
+```html
+https://cdn.jsdelivr.net/gh/codinglombok/LombokCharts@v0.1.0/dist/lombok-charts.umd.min.js
+```
+  
 ### Via `<script>` (no build step)
 
 The UMD build attaches a global `LombokCharts`:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"></script>
+```
+OR
+```html
+<script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"></script>
 <script>
   LombokCharts.chart('#app', { data: [{label:'A',value:10}], mark: 'bar' });
 </script>
 ```
+OR
+Type UMD :
+```html
+<script src="https://cdn.jsdelivr.net/npm/lombok-charts@0.1.1/dist/lombok-charts.umd.min.js"></script>
+```
+OR
+Type ESM :
+```html
+<script type="module"> import lombokCharts from 'https://cdn.jsdelivr.net/npm/lombok-charts@0.1.1/+esm' </script>
+```
 
-Also available on unpkg: `https://unpkg.com/lombok-charts/dist/lombok-charts.umd.min.js`.
+
+### Also available on unpkg: 
+```bashh
+https://unpkg.com/lombok-charts/dist/lombok-charts.umd.min.js
+```
 
 ### Composer (Packagist)
 
@@ -82,11 +115,7 @@ composer require codinglombok/lombok-charts
 
 Then reference `vendor/codinglombok/lombok-charts/dist/lombok-charts.umd.min.js`.
 
-### CDN (jsDelivr)
 
-- From npm: `https://cdn.jsdelivr.net/npm/lombok-charts@0.1.0/dist/lombok-charts.umd.min.js`
-- From GitHub (works before an npm release, since `dist/` is committed):
-  `https://cdn.jsdelivr.net/gh/codinglombok/LombokCharts@v0.1.0/dist/lombok-charts.umd.min.js`
 
 ## Chart types
 
