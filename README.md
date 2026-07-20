@@ -22,7 +22,10 @@
 ### Sourceforge.net
 
 [![Download LombokCharts](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
-
+[![Download LombokCharts](https://img.shields.io/sourceforge/dm/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![Download LombokCharts](https://img.shields.io/sourceforge/dw/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![Download LombokCharts](https://img.shields.io/sourceforge/dd/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![Download LombokCharts](https://img.shields.io/sourceforge/dt/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
 ---
 
 A zero-dependency charting library for the browser. It pairs a small grammar-of-graphics
