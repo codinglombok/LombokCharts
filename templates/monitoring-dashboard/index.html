@@ -1,80 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" data-style="resonant-stark" data-theme="dark">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Monitoring Dashboard — LombokCharts × LombokCSS</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
-<link rel="stylesheet" href="app.css">
-</head>
-<body>
-<nav class="navbar">
-  <span class="navbar-brand">Lombok<span class="text-muted">Monitor</span></span>
-  <span class="dot healthy pulse" style="width:9px;height:9px"></span>
-  <span class="badge badge-pill badge-success" id="health">All systems operational</span>
-  <div class="flex items-center gap-2" style="margin-inline-start:auto">
-    <select id="style" class="select select-sm" aria-label="Design style">
-      <option value="resonant-stark" selected>Resonant Stark</option>
-      <option value="modern-corporate-flat">Modern Corporate</option>
-      <option value="neo-brutalism">Neo Brutalism</option>
-      <option value="semantic-minimalist">Semantic Minimalist</option>
-      <option value="glassmorphism">Glassmorphism</option>
-    </select>
-    <button id="theme" class="btn btn-soft btn-sm">Light</button>
-  </div>
-</nav>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Monitoring Dashboard — LombokCharts × LombokCSS</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css"
+    />
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"
+    ></script>
+    <link rel="stylesheet" href="app.css" />
+  </head>
+  <body>
+    <nav class="navbar">
+      <span class="navbar-brand"
+        >Lombok<span class="text-muted">Monitor</span></span
+      >
+      <span class="dot healthy pulse" style="width: 9px; height: 9px"></span>
+      <span class="badge badge-pill badge-success" id="health"
+        >All systems operational</span
+      >
+      <div class="flex items-center gap-2" style="margin-inline-start: auto">
+        <select id="style" class="select select-sm" aria-label="Design style">
+          <option value="resonant-stark" selected>Resonant Stark</option>
+          <option value="modern-corporate-flat">Modern Corporate</option>
+          <option value="neo-brutalism">Neo Brutalism</option>
+          <option value="semantic-minimalist">Semantic Minimalist</option>
+          <option value="glassmorphism">Glassmorphism</option>
+        </select>
+        <button id="theme" class="btn btn-soft btn-sm">Light</button>
+      </div>
+    </nav>
 
-<main class="container section" style="max-width:1280px">
-  <!-- Gauges -->
-  <div class="grid-3 mb-4">
-    <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">CPU</h2><div class="gauge" id="g_cpu"></div></div></div>
-    <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Memory</h2><div class="gauge" id="g_mem"></div></div></div>
-    <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Disk</h2><div class="gauge" id="g_disk"></div></div></div>
-  </div>
+    <main class="container section" style="max-width: 1280px">
+      <!-- Gauges -->
+      <div class="grid-3 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title text-sm mb-2">CPU</h2>
+            <div class="gauge" id="g_cpu"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title text-sm mb-2">Memory</h2>
+            <div class="gauge" id="g_mem"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title text-sm mb-2">Disk</h2>
+            <div class="gauge" id="g_disk"></div>
+          </div>
+        </div>
+      </div>
 
-  <!-- Streaming metric cards -->
-  <div class="grid-3 mb-4">
-    <div class="card"><div class="card-body">
-      <div class="flex items-center justify-between"><span class="stat-label text-muted text-sm">Network</span><span class="text-muted text-sm">Mbps</span></div>
-      <div class="metric-val num" id="v_net">—</div><div class="mini" id="s_net"></div>
-    </div></div>
-    <div class="card"><div class="card-body">
-      <div class="flex items-center justify-between"><span class="stat-label text-muted text-sm">Requests</span><span class="text-muted text-sm">req/s</span></div>
-      <div class="metric-val num" id="v_rps">—</div><div class="mini" id="s_rps"></div>
-    </div></div>
-    <div class="card"><div class="card-body">
-      <div class="flex items-center justify-between"><span class="stat-label text-muted text-sm">Latency</span><span class="text-muted text-sm">ms</span></div>
-      <div class="metric-val num" id="v_latency">—</div><div class="mini" id="s_latency"></div>
-    </div></div>
-  </div>
+      <!-- Streaming metric cards -->
+      <div class="grid-3 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <span class="stat-label text-muted text-sm">Network</span
+              ><span class="text-muted text-sm">Mbps</span>
+            </div>
+            <div class="metric-val num" id="v_net">—</div>
+            <div class="mini" id="s_net"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <span class="stat-label text-muted text-sm">Requests</span
+              ><span class="text-muted text-sm">req/s</span>
+            </div>
+            <div class="metric-val num" id="v_rps">—</div>
+            <div class="mini" id="s_rps"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-body">
+            <div class="flex items-center justify-between">
+              <span class="stat-label text-muted text-sm">Latency</span
+              ><span class="text-muted text-sm">ms</span>
+            </div>
+            <div class="metric-val num" id="v_latency">—</div>
+            <div class="mini" id="s_latency"></div>
+          </div>
+        </div>
+      </div>
 
-  <!-- Wide live throughput -->
-  <div class="card mb-4"><div class="card-body">
-    <h2 class="card-title text-sm mb-2">Throughput — requests/sec (live)</h2>
-    <div class="wide" id="wide"></div>
-  </div></div>
+      <!-- Wide live throughput -->
+      <div class="card mb-4">
+        <div class="card-body">
+          <h2 class="card-title text-sm mb-2">
+            Throughput — requests/sec (live)
+          </h2>
+          <div class="wide" id="wide"></div>
+        </div>
+      </div>
 
-  <!-- Host status -->
-  <div class="card"><div class="card-body">
-    <h2 class="card-title text-sm mb-2">Hosts</h2>
-    <div class="table-wrap">
-      <table id="hosts" class="table table-hover hosts">
-        <thead><tr><th>Host</th><th>Region</th><th style="text-align:right">CPU</th><th style="text-align:right">Latency</th><th>Latency trend</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div></div>
+      <!-- Host status -->
+      <div class="card">
+        <div class="card-body">
+          <h2 class="card-title text-sm mb-2">Hosts</h2>
+          <div class="table-wrap">
+            <table id="hosts" class="table table-hover hosts">
+              <thead>
+                <tr>
+                  <th>Host</th>
+                  <th>Region</th>
+                  <th style="text-align: right">CPU</th>
+                  <th style="text-align: right">Latency</th>
+                  <th>Latency trend</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-  <p class="text-muted text-sm mt-6">
-    Live simulated telemetry via <code>monitor-sim.js</code> (bounded random walks, ring-buffered
-    streams). Gauges, streaming areas and per-host sparklines by LombokCharts; UI by LombokCSS.
-  </p>
-</main>
+      <p class="text-muted text-sm mt-6">
+        Live simulated telemetry via <code>monitor-sim.js</code> (bounded random
+        walks, ring-buffered streams). Gauges, streaming areas and per-host
+        sparklines by LombokCharts; UI by LombokCSS.
+      </p>
+    </main>
 
-<script src="../lombokcss-theme.js"></script>
-<script src="monitor-sim.js"></script>
-<script src="../../dist/lombok-charts.umd.js"></script>
-<script src="monitor.js"></script>
-</body>
+    <script src="../lombokcss-theme.js"></script>
+    <script src="monitor-sim.js"></script>
+    <script src="../../dist/lombok-charts.umd.js"></script>
+    <script src="monitor.js"></script>
+  </body>
 </html>

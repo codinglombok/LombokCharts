@@ -7,8 +7,18 @@
 export function bandScale(categories, range, opts = {}) {
   const [r0, r1] = range;
   const n = categories.length;
-  const paddingInner = opts.paddingInner != null ? opts.paddingInner : (opts.padding != null ? opts.padding : 0.1);
-  const paddingOuter = opts.paddingOuter != null ? opts.paddingOuter : (opts.padding != null ? opts.padding : 0.1);
+  const paddingInner =
+    opts.paddingInner != null
+      ? opts.paddingInner
+      : opts.padding != null
+        ? opts.padding
+        : 0.1;
+  const paddingOuter =
+    opts.paddingOuter != null
+      ? opts.paddingOuter
+      : opts.padding != null
+        ? opts.padding
+        : 0.1;
   const width = r1 - r0;
   const step = n > 0 ? width / (n - paddingInner + 2 * paddingOuter) : width;
   const bandwidth = step * (1 - paddingInner);
@@ -24,7 +34,7 @@ export function bandScale(categories, range, opts = {}) {
   scale.step = step;
   scale.domain = categories;
   scale.range = [r0, r1];
-  scale.kind = 'band';
+  scale.kind = "band";
   scale.ticks = () => categories;
   scale.center = (cat) => scale(cat) + bandwidth / 2;
   scale.invert = (px) => {

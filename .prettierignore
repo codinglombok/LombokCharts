@@ -1,7 +1,9 @@
+# generated output — do not format
 node_modules/
 dist/
 .git/
 .github/
+docs/
 dist/
 assets/
 *.json
@@ -19,3 +21,6 @@ docs/
 build.js
 .eslintrc.json
 jsconfig.json
+# playwright artifacts (baselines under tests/**-snapshots ARE committed)
+test-results/
+playwright-report/

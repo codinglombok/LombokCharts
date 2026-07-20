@@ -5,16 +5,26 @@
 // A Mark turns resolved series + scales into renderer draw calls. It may push
 // hit-test records into ctx.hits and report how many primitives it drew via ctx.stats.
 export class Mark {
-  constructor(options = {}) { this.options = options; }
+  constructor(options = {}) {
+    this.options = options;
+  }
   /** @returns {'cartesian'|'polar'|'none'} */
-  coordinate() { return 'cartesian'; }
+  coordinate() {
+    return "cartesian";
+  }
   /**
    * Domain hints so the Chart can build cartesian scales.
    * @returns {{x:{type:string,values?:string[],domain?:number[]}, y:{domain:number[]}}|null}
    */
-  domains(/* series, opts */) { return null; }
+  domains(/* series, opts */) {
+    return null;
+  }
   /** @param {import('../core/Chart.js').DrawContext} ctx */
-  draw(/* ctx */) { throw new Error('Mark.draw not implemented'); }
+  draw(/* ctx */) {
+    throw new Error("Mark.draw not implemented");
+  }
   /** @returns {{label:string,color:string}[]|null} */
-  legendItems(/* series, ctx */) { return null; }
+  legendItems(/* series, ctx */) {
+    return null;
+  }
 }

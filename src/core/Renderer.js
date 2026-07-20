@@ -27,12 +27,17 @@ export class Renderer {
     this.width = size.width;
     this.height = size.height;
     /** @type {'canvas'|'svg'|'webgl'} */
-    this.type = 'abstract';
+    this.type = "abstract";
   }
 
   /* eslint-disable no-unused-vars */
-  mount() { throw new Error('Renderer.mount not implemented'); }
-  resize(w, h) { this.width = w; this.height = h; }
+  mount() {
+    throw new Error("Renderer.mount not implemented");
+  }
+  resize(w, h) {
+    this.width = w;
+    this.height = h;
+  }
   beginFrame() {}
   endFrame() {}
   clear() {}
@@ -46,9 +51,13 @@ export class Renderer {
   pathCmds(cmds, style) {}
   text(x, y, str, style) {}
   /** @returns {string|null} data URL (PNG) — Canvas only. */
-  toDataURL() { return null; }
+  toDataURL() {
+    return null;
+  }
   /** @returns {string|null} serialized SVG markup — SVG only. */
-  toSVGString() { return null; }
+  toSVGString() {
+    return null;
+  }
   destroy() {}
   /* eslint-enable no-unused-vars */
 }
