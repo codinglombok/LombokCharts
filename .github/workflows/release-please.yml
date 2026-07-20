@@ -17,16 +17,16 @@ jobs:
       SF_SSH_KEY: ${{ secrets.SF_SSH_KEY }}
       PACKAGIST_TOKEN: ${{ secrets.PACKAGIST_TOKEN }}
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         id: release
         with:
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
 
       # ---- Everything below runs only when a release is actually cut ----
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
         if: ${{ steps.release.outputs.release_created }}
-      - uses: actions/setup-node@v5
+      - uses: actions/setup-node@v6
         if: ${{ steps.release.outputs.release_created }}
         with:
           node-version: '22'
@@ -45,16 +45,6 @@ jobs:
         run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-      # jsDelivr serves from npm automatically; purge the cache so the new version
-      # (and the @latest alias) is picked up immediately instead of after TTL.
-      - name: Purge jsDelivr cache
-        if: ${{ steps.release.outputs.release_created }}
-        run: |
-          for file in umd.min umd esm.min esm cjs; do
-            curl -sf "https://purge.jsdelivr.net/npm/lombok-charts@latest/dist/lombok-charts.$file.js" || true
-          done
-          curl -sf "https://purge.jsdelivr.net/npm/lombok-charts/" || true
 
       # Build the downloadable release archives (dist + src + docs + license)
       - name: Package release archives
