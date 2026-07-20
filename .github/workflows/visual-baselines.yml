@@ -1,0 +1,29 @@
+name: Generate visual baselines
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  baselines:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.0-noble
+      options: --ipc=host   # Chromium: avoid shared-memory crashes in Docker
+    env:
+      HOME: /root           # Firefox: required to launch inside the container on Actions
+    steps:
+      - uses: actions/checkout@v5
+      - run: npm ci || npm install
+      - run: npm run build
+      - name: Regenerate snapshots
+        run: npx playwright test --update-snapshots
+      - name: Commit baselines
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add tests/visual/__snapshots__
+          git commit -m "test: update visual baselines" || echo "no baseline changes"
+          git push || echo "push skipped"

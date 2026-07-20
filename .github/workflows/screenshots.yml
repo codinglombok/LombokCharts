@@ -1,0 +1,29 @@
+name: Capture screenshots
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screenshots:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.56.0-noble
+      options: --ipc=host
+    env:
+      HOME: /root
+    steps:
+      - uses: actions/checkout@v5
+      - run: npm ci || npm install
+      - run: npm run build
+      - name: Capture real page screenshots
+        run: node scripts/screenshots.mjs
+      - name: Commit screenshots
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add assets/previews
+          git commit -m "docs: refresh template/example screenshots" || echo "no changes"
+          git push || echo "push skipped"

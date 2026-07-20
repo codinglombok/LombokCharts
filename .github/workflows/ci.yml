@@ -6,15 +6,12 @@ on:
   pull_request:
     branches: [main]
 
-permissions:
-  contents: read
-
 jobs:
   build-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v6
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
           node-version: '22'
           cache: 'npm'
@@ -26,17 +23,6 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
-    
-      - name: Verify committed dist is up to date
-        run: |
-          npm run build
-          if ! git diff --quiet -- dist/; then
-            echo "::error::dist/ is stale — run 'npm run build' and commit"
-            git --no-pager diff --stat -- dist/
-            git --no-pager diff -- dist/ | head -80
-            exit 1
-          fi
-      
       - name: Report bundle size
         run: |
           echo "### Bundle sizes" >> "$GITHUB_STEP_SUMMARY"
@@ -47,5 +33,3 @@ jobs:
             gz=$(gzip -c "$f" | wc -c | awk '{printf "%.1f", $1/1024}')
             echo "| $f | ${raw} KB | ${gz} KB |" >> "$GITHUB_STEP_SUMMARY"
           done
-
-

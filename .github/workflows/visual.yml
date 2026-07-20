@@ -1,57 +1,28 @@
-name: Visual
+name: Visual regression
+
 on:
   push:
     branches: [main]
   pull_request:
-  workflow_dispatch:
-    inputs:
-      update:
-        description: 'Regenerate snapshot baselines and commit them'
-        type: boolean
-        default: false
-
-permissions:
-  contents: write
-
-concurrency:                                  # NEW: cancel superseded runs on same branch
-  group: visual-${{ github.ref }}
-  cancel-in-progress: true
 
 jobs:
   visual:
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.56.0-noble
+      options: --ipc=host   # Chromium: avoid shared-memory crashes in Docker
     env:
-      HOME: /root                             # FIX: Firefox launch failure from your CI run
+      HOME: /root           # Firefox: required to launch inside the container on Actions
     steps:
-      - uses: actions/checkout@v7
-
+      - uses: actions/checkout@v5
       - run: npm ci || npm install
       - run: npm run build
-
       - name: Run visual tests
-        run: |
-          if [ "${{ inputs.update }}" = "true" ]; then
-            npx playwright test --update-snapshots
-          else
-            npx playwright test
-          fi
-
+        run: npx playwright test
       - name: Upload report
         if: always()
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
-             
-      - name: Commit regenerated baselines
-        if: ${{ inputs.update == true }}
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git add -A tests/visual              # CHANGED: catch snapshots wherever they land
-          git commit -m "test: update visual baselines" || echo "no baseline changes"
-          git push origin HEAD:${{ github.ref_name }}   # CHANGED: explicit refspec, no silent failure
