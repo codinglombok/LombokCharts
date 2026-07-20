@@ -24,6 +24,7 @@
 [![Download LombokCharts](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
 
 ---
+
 A zero-dependency charting library for the browser. It pairs a small grammar-of-graphics
 core (Data → Scale → Mark) with pluggable Canvas and SVG renderers, LTTB decimation, and a
 real-time streaming layer — so the same API draws a five-point bar chart or a five-million-point
@@ -42,14 +43,11 @@ line without changing shape.
 
 [![LombokCharts Preview](assets/social-preview.png)](https://codinglombok.github.io/LombokCharts/)
 
-
-| | |
-| --- | --- |
-| [![Trading Terminal](assets/previews/trading.png)](https://codinglombok.github.io/LombokCharts/templates/trading-dashboard/index.html) | [![Analytics Dashboard](assets/previews/analytics.png)](https://codinglombok.github.io/LombokCharts/templates/analytics-dashboard/index.html) |
-| [![Monitoring Dashboard](assets/previews/monitoring.png)](https://codinglombok.github.io/LombokCharts/templates/monitoring-dashboard/index.html) | [![CRM Dashboard](assets/previews/crm.png)](https://codinglombok.github.io/LombokCharts/templates/crm-dashboard/index.html) |
-| [![Examples Gallery](assets/previews/examples.png)](https://codinglombok.github.io/LombokCharts/examples/index.html) | [![Stress Benchmark](assets/previews/stress.png)](https://codinglombok.github.io/LombokCharts/examples/stress.html) |
-
-
+|                                                                                                                                                  |                                                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| [![Trading Terminal](assets/previews/trading.png)](https://codinglombok.github.io/LombokCharts/templates/trading-dashboard/index.html)           | [![Analytics Dashboard](assets/previews/analytics.png)](https://codinglombok.github.io/LombokCharts/templates/analytics-dashboard/index.html) |
+| [![Monitoring Dashboard](assets/previews/monitoring.png)](https://codinglombok.github.io/LombokCharts/templates/monitoring-dashboard/index.html) | [![CRM Dashboard](assets/previews/crm.png)](https://codinglombok.github.io/LombokCharts/templates/crm-dashboard/index.html)                   |
+| [![Examples Gallery](assets/previews/examples.png)](https://codinglombok.github.io/LombokCharts/examples/index.html)                             | [![Stress Benchmark](assets/previews/stress.png)](https://codinglombok.github.io/LombokCharts/examples/stress.html)                           |
 
 ## Install
 
@@ -59,35 +57,40 @@ npm install lombok-charts
 ```
 
 ```js
-import { chart } from 'lombok-charts';
+import { chart } from "lombok-charts";
 
-chart('#app', {
+chart("#app", {
   data: [
-    { label: 'Q1', value: 120 },
-    { label: 'Q2', value: 200 },
-    { label: 'Q3', value: 150 },
-    { label: 'Q4', value: 280 },
+    { label: "Q1", value: 120 },
+    { label: "Q2", value: 200 },
+    { label: "Q3", value: 150 },
+    { label: "Q4", value: 280 },
   ],
-  mark: 'bar',
-  title: 'Quarterly Revenue',
+  mark: "bar",
+  title: "Quarterly Revenue",
 });
 ```
 
 ### CDN (jsDelivr)
 
 - From npm:
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"></script>
 ```
-OR 
+
+OR
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/lombok-charts@0.1.1/dist/lombok-charts.umd.min.js"></script>
 ```
- - From GitHub (works before an npm release, since `dist/` is committed):
+
+- From GitHub (works before an npm release, since `dist/` is committed):
+
 ```html
 https://cdn.jsdelivr.net/gh/codinglombok/LombokCharts@v0.1.0/dist/lombok-charts.umd.min.js
 ```
-  
+
 ### Via `<script>` (no build step)
 
 The UMD build attaches a global `LombokCharts`:
@@ -95,26 +98,37 @@ The UMD build attaches a global `LombokCharts`:
 ```html
 <script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"></script>
 ```
+
 OR
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"></script>
 <script>
-  LombokCharts.chart('#app', { data: [{label:'A',value:10}], mark: 'bar' });
+  LombokCharts.chart("#app", {
+    data: [{ label: "A", value: 10 }],
+    mark: "bar",
+  });
 </script>
 ```
+
 OR
 Type UMD :
+
 ```html
 <script src="https://cdn.jsdelivr.net/npm/lombok-charts@0.1.1/dist/lombok-charts.umd.min.js"></script>
 ```
+
 OR
 Type ESM :
+
 ```html
-<script type="module"> import lombokCharts from 'https://cdn.jsdelivr.net/npm/lombok-charts@0.1.1/+esm' </script>
+<script type="module">
+  import lombokCharts from "https://cdn.jsdelivr.net/npm/lombok-charts@0.1.1/+esm";
+</script>
 ```
 
+### Also available on unpkg:
 
-### Also available on unpkg: 
 ```bashh
 https://unpkg.com/lombok-charts/dist/lombok-charts.umd.min.js
 ```
@@ -129,20 +143,18 @@ composer require codinglombok/lombok-charts
 
 Then reference `vendor/codinglombok/lombok-charts/dist/lombok-charts.umd.min.js`.
 
-
-
 ## Chart types
 
-| Family | Marks |
-| --- | --- |
-| Bar | column, horizontal bar, grouped, stacked, waterfall |
-| Line | line, step, spline (Catmull-Rom), slope |
-| Area | area, stacked, streamgraph |
-| Point | scatter, bubble |
-| Arc | pie, donut, gauge, radial bar |
-| Statistical | histogram, box plot |
-| Financial | candlestick (OHLC) |
-| Specialized | radar, heatmap, funnel, treemap, sankey |
+| Family      | Marks                                               |
+| ----------- | --------------------------------------------------- |
+| Bar         | column, horizontal bar, grouped, stacked, waterfall |
+| Line        | line, step, spline (Catmull-Rom), slope             |
+| Area        | area, stacked, streamgraph                          |
+| Point       | scatter, bubble                                     |
+| Arc         | pie, donut, gauge, radial bar                       |
+| Statistical | histogram, box plot                                 |
+| Financial   | candlestick (OHLC)                                  |
+| Specialized | radar, heatmap, funnel, treemap, sankey             |
 
 Pick a mark with the `mark` option, either as a shorthand string (`'donut'`, `'stacked-bar'`,
 `'spline'`) or as an object with extra settings (`{ type: 'gauge', value: 72, min: 0, max: 100 }`).
@@ -152,29 +164,30 @@ Pick a mark with the `mark` option, either as a shorthand string (`'donut'`, `'s
 Multi-series line from row objects:
 
 ```js
-chart('#chart', {
-  data: rows,                 // [{ month:'Jan', sales: 10, cost: 6 }, ...]
-  x: 'month',
+chart("#chart", {
+  data: rows, // [{ month:'Jan', sales: 10, cost: 6 }, ...]
+  x: "month",
   series: [
-    { key: 'sales', label: 'Sales' },
-    { key: 'cost',  label: 'Cost' },
+    { key: "sales", label: "Sales" },
+    { key: "cost", label: "Cost" },
   ],
-  mark: 'line',
+  mark: "line",
 });
 ```
 
 A large series from typed arrays (skips object overhead entirely):
 
 ```js
-const xs = new Float64Array(n), ys = new Float64Array(n);
+const xs = new Float64Array(n),
+  ys = new Float64Array(n);
 // ...fill...
-chart('#chart', { xs, ys, count: n, mark: 'line' }); // LTTB kicks in automatically
+chart("#chart", { xs, ys, count: n, mark: "line" }); // LTTB kicks in automatically
 ```
 
 Real-time stream with a sliding window:
 
 ```js
-const c = chart('#chart', { mark: 'line', maxPoints: 2000 });
+const c = chart("#chart", { mark: "line", maxPoints: 2000 });
 setInterval(() => c.appendData({ x: Date.now(), y: read() }), 16);
 // or: c.stream(new WebSocket('wss://…'), (msg) => ({ x: msg.t, y: msg.v }));
 ```
@@ -182,9 +195,9 @@ setInterval(() => c.appendData({ x: Date.now(), y: read() }), 16);
 Export and theming:
 
 ```js
-c.setTheme('dark');
-const png = c.toPNG();   // data URL
-const svg = c.toSVG();   // serialized <svg> markup
+c.setTheme("dark");
+const png = c.toPNG(); // data URL
+const svg = c.toSVG(); // serialized <svg> markup
 ```
 
 ## Performance
@@ -212,10 +225,10 @@ General guidance from the design:
 
 ## Bundle size
 
-| Build | File | Raw | Gzipped |
-| --- | --- | --- | --- |
-| ESM (min) | `dist/lombok-charts.esm.min.js` | ~56 KB | ~18 KB |
-| UMD (min) | `dist/lombok-charts.umd.min.js` | ~56 KB | ~18 KB |
+| Build     | File                            | Raw    | Gzipped |
+| --------- | ------------------------------- | ------ | ------- |
+| ESM (min) | `dist/lombok-charts.esm.min.js` | ~56 KB | ~18 KB  |
+| UMD (min) | `dist/lombok-charts.umd.min.js` | ~56 KB | ~18 KB  |
 
 These cover the **full** library with all 13 marks registered. Importing `Chart` plus only the
 marks you need lets your bundler tree-shake the rest for a smaller footprint.
