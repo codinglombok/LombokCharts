@@ -9,14 +9,6 @@
 [![gzip size](https://img.shields.io/badge/gzip-19%20KB-success.svg)](#)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Download LombokCharts](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
-<!-- Begin  Tag -->
-<div class="sf-root" data-id="4111149" data-badge="oss-users-love-us-white" style="width:125px">
-    <a href="https://sourceforge.net/projects/lombokcharts/" target="_blank">LombokCharts</a>
-</div>
-<script>(function () {var sc=document.createElement('script');sc.async=true;sc.src='https://b.sf-syn.com/badge_js?sf_id=4111149';var p=document.getElementsByTagName('script')[0];p.parentNode.insertBefore(sc, p);})();
-</script>
-<!-- End  Tag -->
-
 
 A zero-dependency charting library for the browser. It pairs a small grammar-of-graphics
 core (Data → Scale → Mark) with pluggable Canvas and SVG renderers, LTTB decimation, and a
