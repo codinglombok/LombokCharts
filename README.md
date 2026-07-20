@@ -1,15 +1,29 @@
 # LombokCharts
 
+---
+
+### Git Hub
+
 [![CI](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml)
 [![Super-Linter](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml)
 [![Deploy docs](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+---
+
+### NPM
+
 [![npm version](https://img.shields.io/npm/v/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
 [![npm downloads](https://img.shields.io/npm/dm/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
 [![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg)](https://www.jsdelivr.com/package/npm/lombok-charts)
 [![gzip size](https://img.shields.io/badge/gzip-19%20KB-success.svg)](#)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+
+---
+
+### Sourceforge.net
+
 [![Download LombokCharts](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
 
+---
 A zero-dependency charting library for the browser. It pairs a small grammar-of-graphics
 core (Data → Scale → Mark) with pluggable Canvas and SVG renderers, LTTB decimation, and a
 real-time streaming layer — so the same API draws a five-point bar chart or a five-million-point
