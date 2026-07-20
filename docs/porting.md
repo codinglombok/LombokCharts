@@ -7,18 +7,18 @@ pure layer and wire it to a native drawing surface.
 
 ## What is portable (no DOM, no canvas)
 
-| Module | Responsibility | Contract |
-| --- | --- | --- |
-| `scales/linear` | value→pixel, `invert`, `ticks` | `s(v)=r0+(v-d0)/(d1-d0)*(r1-r0)` |
-| `scales/log` | log-domain mapping | base-10; domain must be > 0 |
-| `scales/time` | timestamps→pixels | linear over epoch ms; calendar ticks |
-| `scales/band` | categories→bands | `step`, `bandwidth`, `center(cat)` |
-| `scales/sqrt` | area-proportional radius | `r = sqrt(v) `-normalized |
-| `scales/radial` | polar mapping | `polarToCartesian(cx,cy,r,θ)` |
-| `scales/color` | categorical + sequential | stable index map; hex lerp |
-| `data/decimate` | LTTB + min/max | preserves first/last + bucket extremes |
-| `data/ringbuffer` | sliding window | fixed capacity, overwrite oldest |
-| `utils/math` | clamp/lerp/extent/ticks/quantile | numeric only |
+| Module            | Responsibility                   | Contract                               |
+| ----------------- | -------------------------------- | -------------------------------------- |
+| `scales/linear`   | value→pixel, `invert`, `ticks`   | `s(v)=r0+(v-d0)/(d1-d0)*(r1-r0)`       |
+| `scales/log`      | log-domain mapping               | base-10; domain must be > 0            |
+| `scales/time`     | timestamps→pixels                | linear over epoch ms; calendar ticks   |
+| `scales/band`     | categories→bands                 | `step`, `bandwidth`, `center(cat)`     |
+| `scales/sqrt`     | area-proportional radius         | `r = sqrt(v) `-normalized              |
+| `scales/radial`   | polar mapping                    | `polarToCartesian(cx,cy,r,θ)`          |
+| `scales/color`    | categorical + sequential         | stable index map; hex lerp             |
+| `data/decimate`   | LTTB + min/max                   | preserves first/last + bucket extremes |
+| `data/ringbuffer` | sliding window                   | fixed capacity, overwrite oldest       |
+| `utils/math`      | clamp/lerp/extent/ticks/quantile | numeric only                           |
 
 ## LTTB contract (the important one)
 

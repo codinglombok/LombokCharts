@@ -24,8 +24,14 @@ Open `index.html` (double-click works). Loads LombokCSS from CDN and LombokChart
 this repo's build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"
+></script>
 <script src="crm-sim.js"></script>
 <script src="../../dist/lombok-charts.umd.js"></script>
 <script src="crm.js"></script>
@@ -35,12 +41,12 @@ this repo's build:
 
 ## Files
 
-| File | Purpose |
-| --- | --- |
-| `index.html` | App-shell layout (LombokCSS sidebar, cards, table, badges). |
-| `app.css` | Shell + grid glue (~30 lines). |
+| File         | Purpose                                                                     |
+| ------------ | --------------------------------------------------------------------------- |
+| `index.html` | App-shell layout (LombokCSS sidebar, cards, table, badges).                 |
+| `app.css`    | Shell + grid glue (~30 lines).                                              |
 | `crm-sim.js` | Zero-dependency CRM data: pipeline, revenue, reps, sources, activity, flow. |
-| `crm.js` | Wires data to charts, feed, and table; sidebar nav; style/theme controls. |
+| `crm.js`     | Wires data to charts, feed, and table; sidebar nav; style/theme controls.   |
 
 ## License
 

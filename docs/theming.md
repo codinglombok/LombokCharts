@@ -32,9 +32,10 @@ Themes are plain JSON-able token objects. Two are built in (`lightTheme`, `darkT
 Only specify what changes; the rest is inherited:
 
 ```js
-chart('#app', {
-  data, mark: 'bar',
-  theme: { palette: ['#111', '#555', '#999'], colors: { grid: '#eee' } },
+chart("#app", {
+  data,
+  mark: "bar",
+  theme: { palette: ["#111", "#555", "#999"], colors: { grid: "#eee" } },
 });
 ```
 
@@ -47,9 +48,9 @@ theme: { name: 'dark', palette: ['#8ab4ff', '#7ee8c8'] }
 ## Switching at runtime
 
 ```js
-const c = chart('#app', { data, mark: 'line' });
-document.querySelector('#toggle').onclick = () =>
-  c.setTheme(c.theme.name === 'dark' ? 'light' : 'dark');
+const c = chart("#app", { data, mark: "line" });
+document.querySelector("#toggle").onclick = () =>
+  c.setTheme(c.theme.name === "dark" ? "light" : "dark");
 ```
 
 `setTheme` re-resolves the categorical color scale, updates the tooltip and legend chrome, and

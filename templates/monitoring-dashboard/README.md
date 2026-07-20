@@ -24,8 +24,14 @@ Open `index.html` (double-click works). Loads LombokCSS from CDN and LombokChart
 this repo's build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"
+></script>
 <script src="monitor-sim.js"></script>
 <script src="../../dist/lombok-charts.umd.js"></script>
 <script src="monitor.js"></script>
@@ -39,7 +45,7 @@ Replace `M.tick()` in the interval with your source and feed each chart:
 
 ```js
 socket.onmessage = (msg) => {
-  const s = JSON.parse(msg.data);                 // { cpu, mem, rps, latency, ... }
+  const s = JSON.parse(msg.data); // { cpu, mem, rps, latency, ... }
   charts.g_cpu.update([{ value: Math.round(s.cpu) }]);
   charts.wide.appendData({ x: Date.now(), y: s.rps });
 };
@@ -47,12 +53,12 @@ socket.onmessage = (msg) => {
 
 ## Files
 
-| File | Purpose |
-| --- | --- |
-| `index.html` | Layout (LombokCSS components + utilities). |
-| `app.css` | ~20 lines of layout glue (grids, chart heights, status dots, pulse). |
+| File             | Purpose                                                                  |
+| ---------------- | ------------------------------------------------------------------------ |
+| `index.html`     | Layout (LombokCSS components + utilities).                               |
+| `app.css`        | ~20 lines of layout glue (grids, chart heights, status dots, pulse).     |
 | `monitor-sim.js` | Zero-dependency telemetry: bounded walks, windowed history, host status. |
-| `monitor.js` | Wires the feed to gauges/streams/sparklines; owns the live loop. |
+| `monitor.js`     | Wires the feed to gauges/streams/sparklines; owns the live loop.         |
 
 ## License
 

@@ -5,6 +5,7 @@ The library ships the same built bundles everywhere; only the delivery channel d
 Composer and the GitHub-based CDN work without a build step. CI fails if `dist/` is stale.
 
 ## npm
+
 Automated by the `release-please` workflow (Conventional Commits → release PR → on release,
 build + `npm publish --provenance`). Manual fallback: the `Publish (manual)` workflow, or locally:
 
@@ -16,15 +17,17 @@ npm run build && npm publish --access public
 runs the build. Consumers: `npm i lombok-charts`.
 
 ## jsDelivr (CDN — no account needed)
+
 Serves automatically once the package is on npm **or** from the GitHub repo/tag:
 
-- npm:    `https://cdn.jsdelivr.net/npm/lombok-charts@<version>/dist/lombok-charts.umd.min.js`
+- npm: `https://cdn.jsdelivr.net/npm/lombok-charts@<version>/dist/lombok-charts.umd.min.js`
 - GitHub: `https://cdn.jsdelivr.net/gh/codinglombok/LombokCharts@<tag>/dist/lombok-charts.umd.min.js`
 
 The GitHub form works immediately after you push a tag (because `dist/` is committed), even
 before publishing to npm. unpkg mirrors the npm form at `https://unpkg.com/lombok-charts/...`.
 
 ## Composer / Packagist
+
 `composer.json` uses the `vendor/package` name `codinglombok/lombok-charts`, license `Apache-2.0`.
 One-time setup:
 
@@ -38,6 +41,7 @@ then use `vendor/codinglombok/lombok-charts/dist/…`. `.gitattributes` keeps th
 (ships `src`, `dist`, `docs`, `README`, `LICENSE`, `NOTICE`).
 
 ## SourceForge (sf.net) — release downloads
+
 SourceForge hosts release archives (its File Release System); it is not a package manager, so
 uploads are manual:
 
@@ -50,16 +54,19 @@ uploads are manual:
 4. Mark the archive as the **default download** for the relevant platforms.
 
 ## Building the release archives
+
 ```bash
 npm run build          # refresh dist/
 npm run pack:release    # -> lombok-charts-<version>.{zip,tgz} (dist + src + license + readme)
 ```
 
 ## Version bumping
+
 Bump `version` in **both** `package.json` and (implicitly, via tag) the git tag; Packagist and
 jsDelivr read the tag. Keep them in sync; release-please handles this from Conventional Commits.
 
 ## Codeberg (mirror + CI + Pages)
+
 Codeberg is a git host (Forgejo-based), not a package registry. Mirror the repo there, run CI via
 the committed `.woodpecker.yml` (Woodpecker; manual onboarding), and optionally publish the docs
 site to Codeberg Pages. Raw file links work directly; for a CDN keep jsDelivr on npm/GitHub. Full
@@ -70,18 +77,18 @@ steps in [CODEBERG.md](CODEBERG.md).
 Merging the release-please PR (which bumps the version and creates the git tag + GitHub Release)
 triggers the `Release` workflow, which then:
 
-| Channel | Automated? | How | Required secrets |
-| --- | --- | --- | --- |
-| **npm** | ✅ yes | `npm publish --provenance` on release | `NPM_TOKEN` |
-| **GitHub Release** | ✅ yes | archives attached via `gh release upload` | (built-in `GITHUB_TOKEN`) |
-| **Packagist** | ✅ yes | git tag → webhook; plus an explicit update ping | webhook (one-time) **or** `PACKAGIST_USER` + `PACKAGIST_TOKEN` |
-| **SourceForge** | ✅ yes* | `rsync` archives to the File Release System | `SF_SSH_KEY` + `SF_USER` + `SF_PROJECT` |
-| **jsDelivr / unpkg** | ✅ yes | serve automatically from npm/GitHub — nothing to do | — |
+| Channel              | Automated? | How                                                 | Required secrets                                               |
+| -------------------- | ---------- | --------------------------------------------------- | -------------------------------------------------------------- |
+| **npm**              | ✅ yes     | `npm publish --provenance` on release               | `NPM_TOKEN`                                                    |
+| **GitHub Release**   | ✅ yes     | archives attached via `gh release upload`           | (built-in `GITHUB_TOKEN`)                                      |
+| **Packagist**        | ✅ yes     | git tag → webhook; plus an explicit update ping     | webhook (one-time) **or** `PACKAGIST_USER` + `PACKAGIST_TOKEN` |
+| **SourceForge**      | ✅ yes*    | `rsync` archives to the File Release System         | `SF_SSH_KEY` + `SF_USER` + `SF_PROJECT`                        |
+| **jsDelivr / unpkg** | ✅ yes     | serve automatically from npm/GitHub — nothing to do | —                                                              |
 
 \* The SourceForge and Packagist-ping steps are **gated on their secrets**: if you don't set them,
 those steps are skipped (the release still succeeds for the others). One-time prerequisites:
 
-- **npm**: create an automation token at npmjs.com → repo *Settings → Secrets → Actions* → `NPM_TOKEN`.
+- **npm**: create an automation token at npmjs.com → repo _Settings → Secrets → Actions_ → `NPM_TOKEN`.
 - **Packagist**: either set up the GitHub→Packagist webhook once (recommended), **or** add
   `PACKAGIST_USER` + `PACKAGIST_TOKEN` (from your Packagist profile) to force an update each release.
 - **SourceForge**: create the project, add an SSH key to your SF account, then set `SF_SSH_KEY`

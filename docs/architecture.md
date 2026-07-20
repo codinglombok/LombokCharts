@@ -35,19 +35,19 @@ owns the lifecycle methods (`update`, `appendData`, `stream`, `setTheme`, `resiz
 
 `mark.draw(ctx)` receives:
 
-| Field | Meaning |
-| --- | --- |
-| `r` | the active renderer |
-| `sx`, `sy` | x / y scales (for `coordinate() === 'cartesian'`) |
-| `area` | plot rectangle `{x, y, width, height}` |
-| `series` | resolved series: `{ xs, ys, count, label, color, visible, categories?, sizes? }` |
-| `rawData` | the original `config.data` (for marks with custom shapes) |
-| `opts` | resolved mark options `{ type, mode, … }` |
-| `color` | categorical color scale (`color.byIndex(i)`) |
-| `theme` | active theme tokens |
-| `t` | animation progress 0→1 |
-| `hits` | push `{x, y, seriesIndex, index, label, value, color, extra?}` for tooltips |
-| `stats` | set `{ drawn }` (used by the benchmark/overlay) |
+| Field      | Meaning                                                                          |
+| ---------- | -------------------------------------------------------------------------------- |
+| `r`        | the active renderer                                                              |
+| `sx`, `sy` | x / y scales (for `coordinate() === 'cartesian'`)                                |
+| `area`     | plot rectangle `{x, y, width, height}`                                           |
+| `series`   | resolved series: `{ xs, ys, count, label, color, visible, categories?, sizes? }` |
+| `rawData`  | the original `config.data` (for marks with custom shapes)                        |
+| `opts`     | resolved mark options `{ type, mode, … }`                                        |
+| `color`    | categorical color scale (`color.byIndex(i)`)                                     |
+| `theme`    | active theme tokens                                                              |
+| `t`        | animation progress 0→1                                                           |
+| `hits`     | push `{x, y, seriesIndex, index, label, value, color, extra?}` for tooltips      |
+| `stats`    | set `{ drawn }` (used by the benchmark/overlay)                                  |
 
 ## Coordinate kinds
 

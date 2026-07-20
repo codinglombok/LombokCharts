@@ -26,8 +26,14 @@ Open `index.html` (double-click works). It loads LombokCSS from CDN and LombokCh
 from this repo's build:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"
+></script>
 <script src="analytics-sim.js"></script>
 <script src="../../dist/lombok-charts.umd.js"></script>
 <script src="analytics.js"></script>
@@ -43,12 +49,12 @@ token set automatically.
 
 ## Files
 
-| File | Purpose |
-| --- | --- |
-| `index.html` | Layout (LombokCSS components + utilities). |
-| `app.css` | ~25 lines of layout glue (KPI/main grids, chart heights, status dots). |
+| File               | Purpose                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------ |
+| `index.html`       | Layout (LombokCSS components + utilities).                                                       |
+| `app.css`          | ~25 lines of layout glue (KPI/main grids, chart heights, status dots).                           |
 | `analytics-sim.js` | Zero-dependency data: trends, KPIs+deltas, traffic/channels/categories, activity matrix, orders. |
-| `analytics.js` | Wires the data to charts and DOM; owns range/chart-type/theme controls. |
+| `analytics.js`     | Wires the data to charts and DOM; owns range/chart-type/theme controls.                          |
 
 ## License
 

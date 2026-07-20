@@ -29,10 +29,17 @@ into the same functions.
 Just open `index.html` in a browser (double-click works). It loads:
 
 ```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
-<script defer src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css"
+/>
+<script
+  defer
+  src="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.js"
+></script>
 <script src="market-sim.js"></script>
-<script src="../../dist/lombok-charts.umd.js"></script>   <!-- from this repo's build -->
+<script src="../../dist/lombok-charts.umd.js"></script>
+<!-- from this repo's build -->
 <script src="dashboard.js"></script>
 ```
 
@@ -61,9 +68,11 @@ with your data source:
 ```js
 // instead of market.tick():
 socket.onmessage = (msg) => {
-  const candle = JSON.parse(msg.data);      // { t, open, high, low, close, volume }
+  const candle = JSON.parse(msg.data); // { t, open, high, low, close, volume }
   market.candles.push(candle);
-  refreshCharts(); renderBook(); refreshHeader();
+  refreshCharts();
+  renderBook();
+  refreshHeader();
 };
 ```
 
@@ -72,12 +81,12 @@ are plain LombokCharts instances — call `update(data)` or `appendData(point)` 
 
 ## Files
 
-| File | Purpose |
-| --- | --- |
-| `index.html` | Layout (LombokCSS components + utilities). |
-| `app.css` | ~30 lines of layout glue (grid, order-book depth bars, sparkline sizing). |
+| File            | Purpose                                                                    |
+| --------------- | -------------------------------------------------------------------------- |
+| `index.html`    | Layout (LombokCSS components + utilities).                                 |
+| `app.css`       | ~30 lines of layout glue (grid, order-book depth bars, sparkline sizing).  |
 | `market-sim.js` | Zero-dependency market data: GBM candles, order book, RSI/SMA/EMA, ticker. |
-| `dashboard.js` | Wires the simulator to charts and DOM; owns the live loop. |
+| `dashboard.js`  | Wires the simulator to charts and DOM; owns the live loop.                 |
 
 ## License
 
