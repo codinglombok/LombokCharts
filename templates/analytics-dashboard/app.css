@@ -1,21 +1,66 @@
 /* app.css — layout glue only; colors/spacing/typography come from LombokCSS. */
-.kpi-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--lc-space-4); }
-@media (min-width: 900px) { .kpi-grid { grid-template-columns: repeat(4, 1fr); } }
-
-.main-grid { display: grid; grid-template-columns: 1fr; gap: var(--lc-space-4); }
-@media (min-width: 992px) {
-  .main-grid { grid-template-columns: 2fr 1fr; }
-  .col-span-2 { grid-column: span 2; }
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--lc-space-4);
+}
+@media (min-width: 900px) {
+  .kpi-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
-.chart-lg { height: 320px; }
-.chart-md { height: 260px; }
-.spark { height: 40px; width: 100%; margin-top: 6px; }
-.num { font-variant-numeric: tabular-nums; }
-.stat-value { font-size: 1.6rem; font-weight: 700; line-height: 1.2; }
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--lc-space-4);
+}
+@media (min-width: 992px) {
+  .main-grid {
+    grid-template-columns: 2fr 1fr;
+  }
+  .col-span-2 {
+    grid-column: span 2;
+  }
+}
 
-.orders td, .orders th { font-variant-numeric: tabular-nums; }
-.dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-inline-end: 6px; }
-.dot.paid { background: var(--lc-success, #2f9e44); }
-.dot.pending { background: var(--lc-warning, #f59f00); }
-.dot.refunded { background: var(--lc-danger, #e03131); }
+.chart-lg {
+  height: 320px;
+}
+.chart-md {
+  height: 260px;
+}
+.spark {
+  height: 40px;
+  width: 100%;
+  margin-top: 6px;
+}
+.num {
+  font-variant-numeric: tabular-nums;
+}
+.stat-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.orders td,
+.orders th {
+  font-variant-numeric: tabular-nums;
+}
+.dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-inline-end: 6px;
+}
+.dot.paid {
+  background: var(--lc-success, #2f9e44);
+}
+.dot.pending {
+  background: var(--lc-warning, #f59f00);
+}
+.dot.refunded {
+  background: var(--lc-danger, #e03131);
+}

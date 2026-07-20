@@ -7,7 +7,15 @@
 const marks = new Map();
 
 /** @param {string} type @param {Function} MarkClass */
-export function registerMark(type, MarkClass) { marks.set(type, MarkClass); }
-export function getMark(type) { return marks.get(type); }
-export function hasMark(type) { return marks.has(type); }
-export function listMarks() { return [...marks.keys()]; }
+export function registerMark(type, MarkClass) {
+  marks.set(type, MarkClass);
+}
+export function getMark(type) {
+  return marks.get(type);
+}
+export function hasMark(type) {
+  return marks.has(type);
+}
+export function listMarks() {
+  return [...marks.keys()];
+}

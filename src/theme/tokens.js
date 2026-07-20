@@ -17,9 +17,23 @@
 
 /** Shared structural tokens (overridden per theme below). */
 export const baseTokens = {
-  palette: ['#4f8cff', '#ff6b6b', '#36c5a0', '#ffa94d', '#a78bfa', '#f06595', '#74c0fc', '#ffd43b'],
-  semantic: { positive: '#36c5a0', negative: '#ff6b6b', neutral: '#868e96' },
-  typography: { family: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif", size: 13, axisSize: 11, labelSize: 12 },
+  palette: [
+    "#4f8cff",
+    "#ff6b6b",
+    "#36c5a0",
+    "#ffa94d",
+    "#a78bfa",
+    "#f06595",
+    "#74c0fc",
+    "#ffd43b",
+  ],
+  semantic: { positive: "#36c5a0", negative: "#ff6b6b", neutral: "#868e96" },
+  typography: {
+    family: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
+    size: 13,
+    axisSize: 11,
+    labelSize: 12,
+  },
   spacing: { padding: 12, tickLength: 5, radius: 4 },
   motion: { duration: 450, easing: easeCubicOut },
 };

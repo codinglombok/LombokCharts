@@ -4,7 +4,7 @@
 // src/stream/scheduler.js
 // Batches incoming points and flushes them once per animation frame, so a 1000
 // points/sec feed still results in ~60 coalesced redraws/sec (constant 60fps).
-import { FrameScheduler } from '../utils/raf.js';
+import { FrameScheduler } from "../utils/raf.js";
 
 export class StreamScheduler {
   /** @param {(batch:Array<{x:number,y:number}>)=>void} flush */
@@ -24,5 +24,8 @@ export class StreamScheduler {
     else this._buffer.push(point);
     this._scheduler.request();
   }
-  cancel() { this._scheduler.cancel(); this._buffer = []; }
+  cancel() {
+    this._scheduler.cancel();
+    this._buffer = [];
+  }
 }

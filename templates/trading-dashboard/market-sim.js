@@ -6,11 +6,12 @@
 // Covers: GBM OHLC generation, streaming next-candle, synthetic order book,
 // RSI / SMA / EMA indicators, and a multi-asset ticker with sparkline history.
 (function (root) {
-  'use strict';
+  "use strict";
 
   /** Standard normal via Box–Muller. @returns {number} */
   function randn() {
-    let u = 0, v = 0;
+    let u = 0,
+      v = 0;
     while (u === 0) u = Math.random();
     while (v === 0) v = Math.random();
     return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
@@ -28,7 +29,7 @@
     const vol = opt.vol != null ? opt.vol : 0.02;
     const intervalMs = opt.intervalMs || 60000;
     let price = opt.start || 100;
-    let t = opt.startTime || (Date.now() - n * intervalMs);
+    let t = opt.startTime || Date.now() - n * intervalMs;
     const out = [];
     for (let i = 0; i < n; i++) {
       const c = stepCandle(price, drift, vol, t, intervalMs);
@@ -47,8 +48,17 @@
     const wick = Math.abs(vol) * open * (0.4 + Math.random() * 0.9);
     const high = Math.max(open, close) + Math.random() * wick;
     const low = Math.min(open, close) - Math.random() * wick;
-    const volume = Math.round((800 + Math.random() * 4200) * (1 + Math.abs(ret) * 40));
-    return { t: t, open: open, high: high, low: low, close: close, volume: volume };
+    const volume = Math.round(
+      (800 + Math.random() * 4200) * (1 + Math.abs(ret) * 40),
+    );
+    return {
+      t: t,
+      open: open,
+      high: high,
+      low: low,
+      close: close,
+      volume: volume,
+    };
   }
 
   /**
@@ -73,19 +83,30 @@
   function orderBook(mid, opt) {
     opt = opt || {};
     const levels = opt.levels || 12;
-    const spreadBps = opt.spreadBps || 4;           // half-spread in basis points
+    const spreadBps = opt.spreadBps || 4; // half-spread in basis points
     const step = opt.tick || mid * 0.0005;
     const halfSpread = mid * (spreadBps / 10000);
-    const bids = [], asks = [];
-    let bTotal = 0, aTotal = 0;
+    const bids = [],
+      asks = [];
+    let bTotal = 0,
+      aTotal = 0;
     for (let i = 0; i < levels; i++) {
       const bSize = Math.round((0.5 + Math.random() * 3) * 1000) / 100;
       const aSize = Math.round((0.5 + Math.random() * 3) * 1000) / 100;
-      bTotal += bSize; aTotal += aSize;
-      bids.push({ price: mid - halfSpread - i * step, size: bSize, total: bTotal });
-      asks.push({ price: mid + halfSpread + i * step, size: aSize, total: aTotal });
+      bTotal += bSize;
+      aTotal += aSize;
+      bids.push({
+        price: mid - halfSpread - i * step,
+        size: bSize,
+        total: bTotal,
+      });
+      asks.push({
+        price: mid + halfSpread + i * step,
+        size: aSize,
+        total: aTotal,
+      });
     }
-    return { bids: bids, asks: asks, spread: (asks[0].price - bids[0].price) };
+    return { bids: bids, asks: asks, spread: asks[0].price - bids[0].price };
   }
 
   /** Simple moving average. @param {number[]} values @param {number} period */
@@ -120,16 +141,20 @@
     period = period || 14;
     const out = new Array(closes.length).fill(null);
     if (closes.length <= period) return out;
-    let gain = 0, loss = 0;
+    let gain = 0,
+      loss = 0;
     for (let i = 1; i <= period; i++) {
       const d = closes[i] - closes[i - 1];
-      if (d >= 0) gain += d; else loss -= d;
+      if (d >= 0) gain += d;
+      else loss -= d;
     }
-    let avgG = gain / period, avgL = loss / period;
+    let avgG = gain / period,
+      avgL = loss / period;
     out[period] = 100 - 100 / (1 + (avgL === 0 ? 100 : avgG / avgL));
     for (let i = period + 1; i < closes.length; i++) {
       const d = closes[i] - closes[i - 1];
-      const g = d >= 0 ? d : 0, l = d < 0 ? -d : 0;
+      const g = d >= 0 ? d : 0,
+        l = d < 0 ? -d : 0;
       avgG = (avgG * (period - 1) + g) / period;
       avgL = (avgL * (period - 1) + l) / period;
       out[i] = avgL === 0 ? 100 : 100 - 100 / (1 + avgG / avgL);
@@ -146,13 +171,23 @@
     const assets = defs.map(function (d) {
       const hist = [];
       for (let i = 0; i < sparkLen; i++) hist.push(d.price);
-      return { symbol: d.symbol, price: d.price, open: d.price, vol: d.vol || 0.015, changePct: 0, spark: hist };
+      return {
+        symbol: d.symbol,
+        price: d.price,
+        open: d.price,
+        vol: d.vol || 0.015,
+        changePct: 0,
+        spark: hist,
+      };
     });
     return {
       assets: assets,
       tick: function () {
         for (const a of assets) {
-          a.price = Math.max(0.0001, a.price * (1 + (0.0001 + a.vol * randn())));
+          a.price = Math.max(
+            0.0001,
+            a.price * (1 + (0.0001 + a.vol * randn())),
+          );
           a.changePct = ((a.price - a.open) / a.open) * 100;
           a.spark.push(a.price);
           if (a.spark.length > sparkLen) a.spark.shift();
@@ -168,15 +203,38 @@
    */
   function createMarket(opt) {
     opt = opt || {};
-    const params = { drift: opt.drift, vol: opt.vol, intervalMs: opt.intervalMs || 60000 };
-    let candles = generateOHLC(Object.assign({ n: opt.n || 180, start: opt.start || 100 }, params));
+    const params = {
+      drift: opt.drift,
+      vol: opt.vol,
+      intervalMs: opt.intervalMs || 60000,
+    };
+    let candles = generateOHLC(
+      Object.assign({ n: opt.n || 180, start: opt.start || 100 }, params),
+    );
     return {
       params: params,
-      get candles() { return candles; },
-      closes: function () { return candles.map(function (c) { return c.close; }); },
-      book: function () { return orderBook(candles[candles.length - 1].close, opt.book); },
-      rsi: function (p) { return rsi(candles.map(function (c) { return c.close; }), p); },
-      last: function () { return candles[candles.length - 1]; },
+      get candles() {
+        return candles;
+      },
+      closes: function () {
+        return candles.map(function (c) {
+          return c.close;
+        });
+      },
+      book: function () {
+        return orderBook(candles[candles.length - 1].close, opt.book);
+      },
+      rsi: function (p) {
+        return rsi(
+          candles.map(function (c) {
+            return c.close;
+          }),
+          p,
+        );
+      },
+      last: function () {
+        return candles[candles.length - 1];
+      },
       tick: function () {
         const c = nextCandle(candles[candles.length - 1], params);
         candles.push(c);
@@ -191,11 +249,13 @@
     generateOHLC: generateOHLC,
     nextCandle: nextCandle,
     orderBook: orderBook,
-    sma: sma, ema: ema, rsi: rsi,
+    sma: sma,
+    ema: ema,
+    rsi: rsi,
     createTicker: createTicker,
     createMarket: createMarket,
   };
 
-  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.MarketSim = api;
-})(typeof self !== 'undefined' ? self : this);
+})(typeof self !== "undefined" ? self : this);
