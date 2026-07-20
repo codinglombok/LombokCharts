@@ -8,7 +8,7 @@
 [![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg)](https://www.jsdelivr.com/package/npm/lombok-charts)
 [![gzip size](https://img.shields.io/badge/gzip-19%20KB-success.svg)](#)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![SourceForge](https://img.shields.io/sourceforge/dt/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/)
+[![Download LombokCharts](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
 
 A zero-dependency charting library for the browser. It pairs a small grammar-of-graphics
 core (Data → Scale → Mark) with pluggable Canvas and SVG renderers, LTTB decimation, and a
