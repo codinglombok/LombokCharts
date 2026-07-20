@@ -19,10 +19,7 @@ export function lttb(xs, ys, n, threshold) {
   if (threshold >= n || threshold <= 2) {
     const ox = new Float64Array(n);
     const oy = new Float64Array(n);
-    for (let i = 0; i < n; i++) {
-      ox[i] = xs[i];
-      oy[i] = ys[i];
-    }
+    for (let i = 0; i < n; i++) { ox[i] = xs[i]; oy[i] = ys[i]; }
     return { xs: ox, ys: oy, count: n };
   }
 
@@ -64,11 +61,10 @@ export function lttb(xs, ys, n, threshold) {
     let nextA = rangeOffs;
     for (; rangeOffs < rangeTo; rangeOffs++) {
       // Triangle area between point A, candidate, and next-bucket average.
-      const area =
-        Math.abs(
-          (pointAX - avgX) * (ys[rangeOffs] - pointAY) -
-            (pointAX - xs[rangeOffs]) * (avgY - pointAY),
-        ) * 0.5;
+      const area = Math.abs(
+        (pointAX - avgX) * (ys[rangeOffs] - pointAY) -
+        (pointAX - xs[rangeOffs]) * (avgY - pointAY)
+      ) * 0.5;
       if (area > maxArea) {
         maxArea = area;
         nextA = rangeOffs;
@@ -94,12 +90,8 @@ export function lttb(xs, ys, n, threshold) {
  */
 export function minMaxDecimate(xs, ys, n, threshold) {
   if (threshold >= n) {
-    const ox = new Float64Array(n);
-    const oy = new Float64Array(n);
-    for (let i = 0; i < n; i++) {
-      ox[i] = xs[i];
-      oy[i] = ys[i];
-    }
+    const ox = new Float64Array(n); const oy = new Float64Array(n);
+    for (let i = 0; i < n; i++) { ox[i] = xs[i]; oy[i] = ys[i]; }
     return { xs: ox, ys: oy, count: n };
   }
   const buckets = Math.floor(threshold / 2);
@@ -110,20 +102,15 @@ export function minMaxDecimate(xs, ys, n, threshold) {
   for (let b = 0; b < buckets; b++) {
     const s = Math.floor(b * size);
     const e = Math.min(n, Math.floor((b + 1) * size));
-    let minI = s;
-    let maxI = s;
+    let minI = s; let maxI = s;
     for (let i = s; i < e; i++) {
       if (ys[i] < ys[minI]) minI = i;
       if (ys[i] > ys[maxI]) maxI = i;
     }
     const first = Math.min(minI, maxI);
     const second = Math.max(minI, maxI);
-    ox[k] = xs[first];
-    oy[k] = ys[first];
-    k++;
-    ox[k] = xs[second];
-    oy[k] = ys[second];
-    k++;
+    ox[k] = xs[first]; oy[k] = ys[first]; k++;
+    ox[k] = xs[second]; oy[k] = ys[second]; k++;
   }
   return { xs: ox, ys: oy, count: k };
 }

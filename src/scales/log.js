@@ -17,7 +17,7 @@ export function logScale(domain, range, base = 10) {
   scale.domain = [d0, d1];
   scale.range = [r0, r1];
   scale.bandwidth = 0;
-  scale.kind = "log";
+  scale.kind = 'log';
   scale.ticks = () => {
     const out = [];
     const start = Math.floor(l0);

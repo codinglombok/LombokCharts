@@ -4,38 +4,34 @@
 // build-site.mjs — assemble a static GitHub Pages site into _site/.
 // Copies the landing page, dist, examples and templates, and renders docs
 // markdown into LombokCSS-styled HTML. Build-time only (uses the `marked` devDep).
-import { marked } from "marked";
-import fs from "node:fs";
-import path from "node:path";
+import { marked } from 'marked';
+import fs from 'node:fs';
+import path from 'node:path';
 
-const root = path.resolve(
-  path.dirname(new URL(import.meta.url).pathname),
-  "..",
-);
-const out = path.join(root, "_site");
+const root = path.resolve(path.dirname(new URL(import.meta.url).pathname), '..');
+const out = path.join(root, '_site');
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(out, { recursive: true });
 
-const cp = (src, dst) =>
-  fs.cpSync(path.join(root, src), path.join(out, dst), { recursive: true });
+const cp = (src, dst) => fs.cpSync(path.join(root, src), path.join(out, dst), { recursive: true });
 
 // Static assets + built library + runnable demos
-cp("site/index.html", "index.html");
-cp("site/site.css", "site.css");
-cp("dist", "dist");
-cp("examples", "examples");
-cp("templates", "templates");
-cp("assets/social-preview.png", "social-preview.png");
+cp('site/index.html', 'index.html');
+cp('site/site.css', 'site.css');
+cp('dist', 'dist');
+cp('examples', 'examples');
+cp('templates', 'templates');
+cp('assets/social-preview.png', 'social-preview.png');
 
 // Render docs markdown -> styled HTML with a sidebar
 const DOCS = [
-  ["index", "Overview", null],
-  ["api", "API Reference", "api.md"],
-  ["theming", "Theming", "theming.md"],
-  ["architecture", "Architecture", "architecture.md"],
-  ["porting", "Porting", "porting.md"],
+  ['index', 'Overview', null],
+  ['api', 'API Reference', 'api.md'],
+  ['theming', 'Theming', 'theming.md'],
+  ['architecture', 'Architecture', 'architecture.md'],
+  ['porting', 'Porting', 'porting.md'],
 ];
-fs.mkdirSync(path.join(out, "docs"), { recursive: true });
+fs.mkdirSync(path.join(out, 'docs'), { recursive: true });
 
 const overview = `# LombokCharts documentation
 
@@ -48,9 +44,7 @@ decimation and real-time streaming. Use the sidebar to browse the reference.
 - [Analytics dashboard template](../templates/analytics-dashboard/index.html)
 `;
 
-const nav = DOCS.map(
-  ([slug, title]) => `<a href="${slug}.html" data-slug="${slug}">${title}</a>`,
-).join("\n");
+const nav = DOCS.map(([slug, title]) => `<a href="${slug}.html" data-slug="${slug}">${title}</a>`).join('\n');
 
 function shell(title, bodyHtml, slug) {
   return `<!DOCTYPE html>
@@ -85,19 +79,10 @@ function shell(title, bodyHtml, slug) {
 }
 
 for (const [slug, title, file] of DOCS) {
-  const md = file
-    ? fs.readFileSync(path.join(root, "docs", file), "utf8")
-    : overview;
+  const md = file ? fs.readFileSync(path.join(root, 'docs', file), 'utf8') : overview;
   // .md links -> .html so cross-doc navigation works on the static site
   let html = marked.parse(md).replace(/href="([^"]+)\.md"/g, 'href="$1.html"');
-  fs.writeFileSync(
-    path.join(out, "docs", `${slug}.html`),
-    shell(title, html, slug),
-  );
+  fs.writeFileSync(path.join(out, 'docs', `${slug}.html`), shell(title, html, slug));
 }
 
-console.log(
-  "Site assembled at _site/ (" +
-    DOCS.length +
-    " doc pages + examples + templates + dist).",
-);
+console.log('Site assembled at _site/ (' + DOCS.length + ' doc pages + examples + templates + dist).');

@@ -81,13 +81,7 @@ export function deepMerge(target, source) {
   for (const key of Object.keys(source)) {
     const sv = source[key];
     const tv = out[key];
-    if (
-      sv &&
-      typeof sv === "object" &&
-      !Array.isArray(sv) &&
-      tv &&
-      typeof tv === "object"
-    ) {
+    if (sv && typeof sv === 'object' && !Array.isArray(sv) && tv && typeof tv === 'object') {
       out[key] = deepMerge(tv, sv);
     } else {
       out[key] = sv;

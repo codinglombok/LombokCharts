@@ -32,11 +32,7 @@ export class ZoomPan {
       [lo, hi] = this._clamp(lo, hi, full);
       this.onChange([lo, hi]);
     };
-    this._onDown = (e) => {
-      this._dragging = true;
-      this._lastX = e.clientX;
-      this.target.style.cursor = "grabbing";
-    };
+    this._onDown = (e) => { this._dragging = true; this._lastX = e.clientX; this.target.style.cursor = 'grabbing'; };
     this._onMove = (e) => {
       if (!this._dragging) return;
       const { x, full } = this.getState();
@@ -49,32 +45,23 @@ export class ZoomPan {
       [lo, hi] = this._clamp(lo, hi, full);
       this.onChange([lo, hi]);
     };
-    this._onUp = () => {
-      this._dragging = false;
-      this.target.style.cursor = "";
-    };
-    this.target.addEventListener("wheel", this._onWheel, { passive: false });
-    this.target.addEventListener("mousedown", this._onDown);
-    window.addEventListener("mousemove", this._onMove);
-    window.addEventListener("mouseup", this._onUp);
+    this._onUp = () => { this._dragging = false; this.target.style.cursor = ''; };
+    this.target.addEventListener('wheel', this._onWheel, { passive: false });
+    this.target.addEventListener('mousedown', this._onDown);
+    window.addEventListener('mousemove', this._onMove);
+    window.addEventListener('mouseup', this._onUp);
   }
   _clamp(lo, hi, full) {
     const span = hi - lo;
-    if (lo < full[0]) {
-      lo = full[0];
-      hi = lo + span;
-    }
-    if (hi > full[1]) {
-      hi = full[1];
-      lo = hi - span;
-    }
+    if (lo < full[0]) { lo = full[0]; hi = lo + span; }
+    if (hi > full[1]) { hi = full[1]; lo = hi - span; }
     if (lo < full[0]) lo = full[0];
     return [lo, hi];
   }
   destroy() {
-    this.target.removeEventListener("wheel", this._onWheel);
-    this.target.removeEventListener("mousedown", this._onDown);
-    window.removeEventListener("mousemove", this._onMove);
-    window.removeEventListener("mouseup", this._onUp);
+    this.target.removeEventListener('wheel', this._onWheel);
+    this.target.removeEventListener('mousedown', this._onDown);
+    window.removeEventListener('mousemove', this._onMove);
+    window.removeEventListener('mouseup', this._onUp);
   }
 }

@@ -4,7 +4,7 @@
 // src/data/adapter.js
 // Normalize user input (array of objects) into typed arrays + category info.
 // Pure logic (no DOM).
-import { extent } from "../utils/math.js";
+import { extent } from '../utils/math.js';
 
 /**
  * @typedef {Object} SeriesData
@@ -17,7 +17,7 @@ import { extent } from "../utils/math.js";
 
 /** Resolve an accessor for a key that may be a string or a function. */
 export function accessor(key) {
-  if (typeof key === "function") return key;
+  if (typeof key === 'function') return key;
   return (d) => d[key];
 }
 
@@ -38,7 +38,7 @@ export function toSeries(data, xKey, yKey) {
   let categorical = false;
   for (let i = 0; i < n; i++) {
     const xv = xa(data[i], i);
-    if (typeof xv !== "number") categorical = true;
+    if (typeof xv !== 'number') categorical = true;
     ys[i] = +ya(data[i], i);
   }
   let categories = null;

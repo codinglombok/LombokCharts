@@ -11,16 +11,12 @@ export class RingBuffer {
     this.capacity = Math.max(1, capacity | 0);
     this.xs = new Float64Array(this.capacity);
     this.ys = new Float64Array(this.capacity);
-    this._head = 0; // next write position
-    this._size = 0; // valid items
+    this._head = 0;   // next write position
+    this._size = 0;   // valid items
   }
 
-  get size() {
-    return this._size;
-  }
-  get full() {
-    return this._size === this.capacity;
-  }
+  get size() { return this._size; }
+  get full() { return this._size === this.capacity; }
 
   /** @param {number} x @param {number} y */
   push(x, y) {
@@ -36,12 +32,8 @@ export class RingBuffer {
     return (start + i) % this.capacity;
   }
 
-  x(i) {
-    return this.xs[this._phys(i)];
-  }
-  y(i) {
-    return this.ys[this._phys(i)];
-  }
+  x(i) { return this.xs[this._phys(i)]; }
+  y(i) { return this.ys[this._phys(i)]; }
 
   /**
    * Copy logical-order data into contiguous typed arrays for rendering.
@@ -59,8 +51,5 @@ export class RingBuffer {
     return { xs: ox, ys: oy, count: n };
   }
 
-  clear() {
-    this._head = 0;
-    this._size = 0;
-  }
+  clear() { this._head = 0; this._size = 0; }
 }

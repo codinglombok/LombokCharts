@@ -367,7 +367,7 @@ var CanvasRenderer = class extends Renderer {
 
 // src/core/SvgRenderer.js
 var NS = "http://www.w3.org/2000/svg";
-var esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+var esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 var SvgRenderer = class extends Renderer {
   constructor(container, size) {
     super(container, size);
@@ -1645,8 +1645,7 @@ var Chart = class {
         if (hit) {
           const h = this._qtHits[hit.index];
           const valTxt = typeof h.value === "number" ? formatNumber(h.value) : h.value;
-          const esc2 = (v) => String(v).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
-          this.tooltip.show(h.x, h.y, `<strong>${h.label != null ? esc2(h.label) : ""}</strong><br>${esc2(valTxt)}${h.extra ? "<br>" + esc2(h.extra) : ""}`);
+          this.tooltip.show(h.x, h.y, `<strong>${h.label != null ? h.label : ""}</strong><br>${valTxt}${h.extra ? "<br>" + h.extra : ""}`);
           this.emitter.emit("hover", h);
         } else this.tooltip.hide();
       }
@@ -1904,23 +1903,41 @@ var Mark = class {
   constructor(options = {}) {
     this.options = options;
   }
-  /** @returns {'cartesian'|'polar'|'none'} */
+  /**
+   * Coordinate system this mark draws in.
+   * @returns {string} 'cartesian' | 'polar' | 'none'
+   */
   coordinate() {
     return "cartesian";
   }
   /**
    * Domain hints so the Chart can build cartesian scales.
+   * @param {Array<Object>} [series]
+   * @param {Object} [opts]
+   * @param {Array<Object>} [rawData]
    * @returns {{x:{type:string,values?:string[],domain?:number[]}, y:{domain:number[]}}|null}
    */
-  domains() {
+  // eslint-disable-next-line no-unused-vars
+  domains(series, opts, rawData) {
     return null;
   }
-  /** @param {import('../core/Chart.js').DrawContext} ctx */
-  draw() {
+  /**
+   * Draw the mark. Concrete marks must override this.
+   * @param {import('../core/Chart.js').DrawContext} ctx
+   * @returns {void}
+   */
+  // eslint-disable-next-line no-unused-vars
+  draw(ctx) {
     throw new Error("Mark.draw not implemented");
   }
-  /** @returns {{label:string,color:string}[]|null} */
-  legendItems() {
+  /**
+   * Legend entries for this mark, if any.
+   * @param {Array<Object>} [series]
+   * @param {Object} [ctx]
+   * @returns {{label:string,color:string}[]|null}
+   */
+  // eslint-disable-next-line no-unused-vars
+  legendItems(series, ctx) {
     return null;
   }
 };

@@ -1,274 +1,104 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" data-style="modern-corporate-flat" data-theme="light">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>LombokCharts — zero-dependency charts</title>
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="LombokCharts" />
-    <meta
-      property="og:description"
-      content="Zero-dependency charts for the web: grammar of graphics, Canvas + SVG, LTTB decimation, real-time streaming. ~19 KB gzipped."
-    />
-    <meta
-      property="og:url"
-      content="https://codinglombok.github.io/LombokCharts/"
-    />
-    <meta
-      property="og:image"
-      content="https://codinglombok.github.io/LombokCharts/social-preview.png"
-    />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="LombokCharts" />
-    <meta
-      name="twitter:description"
-      content="Zero-dependency charts for the web. ~19 KB gzipped."
-    />
-    <meta
-      name="twitter:image"
-      content="https://codinglombok.github.io/LombokCharts/social-preview.png"
-    />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css"
-    />
-    <link rel="stylesheet" href="site.css" />
-  </head>
-  <body>
-    <nav class="navbar">
-      <span class="navbar-brand">LombokCharts</span>
-      <span class="chip">zero deps</span><span class="chip">Canvas + SVG</span
-      ><span class="chip">~18 KB gzip</span>
-      <div class="flex items-center gap-2" style="margin-inline-start: auto">
-        <select id="style" class="select select-sm" aria-label="Design style">
-          <option value="modern-corporate-flat">Modern Corporate</option>
-          <option value="resonant-stark">Resonant Stark</option>
-          <option value="neo-brutalism">Neo Brutalism</option>
-          <option value="semantic-minimalist">Semantic Minimalist</option>
-          <option value="glassmorphism">Glassmorphism</option>
-        </select>
-        <button id="theme" class="btn btn-soft btn-sm">Dark</button>
-        <a class="btn btn-primary btn-sm" href="docs/index.html">Docs</a>
-      </div>
-    </nav>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LombokCharts — zero-dependency charts</title>
+<meta property="og:type" content="website" />
+<meta property="og:title" content="LombokCharts" />
+<meta property="og:description" content="Zero-dependency charts for the web: grammar of graphics, Canvas + SVG, LTTB decimation, real-time streaming. ~19 KB gzipped." />
+<meta property="og:url" content="https://codinglombok.github.io/LombokCharts/" />
+<meta property="og:image" content="https://codinglombok.github.io/LombokCharts/social-preview.png" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="LombokCharts" />
+<meta name="twitter:description" content="Zero-dependency charts for the web. ~19 KB gzipped." />
+<meta name="twitter:image" content="https://codinglombok.github.io/LombokCharts/social-preview.png" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lombokcss/dist/lombok.min.css">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<nav class="navbar">
+  <span class="navbar-brand">LombokCharts</span>
+  <span class="chip">zero deps</span><span class="chip">Canvas + SVG</span><span class="chip">~18 KB gzip</span>
+  <div class="flex items-center gap-2" style="margin-inline-start:auto">
+    <select id="style" class="select select-sm" aria-label="Design style">
+      <option value="modern-corporate-flat">Modern Corporate</option>
+      <option value="resonant-stark">Resonant Stark</option>
+      <option value="neo-brutalism">Neo Brutalism</option>
+      <option value="semantic-minimalist">Semantic Minimalist</option>
+      <option value="glassmorphism">Glassmorphism</option>
+    </select>
+    <button id="theme" class="btn btn-soft btn-sm">Dark</button>
+    <a class="btn btn-primary btn-sm" href="docs/index.html">Docs</a>
+  </div>
+</nav>
 
-    <header class="container hero">
-      <h1>Charts that scale from 5 points to 5 million.</h1>
-      <p class="lead text-muted">
-        A zero-dependency charting library: grammar-of-graphics core, Canvas
-        &amp; SVG renderers, LTTB decimation, and real-time streaming — in about
-        18&nbsp;KB gzipped.
-      </p>
-      <div class="flex gap-2 mt-4">
-        <a class="btn btn-primary" href="examples/index.html"
-          >Explore examples</a
-        >
-        <a class="btn btn-outline" href="examples/stress.html"
-          >1M / 5M benchmark</a
-        >
-      </div>
-    </header>
+<header class="container hero">
+  <h1>Charts that scale from 5 points to 5 million.</h1>
+  <p class="lead text-muted">A zero-dependency charting library: grammar-of-graphics core, Canvas &amp; SVG renderers, LTTB decimation, and real-time streaming — in about 18&nbsp;KB gzipped.</p>
+  <div class="flex gap-2 mt-4">
+    <a class="btn btn-primary" href="examples/index.html">Explore examples</a>
+    <a class="btn btn-outline" href="examples/stress.html">1M / 5M benchmark</a>
+  </div>
+</header>
 
-    <main class="container section">
-      <div class="demo-grid mb-6">
-        <div class="card">
-          <div class="card-body">
-            <h2 class="card-title text-sm mb-2">Bar</h2>
-            <div class="demo" id="d1"></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h2 class="card-title text-sm mb-2">Line</h2>
-            <div class="demo" id="d2"></div>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h2 class="card-title text-sm mb-2">Donut</h2>
-            <div class="demo" id="d3"></div>
-          </div>
-        </div>
-      </div>
+<main class="container section">
+  <div class="demo-grid mb-6">
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Bar</h2><div class="demo" id="d1"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Line</h2><div class="demo" id="d2"></div></div></div>
+    <div class="card"><div class="card-body"><h2 class="card-title text-sm mb-2">Donut</h2><div class="demo" id="d3"></div></div></div>
+  </div>
 
-      <h2 class="text-xl font-semibold mb-3">Templates</h2>
-      <div class="card-grid mb-6">
-        <a
-          class="card"
-          href="templates/trading-dashboard/index.html"
-          style="text-decoration: none; color: inherit"
-          ><div class="card-body">
-            <h3 class="card-title">Trading Terminal</h3>
-            <p class="text-muted text-sm">
-              Candlestick + volume + RSI with a synchronized crosshair, live
-              order book, trade form, and watchlist sparklines.
-            </p>
-          </div></a
-        >
-        <a
-          class="card"
-          href="templates/analytics-dashboard/index.html"
-          style="text-decoration: none; color: inherit"
-          ><div class="card-body">
-            <h3 class="card-title">Analytics Dashboard</h3>
-            <p class="text-muted text-sm">
-              KPI cards with sparklines, revenue area/line, donut, horizontal
-              bar, treemap, and an activity heatmap.
-            </p>
-          </div></a
-        >
-        <a
-          class="card"
-          href="templates/monitoring-dashboard/index.html"
-          style="text-decoration: none; color: inherit"
-          ><div class="card-body">
-            <h3 class="card-title">Monitoring Dashboard</h3>
-            <p class="text-muted text-sm">
-              Real-time gauges, ring-buffered streaming areas, and a per-host
-              latency sparkline table.
-            </p>
-          </div></a
-        >
-        <a
-          class="card"
-          href="templates/crm-dashboard/index.html"
-          style="text-decoration: none; color: inherit"
-          ><div class="card-body">
-            <h3 class="card-title">CRM Dashboard</h3>
-            <p class="text-muted text-sm">
-              Sidebar app-shell with a sales funnel, sankey lead flow, rep
-              leaderboard, and contacts table.
-            </p>
-          </div></a
-        >
-      </div>
+  <h2 class="text-xl font-semibold mb-3">Templates</h2>
+  <div class="card-grid mb-6">
+    <a class="card" href="templates/trading-dashboard/index.html" style="text-decoration:none;color:inherit"><div class="card-body">
+      <h3 class="card-title">Trading Terminal</h3>
+      <p class="text-muted text-sm">Candlestick + volume + RSI with a synchronized crosshair, live order book, trade form, and watchlist sparklines.</p>
+    </div></a>
+    <a class="card" href="templates/analytics-dashboard/index.html" style="text-decoration:none;color:inherit"><div class="card-body">
+      <h3 class="card-title">Analytics Dashboard</h3>
+      <p class="text-muted text-sm">KPI cards with sparklines, revenue area/line, donut, horizontal bar, treemap, and an activity heatmap.</p>
+    </div></a>
+    <a class="card" href="templates/monitoring-dashboard/index.html" style="text-decoration:none;color:inherit"><div class="card-body">
+      <h3 class="card-title">Monitoring Dashboard</h3>
+      <p class="text-muted text-sm">Real-time gauges, ring-buffered streaming areas, and a per-host latency sparkline table.</p>
+    </div></a>
+    <a class="card" href="templates/crm-dashboard/index.html" style="text-decoration:none;color:inherit"><div class="card-body">
+      <h3 class="card-title">CRM Dashboard</h3>
+      <p class="text-muted text-sm">Sidebar app-shell with a sales funnel, sankey lead flow, rep leaderboard, and contacts table.</p>
+    </div></a>
+  </div>
 
-      <h2 class="text-xl font-semibold mb-3">Why LombokCharts</h2>
-      <div class="card-grid mb-6">
-        <div class="card">
-          <div class="card-body">
-            <h3 class="card-title text-sm">Zero dependencies</h3>
-            <p class="text-muted text-sm">
-              Native Canvas2D / SVG / ResizeObserver / rAF / typed arrays.
-              Nothing else.
-            </p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h3 class="card-title text-sm">Scales to millions</h3>
-            <p class="text-muted text-sm">
-              Typed-array pipeline + LTTB decimation keeps million-point series
-              interactive.
-            </p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h3 class="card-title text-sm">Real-time built in</h3>
-            <p class="text-muted text-sm">
-              appendData, async iterators, EventSource, WebSocket — one redraw
-              per frame.
-            </p>
-          </div>
-        </div>
-        <div class="card">
-          <div class="card-body">
-            <h3 class="card-title text-sm">Tree-shakeable</h3>
-            <p class="text-muted text-sm">
-              Register only the marks you use; your bundler drops the rest.
-            </p>
-          </div>
-        </div>
-      </div>
+  <h2 class="text-xl font-semibold mb-3">Why LombokCharts</h2>
+  <div class="card-grid mb-6">
+    <div class="card"><div class="card-body"><h3 class="card-title text-sm">Zero dependencies</h3><p class="text-muted text-sm">Native Canvas2D / SVG / ResizeObserver / rAF / typed arrays. Nothing else.</p></div></div>
+    <div class="card"><div class="card-body"><h3 class="card-title text-sm">Scales to millions</h3><p class="text-muted text-sm">Typed-array pipeline + LTTB decimation keeps million-point series interactive.</p></div></div>
+    <div class="card"><div class="card-body"><h3 class="card-title text-sm">Real-time built in</h3><p class="text-muted text-sm">appendData, async iterators, EventSource, WebSocket — one redraw per frame.</p></div></div>
+    <div class="card"><div class="card-body"><h3 class="card-title text-sm">Tree-shakeable</h3><p class="text-muted text-sm">Register only the marks you use; your bundler drops the rest.</p></div></div>
+  </div>
 
-      <h2 class="text-xl font-semibold mb-3">Install</h2>
-      <pre><code>npm install lombok-charts</code></pre>
-      <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"&gt;&lt;/script&gt;
+  <h2 class="text-xl font-semibold mb-3">Install</h2>
+  <pre><code>npm install lombok-charts</code></pre>
+  <pre><code>&lt;script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"&gt;&lt;/script&gt;
 &lt;script&gt; LombokCharts.chart('#app', { data, mark: 'bar' }); &lt;/script&gt;</code></pre>
 
-      <p class="text-muted text-sm mt-6">
-        Apache-2.0 · © codinglombok · built with LombokCSS
-      </p>
-    </main>
+  <p class="text-muted text-sm mt-6">Apache-2.0 · © codinglombok · built with LombokCSS</p>
+</main>
 
-    <script src="dist/lombok-charts.umd.js"></script>
-    <script>
-      var root = document.documentElement,
-        C = LombokCharts,
-        charts = [];
-      function theme() {
-        var cs = getComputedStyle(document.documentElement);
-        var g = function (n, f) {
-          var v = cs.getPropertyValue(n);
-          return (v && v.trim()) || f;
-        };
-        return {
-          colors: {
-            background: "transparent",
-            surface: g("--lc-surface", "#fff"),
-            text: g("--lc-text", "#212529"),
-            muted: g("--lc-muted", "#868e96"),
-            grid: g("--lc-border", "#e9ecef"),
-            axis: g("--lc-muted", "#868e96"),
-            tooltipBg: g("--lc-text", "#212529"),
-            tooltipText: g("--lc-surface", "#fff"),
-          },
-        };
-      }
-      function build() {
-        charts.forEach(function (c) {
-          c.destroy();
-        });
-        charts = [];
-        var th = theme();
-        charts.push(
-          C.chart("#d1", {
-            data: [
-              { label: "Q1", value: 120 },
-              { label: "Q2", value: 200 },
-              { label: "Q3", value: 150 },
-              { label: "Q4", value: 280 },
-            ],
-            mark: "bar",
-            theme: th,
-          }),
-        );
-        charts.push(
-          C.chart("#d2", {
-            data: Array.from({ length: 24 }, function (_, i) {
-              return { label: i, value: Math.sin(i / 3) * 20 + 50 };
-            }),
-            x: "label",
-            series: [{ key: "value", label: "v" }],
-            mark: "spline",
-            theme: th,
-          }),
-        );
-        charts.push(
-          C.chart("#d3", {
-            data: [
-              { label: "A", value: 40 },
-              { label: "B", value: 25 },
-              { label: "C", value: 20 },
-              { label: "D", value: 15 },
-            ],
-            mark: "donut",
-            theme: th,
-          }),
-        );
-      }
-      build();
-      document.getElementById("style").onchange = function (e) {
-        root.setAttribute("data-style", e.target.value);
-        build();
-      };
-      document.getElementById("theme").onclick = function (e) {
-        var d = root.getAttribute("data-theme") === "dark";
-        root.setAttribute("data-theme", d ? "light" : "dark");
-        e.target.textContent = d ? "Dark" : "Light";
-        build();
-      };
-    </script>
-  </body>
+<script src="dist/lombok-charts.umd.js"></script>
+<script>
+  var root = document.documentElement, C = LombokCharts, charts = [];
+  function theme(){ var cs=getComputedStyle(document.documentElement); var g=function(n,f){var v=cs.getPropertyValue(n);return (v&&v.trim())||f;}; return { colors:{ background:'transparent', surface:g('--lc-surface','#fff'), text:g('--lc-text','#212529'), muted:g('--lc-muted','#868e96'), grid:g('--lc-border','#e9ecef'), axis:g('--lc-muted','#868e96'), tooltipBg:g('--lc-text','#212529'), tooltipText:g('--lc-surface','#fff') } }; }
+  function build(){
+    charts.forEach(function(c){c.destroy();}); charts=[];
+    var th=theme();
+    charts.push(C.chart('#d1',{ data:[{label:'Q1',value:120},{label:'Q2',value:200},{label:'Q3',value:150},{label:'Q4',value:280}], mark:'bar', theme:th }));
+    charts.push(C.chart('#d2',{ data:Array.from({length:24},function(_,i){return {label:i,value:Math.sin(i/3)*20+50};}), x:'label', series:[{key:'value',label:'v'}], mark:'spline', theme:th }));
+    charts.push(C.chart('#d3',{ data:[{label:'A',value:40},{label:'B',value:25},{label:'C',value:20},{label:'D',value:15}], mark:'donut', theme:th }));
+  }
+  build();
+  document.getElementById('style').onchange=function(e){ root.setAttribute('data-style', e.target.value); build(); };
+  document.getElementById('theme').onclick=function(e){ var d=root.getAttribute('data-theme')==='dark'; root.setAttribute('data-theme', d?'light':'dark'); e.target.textContent=d?'Dark':'Light'; build(); };
+</script>
+</body>
 </html>

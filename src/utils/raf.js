@@ -4,7 +4,7 @@
 // src/utils/raf.js
 // requestAnimationFrame helpers with a graceful Node fallback (used by tests/SSR guards).
 
-const hasRAF = typeof requestAnimationFrame === "function";
+const hasRAF = typeof requestAnimationFrame === 'function';
 
 /** @param {FrameRequestCallback} cb @returns {number} */
 export const raf = hasRAF

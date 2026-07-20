@@ -14,61 +14,38 @@
  */
 export function connectStream(source, onPoint, map = (v) => v) {
   let stopped = false;
-  const stop = () => {
-    stopped = true;
-    cleanup();
-  };
+  const stop = () => { stopped = true; cleanup(); };
   let cleanup = () => {};
 
   // Async iterator / async generator
-  if (source && typeof source[Symbol.asyncIterator] === "function") {
+  if (source && typeof source[Symbol.asyncIterator] === 'function') {
     (async () => {
-      for await (const raw of source) {
-        if (stopped) break;
-        onPoint(map(raw));
-      }
+      for await (const raw of source) { if (stopped) break; onPoint(map(raw)); }
     })();
     return { stop };
   }
 
   // EventSource
-  if (typeof EventSource !== "undefined" && source instanceof EventSource) {
-    const handler = (e) => {
-      try {
-        onPoint(map(JSON.parse(e.data)));
-      } catch {
-        onPoint(map(e.data));
-      }
-    };
-    source.addEventListener("message", handler);
-    cleanup = () => source.removeEventListener("message", handler);
+  if (typeof EventSource !== 'undefined' && source instanceof EventSource) {
+    const handler = (e) => { try { onPoint(map(JSON.parse(e.data))); } catch { onPoint(map(e.data)); } };
+    source.addEventListener('message', handler);
+    cleanup = () => source.removeEventListener('message', handler);
     return { stop };
   }
 
   // WebSocket
-  if (typeof WebSocket !== "undefined" && source instanceof WebSocket) {
-    const handler = (e) => {
-      try {
-        onPoint(map(JSON.parse(e.data)));
-      } catch {
-        onPoint(map(e.data));
-      }
-    };
-    source.addEventListener("message", handler);
-    cleanup = () => source.removeEventListener("message", handler);
+  if (typeof WebSocket !== 'undefined' && source instanceof WebSocket) {
+    const handler = (e) => { try { onPoint(map(JSON.parse(e.data))); } catch { onPoint(map(e.data)); } };
+    source.addEventListener('message', handler);
+    cleanup = () => source.removeEventListener('message', handler);
     return { stop };
   }
 
   // Producer function: source(emit, isStopped)
-  if (typeof source === "function") {
-    source(
-      (raw) => {
-        if (!stopped) onPoint(map(raw));
-      },
-      () => stopped,
-    );
+  if (typeof source === 'function') {
+    source((raw) => { if (!stopped) onPoint(map(raw)); }, () => stopped);
     return { stop };
   }
 
-  throw new Error("connectStream: unsupported source type");
+  throw new Error('connectStream: unsupported source type');
 }

@@ -6,9 +6,7 @@
 
 /** @returns {number} */
 export function getDPR() {
-  return typeof devicePixelRatio === "number" && devicePixelRatio > 0
-    ? devicePixelRatio
-    : 1;
+  return typeof devicePixelRatio === 'number' && devicePixelRatio > 0 ? devicePixelRatio : 1;
 }
 
 /**
@@ -19,6 +17,6 @@ export function getDPR() {
 export function sizeCanvas(canvas, cssW, cssH, dpr) {
   canvas.width = Math.max(1, Math.round(cssW * dpr));
   canvas.height = Math.max(1, Math.round(cssH * dpr));
-  canvas.style.width = cssW + "px";
-  canvas.style.height = cssH + "px";
+  canvas.style.width = cssW + 'px';
+  canvas.style.height = cssH + 'px';
 }
