@@ -1,0 +1,272 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - complementary [ref=e3]:
+    - link "LombokCSS" [ref=e4] [cursor=pointer]:
+      - /url: index.html?style=modern-corporate-flat&theme=light&dir=ltr
+    - generic [ref=e5]: Switch the look, not the HTML.
+    - generic [ref=e6]: Guide
+    - navigation [ref=e7]:
+      - link "Overview" [ref=e8] [cursor=pointer]:
+        - /url: index.html?style=modern-corporate-flat&theme=light&dir=ltr
+      - link "Getting started" [ref=e9] [cursor=pointer]:
+        - /url: getting-started.html?style=modern-corporate-flat&theme=light&dir=ltr
+      - link "Migration from Bootstrap" [ref=e10] [cursor=pointer]:
+        - /url: migration.html?style=modern-corporate-flat&theme=light&dir=ltr
+      - link "Theming & styles" [ref=e11] [cursor=pointer]:
+        - /url: theming.html?style=modern-corporate-flat&theme=light&dir=ltr
+    - generic [ref=e12]: Reference
+    - navigation [ref=e13]:
+      - link "Components" [ref=e14] [cursor=pointer]:
+        - /url: components.html?style=modern-corporate-flat&theme=light&dir=ltr
+      - link "Forms" [ref=e15] [cursor=pointer]:
+        - /url: forms.html?style=modern-corporate-flat&theme=light&dir=ltr
+      - link "Utilities" [ref=e16] [cursor=pointer]:
+        - /url: utilities.html?style=modern-corporate-flat&theme=light&dir=ltr
+      - link "Accessibility" [ref=e17] [cursor=pointer]:
+        - /url: accessibility.html?style=modern-corporate-flat&theme=light&dir=ltr
+  - generic [ref=e18]:
+    - banner [ref=e19]:
+      - radiogroup "Design style" [ref=e20]:
+        - button "Corporate" [ref=e21] [cursor=pointer]
+        - button "Stark" [ref=e22] [cursor=pointer]
+        - button "Brutalism" [ref=e23] [cursor=pointer]
+        - button "Minimal" [ref=e24] [cursor=pointer]
+        - button "Glass" [ref=e25] [cursor=pointer]
+      - generic [ref=e26]:
+        - generic [ref=e27] [cursor=pointer]:
+          - generic [ref=e28]: Dark
+          - checkbox "Dark"
+        - generic [ref=e30] [cursor=pointer]:
+          - generic [ref=e31]: RTL
+          - checkbox "RTL"
+    - main [ref=e33]:
+      - heading "Components" [level=1] [ref=e34]
+      - paragraph [ref=e35]: Every example below reacts to the style / dark / RTL controls at the top.
+      - heading "Buttons" [level=2] [ref=e36]
+      - generic [ref=e37]:
+        - button "Primary" [ref=e38] [cursor=pointer]
+        - button "Secondary" [ref=e39] [cursor=pointer]
+        - button "Outline" [ref=e40] [cursor=pointer]
+        - button "Soft" [ref=e41] [cursor=pointer]
+        - button "Ghost" [ref=e42] [cursor=pointer]
+        - button "Link" [ref=e43] [cursor=pointer]
+        - button "Danger" [ref=e44] [cursor=pointer]
+      - code [ref=e46]: <button class="btn btn-primary">Primary</button> <button class="btn btn-secondary">Secondary</button> <button class="btn btn-outline">Outline</button> <button class="btn btn-soft">Soft</button> <button class="btn btn-ghost">Ghost</button> <button class="btn btn-link">Link</button> <button class="btn btn-danger">Danger</button>
+      - generic [ref=e47]:
+        - button "Small" [ref=e48] [cursor=pointer]
+        - button "Default" [ref=e49] [cursor=pointer]
+        - button "Large" [ref=e50] [cursor=pointer]
+        - button "Rounded" [ref=e51] [cursor=pointer]
+        - generic [ref=e52]:
+          - button "L" [ref=e53] [cursor=pointer]
+          - button "M" [ref=e54] [cursor=pointer]
+          - button "R" [ref=e55] [cursor=pointer]
+      - code [ref=e57]: <button class="btn btn-primary btn-sm">Small</button> <button class="btn btn-primary">Default</button> <button class="btn btn-primary btn-lg">Large</button> <button class="btn btn-primary btn-rounded">Rounded</button> <span class="btn-group"><button class="btn btn-secondary">L</button><button class="btn btn-secondary">M</button><button class="btn btn-secondary">R</button></span>
+      - heading "Card" [level=2] [ref=e58]
+      - article [ref=e60]:
+        - generic [ref=e61]: Header
+        - generic [ref=e62]:
+          - heading "Title" [level=3] [ref=e63]
+          - paragraph [ref=e64]: Body copy goes here.
+        - generic [ref=e65]: Footer
+      - code [ref=e67]: <article class="card" style="max-inline-size:340px"> <div class="card-header">Header</div> <div class="card-body"><h3 class="card-title">Title</h3><p class="card-text">Body copy goes here.</p></div> <div class="card-footer">Footer</div> </article>
+      - heading "Badge & Pill" [level=2] [ref=e68]
+      - generic [ref=e69]:
+        - generic [ref=e70]: default
+        - generic [ref=e71]: primary
+        - generic [ref=e72]: success
+        - generic [ref=e73]: warning
+        - generic [ref=e74]: danger
+        - generic [ref=e75]: pill
+        - generic [ref=e76]: solid
+      - code [ref=e78]: <span class="badge">default</span> <span class="badge badge-primary">primary</span> <span class="badge badge-success">success</span> <span class="badge badge-warning">warning</span> <span class="badge badge-danger">danger</span> <span class="badge badge-pill badge-info">pill</span> <span class="badge badge-solid">solid</span>
+      - heading "Alert" [level=2] [ref=e79]
+      - generic [ref=e81]:
+        - generic [ref=e83]:
+          - generic [ref=e84]: Info
+          - text: Something to note.
+        - generic [ref=e86]:
+          - generic [ref=e87]: Saved
+          - text: All good.
+        - generic [ref=e89]:
+          - generic [ref=e90]: Failed
+          - text: Could not reach the server.
+      - code [ref=e92]: <div class="alert alert-info"><div><div class="alert-title">Info</div>Something to note.</div></div>
+      - heading "Form & validation" [level=2] [ref=e93]
+      - paragraph [ref=e94]:
+        - text: Validation uses native
+        - code [ref=e95]: :user-invalid
+        - text: +
+        - code [ref=e96]: :has()
+        - text: . Type an invalid email and blur the field to reveal the error.
+      - generic [ref=e98]:
+        - generic [ref=e99]:
+          - generic [ref=e100]: Email
+          - textbox "Email" [ref=e101]:
+            - /placeholder: you@example.com
+          - generic [ref=e102]: We never share it.
+        - generic [ref=e103]:
+          - generic [ref=e104]: Role
+          - combobox "Role" [ref=e105]:
+            - option "Engineer" [selected]
+            - option "Designer"
+        - generic [ref=e106]:
+          - checkbox "I agree" [ref=e107] [cursor=pointer]
+          - generic [ref=e108] [cursor=pointer]: I agree
+        - generic [ref=e109] [cursor=pointer]:
+          - generic [ref=e110]: Notify me
+          - checkbox "Notify me" [checked]
+      - code [ref=e113]: <div class="field"> <label class="label" for="e">Email</label> <input class="input" id="e" type="email" required> <span class="help">We never share it.</span> <span class="error-text">Enter a valid email.</span> </div> <label class="switch"><span>Notify me</span><input type="checkbox"><span class="track"></span></label>
+      - heading "Avatar & Progress" [level=2] [ref=e114]
+      - generic [ref=e115]:
+        - generic [ref=e116]: AR
+        - generic [ref=e117]: LG
+        - generic [ref=e118]:
+          - generic [ref=e119]: A
+          - generic [ref=e120]: B
+          - generic [ref=e121]: C
+        - code [ref=e126]: <span class="avatar">AR</span> <span class="avatar avatar-lg">LG</span> <span class="avatar-group"><span class="avatar avatar-sm">A</span><span class="avatar avatar-sm">B</span><span class="avatar avatar-sm">C</span></span> <div class="progress" style="inline-size:160px"><div class="bar" style="inline-size:60%"></div></div> <span class="spinner"></span
+        - heading "Tabs" [level=2] [ref=e127]
+        - generic [ref=e129]:
+          - tablist [ref=e130]:
+            - tab "One" [selected] [ref=e131] [cursor=pointer]
+            - tab "Two" [ref=e132] [cursor=pointer]
+          - tabpanel [ref=e133]: First panel.
+        - code [ref=e135]: <div style="inline-size:100%"> <div class="tabs" role="tablist"> <button role="tab" aria-selected="true" aria-controls="dx1">One</button> <button role="tab" aria-selected="false" aria-controls="dx2">Two</button> </div> <div class="tab-panel" id="dx1" role="tabpanel">First panel.</div> <div class="tab-panel" id="dx2" role="tabpanel" hidden>Second panel.</div> </div>
+        - heading "Accordion" [level=2] [ref=e136]
+        - generic [ref=e138]:
+          - group [ref=e139]:
+            - generic "What is it? −" [ref=e140] [cursor=pointer]
+            - generic [ref=e141]: A token-first framework.
+          - group [ref=e142]:
+            - generic "Build step? +" [ref=e143] [cursor=pointer]
+        - code [ref=e145]: <div class="accordion" style="inline-size:100%"> <details open><summary>What is it?</summary><div class="accordion-body">A token-first framework.</div></details> <details><summary>Build step?</summary><div class="accordion-body">None required.</div></details> </div>
+        - heading "Dropdown" [level=2] [ref=e146]
+        - button "Menu ▾" [ref=e149] [cursor=pointer]
+        - code [ref=e151]: <div class="dropdown"> <button class="btn btn-soft" data-dropdown-toggle aria-expanded="false">Menu ▾</button> <div class="dropdown-menu"> <a class="dropdown-item" href="#">Profile</a> <a class="dropdown-item" href="#">Settings</a> <div class="dropdown-divider"></div> <button class="dropdown-item">Sign out</button> </div> </div>
+        - heading "Modal" [level=2] [ref=e152]
+        - button "Open modal" [ref=e154] [cursor=pointer]
+        - code [ref=e156]: <button class="btn btn-primary" data-modal-open="dlgDocs">Open modal</button> <dialog class="modal" id="dlgDocs"> <div class="modal-card"> <div class="modal-header">Title <button class="btn btn-ghost btn-icon btn-sm" data-modal-close>✕</button></div> <div class="modal-body"><p class="mb-0">Native &lt;dialog&gt; — Esc, backdrop click and focus trapping included.</p></div> <div class="modal-footer"><button class="btn btn-ghost" data-modal-close>Cancel</button><button class="btn btn-primary" data-modal-close>OK</button></div> </div> </dialog>
+        - heading "Toast" [level=2] [ref=e157]
+        - button "Fire toast" [ref=e159] [cursor=pointer]
+        - code [ref=e161]: "Lombok.toast(\"Saved\", { variant: \"success\" });"
+        - heading "Popover" [level=2] [ref=e162]
+        - button "Show ▾" [ref=e165] [cursor=pointer]
+        - code [ref=e167]: <div class="popover"> <button class="btn btn-outline" data-popover-toggle aria-expanded="false">Show ▾</button> <div class="popover-panel"><div class="popover-title">Popover</div><p class="card-text mb-0">Click-triggered, holds any content.</p></div> </div>
+        - heading "Tooltip" [level=2] [ref=e168]
+        - button "Hover me I am a tooltip" [ref=e170] [cursor=pointer]
+        - code [ref=e172]: <button class="btn btn-soft" data-tip="I am a tooltip">Hover me</button>
+        - heading "Breadcrumb & Pagination" [level=2] [ref=e173]
+        - navigation [ref=e175]:
+          - list [ref=e176]:
+            - listitem [ref=e177]:
+              - link "Home" [ref=e178] [cursor=pointer]:
+                - /url: "#"
+              - text: /
+            - listitem [ref=e179]:
+              - link "Docs" [ref=e180] [cursor=pointer]:
+                - /url: "#"
+              - text: /
+            - listitem [ref=e181]: Components
+        - code [ref=e183]: <nav><ul class="breadcrumb"><li><a href="#">Home</a></li><li><a href="#">Docs</a></li><li aria-current="page">Components</li></ul></nav>
+        - list [ref=e185]:
+          - listitem [ref=e186]:
+            - link "‹" [ref=e187] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e188]:
+            - link "1" [ref=e189] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e190]:
+            - link "2" [ref=e191] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e192]:
+            - link "3" [ref=e193] [cursor=pointer]:
+              - /url: "#"
+          - listitem [ref=e194]:
+            - link "›" [ref=e195] [cursor=pointer]:
+              - /url: "#"
+        - code [ref=e197]: <ul class="pagination"><li><a href="#">‹</a></li><li class="is-active"><a href="#">1</a></li><li><a href="#">2</a></li><li><a href="#">3</a></li><li><a href="#">›</a></li></ul>
+        - heading "List group" [level=2] [ref=e198]
+        - generic [ref=e200]:
+          - link "Inbox" [ref=e201] [cursor=pointer]:
+            - /url: "#"
+          - link "Starred" [ref=e202] [cursor=pointer]:
+            - /url: "#"
+          - link "Archive" [ref=e203] [cursor=pointer]:
+            - /url: "#"
+        - code [ref=e205]: <div class="list-group" style="inline-size:100%;max-inline-size:320px"> <a class="list-group-item is-active" href="#">Inbox</a> <a class="list-group-item" href="#">Starred</a> <a class="list-group-item" href="#">Archive</a> </div>
+        - heading "Table (sortable)" [level=2] [ref=e206]
+        - paragraph [ref=e207]: Click a header to sort.
+        - table [ref=e210]:
+          - rowgroup [ref=e211]:
+            - row "Name↕ Plan↕ MRR↕" [ref=e212]:
+              - cell "Name↕" [ref=e213] [cursor=pointer]
+              - cell "Plan↕" [ref=e214] [cursor=pointer]
+              - cell "MRR↕" [ref=e215] [cursor=pointer]
+          - rowgroup [ref=e216]:
+            - row "Nadia Pro 49" [ref=e217]:
+              - cell "Nadia" [ref=e218]
+              - cell "Pro" [ref=e219]
+              - cell "49" [ref=e220]
+            - row "Bayu Team 199" [ref=e221]:
+              - cell "Bayu" [ref=e222]
+              - cell "Team" [ref=e223]
+              - cell "199" [ref=e224]
+            - row "Citra Free 0" [ref=e225]:
+              - cell "Citra" [ref=e226]
+              - cell "Free" [ref=e227]
+              - cell "0" [ref=e228]
+        - code [ref=e230]: <div class="table-wrap" style="inline-size:100%"> <table class="table table-hover"> <thead><tr><th aria-sort="none">Name</th><th aria-sort="none">Plan</th><th aria-sort="none">MRR</th></tr></thead> <tbody> <tr><td>Nadia</td><td>Pro</td><td>49</td></tr> <tr><td>Bayu</td><td>Team</td><td>199</td></tr> <tr><td>Citra</td><td>Free</td><td>0</td></tr> </tbody> </table> </div>
+        - heading "Sidebar" [level=2] [ref=e231]
+        - navigation [ref=e233]:
+          - generic [ref=e234]: Workspace
+          - link "Dashboard" [ref=e235] [cursor=pointer]:
+            - /url: "#"
+          - link "Projects" [ref=e236] [cursor=pointer]:
+            - /url: "#"
+          - link "Team" [ref=e237] [cursor=pointer]:
+            - /url: "#"
+        - code [ref=e239]: <nav class="sidebar" style="border-radius:10px"> <div class="sidebar-title">Workspace</div> <a class="sidebar-link is-active" href="#">Dashboard</a> <a class="sidebar-link" href="#">Projects</a> <a class="sidebar-link" href="#">Team</a> </nav>
+        - heading "Drawer / Offcanvas" [level=2] [ref=e240]
+        - generic [ref=e241]:
+          - button "Open drawer" [ref=e242] [cursor=pointer]
+          - complementary [ref=e243]:
+            - generic [ref=e244]:
+              - text: Menu
+              - button "✕" [ref=e245] [cursor=pointer]
+            - generic [ref=e246]: Drawer content. Esc or click outside to close.
+        - code [ref=e248]: <button class="btn btn-primary" data-drawer-open="dDocs">Open drawer</button> <aside class="drawer" id="dDocs"> <div class="drawer-header">Menu <button class="btn btn-ghost btn-icon btn-sm" data-drawer-close>✕</button></div> <div class="drawer-body">Drawer content. Esc or click outside to close.</div> </aside> <div class="drawer-overlay" id="dDocs-overlay"></div>
+        - heading "Carousel" [level=2] [ref=e249]
+        - generic [ref=e251]:
+          - button "Previous" [ref=e252] [cursor=pointer]: ‹
+          - button "Next" [ref=e253] [cursor=pointer]: ›
+          - generic [ref=e254]:
+            - generic [ref=e256]: Slide 1
+            - generic [ref=e258]: Slide 2
+            - generic [ref=e260]: Slide 3
+            - generic [ref=e262]: Slide 4
+          - generic [ref=e263]:
+            - button [ref=e264] [cursor=pointer]
+            - button [ref=e265] [cursor=pointer]
+            - button [ref=e266] [cursor=pointer]
+            - button [ref=e267] [cursor=pointer]
+        - code [ref=e269]: <div class="carousel" style="inline-size:100%"> <button class="carousel-btn carousel-prev" aria-label="Previous">‹</button> <button class="carousel-btn carousel-next" aria-label="Next">›</button> <div class="carousel-track"> <div class="carousel-slide is-third card"><div class="card-body">Slide 1</div></div> <div class="carousel-slide is-third card"><div class="card-body">Slide 2</div></div> <div class="carousel-slide is-third card"><div class="card-body">Slide 3</div></div> <div class="carousel-slide is-third card"><div class="card-body">Slide 4</div></div> </div> <div class="carousel-dots"><button class="is-active"></button><button></button><button></button><button></button></div> </div>
+        - heading "Timeline & Steps" [level=2] [ref=e270]
+        - list [ref=e272]:
+          - listitem [ref=e273]:
+            - generic [ref=e274]: 09:00
+            - generic [ref=e275]: Started
+            - paragraph [ref=e276]: Kickoff.
+          - listitem [ref=e277]:
+            - generic [ref=e278]: 14:00
+            - generic [ref=e279]: Shipped
+            - paragraph [ref=e280]: Done.
+        - code [ref=e282]: <ul class="timeline" style="inline-size:100%;max-inline-size:420px"> <li><div class="timeline-time">09:00</div><div class="timeline-title">Started</div><p class="card-text mb-0">Kickoff.</p></li> <li><div class="timeline-time">14:00</div><div class="timeline-title">Shipped</div><p class="card-text mb-0">Done.</p></li> </ul>
+        - list [ref=e284]:
+          - listitem [ref=e285]: Account
+          - listitem [ref=e286]: Profile
+          - listitem [ref=e287]: Done
+        - code [ref=e289]: <ul class="steps" style="inline-size:100%;max-inline-size:360px"><li class="is-done">Account</li><li class="is-active">Profile</li><li>Done</li></ul>
+```
