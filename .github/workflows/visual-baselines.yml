@@ -15,7 +15,7 @@ jobs:
     env:
       HOME: /root           # Firefox: required to launch inside the container on Actions
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@v7
       - run: npm ci || npm install
       - run: npm run build
       - name: Regenerate snapshots
