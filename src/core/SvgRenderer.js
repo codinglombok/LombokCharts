@@ -7,7 +7,12 @@
 import { Renderer } from './Renderer.js';
 
 const NS = 'http://www.w3.org/2000/svg';
-const esc = (s) => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const esc = (s) => String(s)
+  .replace(/&/g, '&amp;')
+  .replace(/</g, '&lt;')
+  .replace(/>/g, '&gt;')
+  .replace(/"/g, '&quot;')
+  .replace(/'/g, '&#39;');
 
 export class SvgRenderer extends Renderer {
   constructor(container, size) {
