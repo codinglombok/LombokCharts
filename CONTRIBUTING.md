@@ -20,7 +20,7 @@ build) to see your changes across every chart type.
 
 ## Project layout
 
-```
+```text
 src/
   core/       Renderer (Canvas/SVG), Scene, Chart orchestrator, events
   scales/     pure value->pixel functions (linear, log, time, band, sqrt, radial, color)
@@ -60,7 +60,7 @@ explains the Data → Scale → Mark pipeline and the draw-context contract.
 This repo uses [Conventional Commits](https://www.conventionalcommits.org/) so
 release automation can generate the changelog and version bumps:
 
-```
+```text
 feat: add violin mark
 fix: correct band-scale center on odd counts
 docs: expand porting guide

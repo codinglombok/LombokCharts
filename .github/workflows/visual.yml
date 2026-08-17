@@ -45,7 +45,7 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 14
-             
+
       - name: Commit regenerated baselines
         if: ${{ inputs.update == true }}
         run: |

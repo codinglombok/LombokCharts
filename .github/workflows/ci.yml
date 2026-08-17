@@ -26,7 +26,7 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
-    
+
       - name: Verify committed dist is up to date
         run: |
           npm run build
@@ -36,7 +36,7 @@ jobs:
             git --no-pager diff -- dist/ | head -80
             exit 1
           fi
-      
+
       - name: Report bundle size
         run: |
           echo "### Bundle sizes" >> "$GITHUB_STEP_SUMMARY"
@@ -47,5 +47,3 @@ jobs:
             gz=$(gzip -c "$f" | wc -c | awk '{printf "%.1f", $1/1024}')
             echo "| $f | ${raw} KB | ${gz} KB |" >> "$GITHUB_STEP_SUMMARY"
           done
-
-

@@ -31,55 +31,55 @@ jobs:
         run: |
           # Create Home page from README
           cp README.md wiki/Home.md
-          
+
           # Copy API documentation
           if [ -f docs/api.md ]; then
             cp docs/api.md wiki/API-Reference.md
           fi
-          
+
           # Copy theming documentation
           if [ -f docs/theming.md ]; then
             cp docs/theming.md wiki/Theming.md
           fi
-          
+
           # Copy architecture documentation
           if [ -f docs/architecture.md ]; then
             cp docs/architecture.md wiki/Architecture.md
           fi
-          
+
           # Copy porting documentation
           if [ -f docs/porting.md ]; then
             cp docs/porting.md wiki/Porting-Guide.md
           fi
-          
+
           # Create Getting Started page
           cat > wiki/Getting-Started.md << 'EOF'
           # Getting Started with LombokCharts
-          
+
           ## Installation
-          
+
           ### npm
           \`\`\`bash
           npm install lombok-charts
           \`\`\`
-          
+
           ### pnpm
           \`\`\`bash
           pnpm add lombok-charts
           \`\`\`
-          
+
           ### yarn
           \`\`\`bash
           yarn add lombok-charts
           \`\`\`
-          
+
           ## Quick Start
-          
+
           ### Basic Usage
-          
+
           \`\`\`javascript
           import { chart } from 'lombok-charts';
-          
+
           chart('#app', {
             data: [
               { label: 'Q1', value: 120 },
@@ -91,9 +91,9 @@ jobs:
             title: 'Quarterly Revenue',
           });
           \`\`\`
-          
+
           ### Via CDN (no build step)
-          
+
           \`\`\`html
           <script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"></script>
           <script>
@@ -109,7 +109,7 @@ jobs:
         run: |
           cat > wiki/_Sidebar.md << 'EOF'
           # Documentation
-          
+
           - [[Home|Home]]
           - [[Getting Started|Getting-Started]]
           - [[API Reference|API-Reference]]
@@ -124,7 +124,7 @@ jobs:
           cat > wiki/_Footer.md << EOF
           ---
           *LombokCharts v${VERSION} - Zero-Dependency Charting Library*
-          
+
           [Repository](https://github.com/codinglombok/LombokCharts) | [npm Package](https://www.npmjs.com/package/lombok-charts) | [License](https://github.com/codinglombok/LombokCharts/blob/main/LICENSE)
           EOF
 
@@ -133,9 +133,9 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           git add .
-          
+
           # Only commit if there are changes
           if git diff --cached --quiet; then
             echo "No changes to commit"

@@ -238,7 +238,7 @@ marks you need lets your bundler tree-shake the rest for a smaller footprint.
 
 ## API at a glance
 
-```
+```javascript
 chart(container, config) -> Chart        // factory; same as new Chart(container, config)
 
 Chart#render()                           // (re)draw, animating on first paint

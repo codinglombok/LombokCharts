@@ -2,15 +2,20 @@ name: Publish to npm
 on:
   release:
     types: [published]
-  workflow_dispatch: {}   # manual trigger fallback
+  workflow_dispatch: {}
 jobs:
   publish:
     runs-on: ubuntu-latest
-    permissions: { contents: read, id-token: write }  # id-token for npm provenance
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
-        with: { node-version: '22', registry-url: 'https://registry.npmjs.org', cache: 'npm' }
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'npm'
       - run: npm ci || npm install
       - name: Quality gate before publish
         run: npm test && npm run build
