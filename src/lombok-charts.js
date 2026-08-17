@@ -54,5 +54,5 @@ export { lttb, minMaxDecimate } from './data/decimate.js';
 export { RingBuffer } from './data/ringbuffer.js';
 export * from './scales/index.js';
 
-export const version = '0.1.0';
+export const version = '0.1.1';
 export default { Chart, chart, registerMark, version };

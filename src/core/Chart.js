@@ -21,7 +21,7 @@ import { darkTheme } from '../theme/dark.js';
 import { deepMerge } from '../utils/math.js';
 import { FrameScheduler, raf } from '../utils/raf.js';
 import { Quadtree } from '../interaction/quadtree.js';
-import { Tooltip } from '../interaction/tooltip.js';
+import { Tooltip, escapeHtml } from '../interaction/tooltip.js';
 import { Legend } from '../interaction/legend.js';
 import { ZoomPan } from '../interaction/zoom.js';
 import { StreamScheduler } from '../stream/scheduler.js';
@@ -310,8 +310,8 @@ export class Chart {
         const hit = this._qt.nearest(px, py, 40);
         if (hit) {
           const h = this._qtHits[hit.index];
-          const valTxt = typeof h.value === 'number' ? formatNumber(h.value) : h.value;
-          this.tooltip.show(h.x, h.y, `<strong>${h.label != null ? h.label : ''}</strong><br>${valTxt}${h.extra ? '<br>' + h.extra : ''}`);
+          const valTxt = typeof h.value === 'number' ? formatNumber(h.value) : escapeHtml(h.value);
+          this.tooltip.show(h.x, h.y, `<strong>${escapeHtml(h.label != null ? h.label : '')}</strong><br>${valTxt}${h.extra ? '<br>' + escapeHtml(h.extra) : ''}`);
           this.emitter.emit('hover', h);
         } else this.tooltip.hide();
       }

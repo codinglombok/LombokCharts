@@ -1,4 +1,4 @@
-/* LombokCharts v0.1.0 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */
+/* LombokCharts v0.1.1 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -1102,6 +1102,10 @@ var Quadtree = class _Quadtree {
 };
 
 // src/interaction/tooltip.js
+function escapeHtml(s) {
+  if (s == null) return "";
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
 var Tooltip = class {
   constructor(container, theme) {
     this.container = container;
@@ -1644,8 +1648,8 @@ var Chart = class {
         const hit = this._qt.nearest(px, py, 40);
         if (hit) {
           const h = this._qtHits[hit.index];
-          const valTxt = typeof h.value === "number" ? formatNumber(h.value) : h.value;
-          this.tooltip.show(h.x, h.y, `<strong>${h.label != null ? h.label : ""}</strong><br>${valTxt}${h.extra ? "<br>" + h.extra : ""}`);
+          const valTxt = typeof h.value === "number" ? formatNumber(h.value) : escapeHtml(h.value);
+          this.tooltip.show(h.x, h.y, `<strong>${escapeHtml(h.label != null ? h.label : "")}</strong><br>${valTxt}${h.extra ? "<br>" + escapeHtml(h.extra) : ""}`);
           this.emitter.emit("hover", h);
         } else this.tooltip.hide();
       }
@@ -2929,5 +2933,5 @@ registerMark("sankey", SankeyMark);
 function chart(el, config) {
   return new Chart(el, config);
 }
-var version = "0.1.0";
+var version = "0.1.1";
 var lombok_charts_default = { Chart, chart, registerMark, version };

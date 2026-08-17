@@ -265,7 +265,7 @@ npm test         # zero-dependency test runner (unit + headless DOM smoke)
 npm run dev      # watch build
 ```
 
-The build output is committed-free (`dist/` is git-ignored); CI rebuilds on every push. The test
+The `dist/` folder is committed so that Composer, jsDelivr-from-GitHub, and `<script>` users can consume it without a build step; CI regenerates it on every push to keep it in sync with `src/`. The test
 suite runs pure-logic checks (scales, LTTB, ring buffer, quadtree) plus an end-to-end pipeline
 test under a tiny headless DOM/Canvas shim, so integration regressions are caught without a browser.
 

@@ -5,12 +5,13 @@
 // and minified variants. The library itself ships ZERO runtime dependencies;
 // esbuild is a build-only devDependency.
 import esbuild from 'esbuild';
-import { mkdirSync } from 'node:fs';
+import { mkdirSync, readFileSync } from 'node:fs';
 
+const pkg = JSON.parse(readFileSync('package.json', 'utf8'));
 mkdirSync('dist', { recursive: true });
 const watch = process.argv.includes('--watch');
 const entry = 'src/lombok-charts.js';
-const banner = { js: `/* LombokCharts v0.1.0 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */` };
+const banner = { js: `/* LombokCharts v${pkg.version} | Apache-2.0 | https://github.com/codinglombok/LombokCharts */` };
 
 /** @type {import('esbuild').BuildOptions[]} */
 const targets = [

@@ -9,14 +9,11 @@ jobs:
     permissions: { contents: read, id-token: write }  # id-token for npm provenance
     steps:
       - uses: actions/checkout@v7
-      - uses: shivammathur/setup-php@v2
-        with: { php-version: '8.3', extensions: pdo_sqlite }
-      - name: Quality gate before publish
-        run: |
-          php tests/run-all.php
-          php bin/check-domain-boundary.php
       - uses: actions/setup-node@v7
-        with: { node-version: '20', registry-url: 'https://registry.npmjs.org' }
+        with: { node-version: '22', registry-url: 'https://registry.npmjs.org', cache: 'npm' }
+      - run: npm ci || npm install
+      - name: Quality gate before publish
+        run: npm test && npm run build
       - name: Sync version from release tag (v1.2.3 -> 1.2.3)
         if: github.event_name == 'release'
         run: npm version ${GITHUB_REF_NAME#v} --no-git-tag-version

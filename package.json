@@ -25,8 +25,8 @@
     "build": "node build.js",
     "dev": "node build.js --watch",
     "test": "node tests/run.js",
-    "typecheck": "tsc -p jsconfig.json --noEmit || true",
-    "lint": "eslint src --ext .js || true",
+    "typecheck": "tsc -p jsconfig.json --noEmit",
+    "lint": "eslint src --ext .js",
     "types": "tsc --allowJs --declaration --emitDeclarationOnly -p jsconfig.json",
     "prepublishOnly": "npm run build",
     "site": "node site/build-site.mjs",
@@ -56,9 +56,10 @@
   "devDependencies": {
     "@playwright/test": "1.56.0",
     "esbuild": "0.25.0",
+    "eslint": "^8.57.0",
     "marked": "^18.0.5"
   },
   "allowScripts": {
-    "esbuild@0.21.5": true
+    "esbuild@0.25.0": true
   }
 }

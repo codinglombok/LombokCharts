@@ -2,6 +2,18 @@
 // Licensed under the Apache License, Version 2.0 (see LICENSE or
 // http://www.apache.org/licenses/LICENSE-2.0).
 // src/interaction/tooltip.js — DOM overlay tooltip positioned in container space.
+
+/** Escape user-supplied text so it is safe for innerHTML. */
+export function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 export class Tooltip {
   constructor(container, theme) {
     this.container = container;

@@ -1,0 +1,30 @@
+# Label rules for actions/labeler — maps file paths to PR labels.
+src:
+  - changed-files:
+      - any-glob-to-any-file: 'src/**'
+
+tests:
+  - changed-files:
+      - any-glob-to-any-file: 'tests/**'
+
+build:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'build.js'
+          - 'package.json'
+          - 'package-lock.json'
+
+docs:
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'docs/**'
+          - 'README.md'
+          - 'CONTRIBUTING.md'
+
+ci:
+  - changed-files:
+      - any-glob-to-any-file: '.github/**'
+
+examples:
+  - changed-files:
+      - any-glob-to-any-file: 'examples/**'

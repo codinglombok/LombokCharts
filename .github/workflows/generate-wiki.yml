@@ -120,9 +120,10 @@ jobs:
 
       - name: Create _Footer.md
         run: |
-          cat > wiki/_Footer.md << 'EOF'
+          VERSION=$(node -p "require('./package.json').version")
+          cat > wiki/_Footer.md << EOF
           ---
-          *LombokCharts v0.1.0 - Zero-Dependency Charting Library*
+          *LombokCharts v${VERSION} - Zero-Dependency Charting Library*
           
           [Repository](https://github.com/codinglombok/LombokCharts) | [npm Package](https://www.npmjs.com/package/lombok-charts) | [License](https://github.com/codinglombok/LombokCharts/blob/main/LICENSE)
           EOF
