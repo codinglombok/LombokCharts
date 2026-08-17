@@ -20,6 +20,7 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LINTER_RULES_PATH: .
           # Jangan lint hasil build, snapshot, dan vendor
           FILTER_REGEX_EXCLUDE: (^|/)(dist|node_modules|site|docs)/|tests/visual/__snapshots__/
           # Menyalakan satu VALIDATE_* mematikan semua yang lain
