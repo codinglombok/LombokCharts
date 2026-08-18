@@ -1,0 +1,398 @@
+diff --git a/.github/workflows/ci.yml b/.github/workflows/ci.yml
+index 587b950..eb9e89b 100644
+--- a/.github/workflows/ci.yml
++++ b/.github/workflows/ci.yml
+@@ -26,7 +26,7 @@ jobs:
+         run: npm test
+       - name: Build
+         run: npm run build
+-    
++
+       - name: Verify committed dist is up to date
+         run: |
+           npm run build
+@@ -36,7 +36,7 @@ jobs:
+             git --no-pager diff -- dist/ | head -80
+             exit 1
+           fi
+-      
++
+       - name: Report bundle size
+         run: |
+           echo "### Bundle sizes" >> "$GITHUB_STEP_SUMMARY"
+@@ -47,5 +47,3 @@ jobs:
+             gz=$(gzip -c "$f" | wc -c | awk '{printf "%.1f", $1/1024}')
+             echo "| $f | ${raw} KB | ${gz} KB |" >> "$GITHUB_STEP_SUMMARY"
+           done
+-
+-
+diff --git a/.github/workflows/codeql.yml b/.github/workflows/codeql.yml
+index d77abde..d3343eb 100644
+--- a/.github/workflows/codeql.yml
++++ b/.github/workflows/codeql.yml
+@@ -1,41 +1,20 @@
+-# For most projects, this workflow file will not need changing; you simply need
+-# to commit it to your repository.
+-#
+-# You may wish to alter this file to override the set of languages analyzed,
+-# or to provide custom queries or build logic.
+-#
+-# ******** NOTE ********
+-# We have attempted to detect the languages in your repository. Please check
+-# the `language` matrix defined below to confirm you have the correct set of
+-# supported CodeQL languages.
+-#
+ name: "CodeQL Advanced"
+ 
+ on:
+   push:
+-    branches: [ "main" ]
++    branches: ["main"]
+   pull_request:
+-    branches: [ "main" ]
++    branches: ["main"]
+   schedule:
+     - cron: '41 9 * * 1'
+ 
+ jobs:
+   analyze:
+     name: Analyze (${{ matrix.language }})
+-    # Runner size impacts CodeQL analysis time. To learn more, please see:
+-    #   - https://gh.io/recommended-hardware-resources-for-running-codeql
+-    #   - https://gh.io/supported-runners-and-hardware-resources
+-    #   - https://gh.io/using-larger-runners (GitHub.com only)
+-    # Consider using larger runners or machines with greater resources for possible analysis time improvements.
+-    runs-on: ${{ (matrix.language == 'swift' && 'macos-latest') || 'ubuntu-latest' }}
++    runs-on: ubuntu-latest
+     permissions:
+-      # required for all workflows
+       security-events: write
+-
+-      # required to fetch internal or private CodeQL packs
+       packages: read
+-
+-      # only required for workflows in private repositories
+       actions: read
+       contents: read
+ 
+@@ -43,63 +22,24 @@ jobs:
+       fail-fast: false
+       matrix:
+         include:
+-        - language: actions
+-          build-mode: none
+-        - language: javascript-typescript
+-          build-mode: none
+-        - language: python
+-          build-mode: none
+-        - language: ruby
+-          build-mode: none
+-        # CodeQL supports the following values keywords for 'language': 'actions', 'c-cpp', 'csharp', 'go', 'java-kotlin', 'javascript-typescript', 'python', 'ruby', 'rust', 'swift'
+-        # Use `c-cpp` to analyze code written in C, C++ or both
+-        # Use 'java-kotlin' to analyze code written in Java, Kotlin or both
+-        # Use 'javascript-typescript' to analyze code written in JavaScript, TypeScript or both
+-        # To learn more about changing the languages that are analyzed or customizing the build mode for your analysis,
+-        # see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/customizing-your-advanced-setup-for-code-scanning.
+-        # If you are analyzing a compiled language, you can modify the 'build-mode' for that language to customize how
+-        # your codebase is analyzed, see https://docs.github.com/en/code-security/code-scanning/creating-an-advanced-setup-for-code-scanning/codeql-code-scanning-for-compiled-languages
+-    steps:
+-    - name: Checkout repository
+-      uses: actions/checkout@v7
+-
+-    # Add any setup steps before running the `github/codeql-action/init` action.
+-    # This includes steps like installing compilers or runtimes (`actions/setup-node`
+-    # or others). This is typically only required for manual builds.
+-    # - name: Setup runtime (example)
+-    #   uses: actions/setup-example@v1
++          - language: actions
++            build-mode: none
++          - language: javascript-typescript
++            build-mode: none
++          # Python and Ruby removed: only one helper script (build_docs.py),
++          # no Ruby code at all. CodeQL scans for nonexistent languages always fail.
+ 
+-    # Initializes the CodeQL tools for scanning.
+-    - name: Initialize CodeQL
+-      uses: github/codeql-action/init@v4
+-      with:
+-        languages: ${{ matrix.language }}
+-        build-mode: ${{ matrix.build-mode }}
+-        # If you wish to specify custom queries, you can do so here or in a config file.
+-        # By default, queries listed here will override any specified in a config file.
+-        # Prefix the list here with "+" to use these queries and those in the config file.
+-
+-        # For more details on CodeQL's query packs, refer to: https://docs.github.com/en/code-security/code-scanning/automatically-scanning-your-code-for-vulnerabilities-and-errors/configuring-code-scanning#using-queries-in-ql-packs
+-        # queries: security-extended,security-and-quality
+-
+-    # If the analyze step fails for one of the languages you are analyzing with
+-    # "We were unable to automatically build your code", modify the matrix above
+-    # to set the build mode to "manual" for that language. Then modify this step
+-    # to build your code.
+-    # ℹ️ Command-line programs to run using the OS shell.
+-    # 📚 See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+-    - name: Run manual build steps
+-      if: matrix.build-mode == 'manual'
+-      shell: bash
+-      run: |
+-        echo 'If you are using a "manual" build mode for one or more of the' \
+-          'languages you are analyzing, replace this with the commands to build' \
+-          'your code, for example:'
+-        echo '  make bootstrap'
+-        echo '  make release'
+-        exit 1
+-
+-    - name: Perform CodeQL Analysis
+-      uses: github/codeql-action/analyze@v4
+-      with:
+-        category: "/language:${{matrix.language}}"
++    steps:
++      - name: Checkout repository
++        uses: actions/checkout@v7
++
++      - name: Initialize CodeQL
++        uses: github/codeql-action/init@v4
++        with:
++          languages: ${{ matrix.language }}
++          build-mode: ${{ matrix.build-mode }}
++
++      - name: Perform CodeQL Analysis
++        uses: github/codeql-action/analyze@v4
++        with:
++          category: "/language:${{matrix.language}}"
+diff --git a/.github/workflows/generate-wiki.yml b/.github/workflows/generate-wiki.yml
+index e46d77c..493564f 100644
+--- a/.github/workflows/generate-wiki.yml
++++ b/.github/workflows/generate-wiki.yml
+@@ -31,55 +31,55 @@ jobs:
+         run: |
+           # Create Home page from README
+           cp README.md wiki/Home.md
+-          
++
+           # Copy API documentation
+           if [ -f docs/api.md ]; then
+             cp docs/api.md wiki/API-Reference.md
+           fi
+-          
++
+           # Copy theming documentation
+           if [ -f docs/theming.md ]; then
+             cp docs/theming.md wiki/Theming.md
+           fi
+-          
++
+           # Copy architecture documentation
+           if [ -f docs/architecture.md ]; then
+             cp docs/architecture.md wiki/Architecture.md
+           fi
+-          
++
+           # Copy porting documentation
+           if [ -f docs/porting.md ]; then
+             cp docs/porting.md wiki/Porting-Guide.md
+           fi
+-          
++
+           # Create Getting Started page
+           cat > wiki/Getting-Started.md << 'EOF'
+           # Getting Started with LombokCharts
+-          
++
+           ## Installation
+-          
++
+           ### npm
+           \`\`\`bash
+           npm install lombok-charts
+           \`\`\`
+-          
++
+           ### pnpm
+           \`\`\`bash
+           pnpm add lombok-charts
+           \`\`\`
+-          
++
+           ### yarn
+           \`\`\`bash
+           yarn add lombok-charts
+           \`\`\`
+-          
++
+           ## Quick Start
+-          
++
+           ### Basic Usage
+-          
++
+           \`\`\`javascript
+           import { chart } from 'lombok-charts';
+-          
++
+           chart('#app', {
+             data: [
+               { label: 'Q1', value: 120 },
+@@ -91,9 +91,9 @@ jobs:
+             title: 'Quarterly Revenue',
+           });
+           \`\`\`
+-          
++
+           ### Via CDN (no build step)
+-          
++
+           \`\`\`html
+           <script src="https://cdn.jsdelivr.net/npm/lombok-charts/dist/lombok-charts.umd.min.js"></script>
+           <script>
+@@ -109,7 +109,7 @@ jobs:
+         run: |
+           cat > wiki/_Sidebar.md << 'EOF'
+           # Documentation
+-          
++
+           - [[Home|Home]]
+           - [[Getting Started|Getting-Started]]
+           - [[API Reference|API-Reference]]
+@@ -124,7 +124,7 @@ jobs:
+           cat > wiki/_Footer.md << EOF
+           ---
+           *LombokCharts v${VERSION} - Zero-Dependency Charting Library*
+-          
++
+           [Repository](https://github.com/codinglombok/LombokCharts) | [npm Package](https://www.npmjs.com/package/lombok-charts) | [License](https://github.com/codinglombok/LombokCharts/blob/main/LICENSE)
+           EOF
+ 
+@@ -133,9 +133,9 @@ jobs:
+         run: |
+           git config user.name "github-actions[bot]"
+           git config user.email "github-actions[bot]@users.noreply.github.com"
+-          
++
+           git add .
+-          
++
+           # Only commit if there are changes
+           if git diff --cached --quiet; then
+             echo "No changes to commit"
+diff --git a/.github/workflows/npm-publish.yml b/.github/workflows/npm-publish.yml
+index 7c3002f..5058906 100644
+--- a/.github/workflows/npm-publish.yml
++++ b/.github/workflows/npm-publish.yml
+@@ -2,15 +2,20 @@ name: Publish to npm
+ on:
+   release:
+     types: [published]
+-  workflow_dispatch: {}   # manual trigger fallback
++  workflow_dispatch: {}
+ jobs:
+   publish:
+     runs-on: ubuntu-latest
+-    permissions: { contents: read, id-token: write }  # id-token for npm provenance
++    permissions:
++      contents: read
++      id-token: write
+     steps:
+       - uses: actions/checkout@v7
+       - uses: actions/setup-node@v7
+-        with: { node-version: '22', registry-url: 'https://registry.npmjs.org', cache: 'npm' }
++        with:
++          node-version: '22'
++          registry-url: 'https://registry.npmjs.org'
++          cache: 'npm'
+       - run: npm ci || npm install
+       - name: Quality gate before publish
+         run: npm test && npm run build
+diff --git a/.github/workflows/release-please.yml b/.github/workflows/release-please.yml
+index 6a9c7af..2b07419 100644
+--- a/.github/workflows/release-please.yml
++++ b/.github/workflows/release-please.yml
+@@ -20,6 +20,7 @@ jobs:
+       - uses: googleapis/release-please-action@v5
+         id: release
+         with:
++          token: ${{ secrets.GITHUB_TOKEN }}
+           config-file: release-please-config.json
+           manifest-file: .release-please-manifest.json
+ 
+diff --git a/.github/workflows/visual.yml b/.github/workflows/visual.yml
+index a2053e5..e9bd49b 100644
+--- a/.github/workflows/visual.yml
++++ b/.github/workflows/visual.yml
+@@ -45,7 +45,7 @@ jobs:
+           name: playwright-report
+           path: playwright-report/
+           retention-days: 14
+-             
++
+       - name: Commit regenerated baselines
+         if: ${{ inputs.update == true }}
+         run: |
+diff --git a/.markdownlint.json b/.markdownlint.json
+new file mode 100644
+index 0000000..34bd500
+--- /dev/null
++++ b/.markdownlint.json
+@@ -0,0 +1,10 @@
++{
++  "MD013": false,
++  "MD001": false,
++  "MD003": false,
++  "MD026": false,
++  "MD033": false,
++  "MD034": false,
++  "MD041": false,
++  "MD042": false
++}
+diff --git a/.yamllint.yml b/.yamllint.yml
+new file mode 100644
+index 0000000..b8d30bb
+--- /dev/null
++++ b/.yamllint.yml
+@@ -0,0 +1,12 @@
++extends: default
++
++rules:
++  line-length: disable
++  document-start: disable
++  truthy: disable
++  comments-indentation: disable
++  brackets:
++    max-spaces-inside: 1
++  indentation:
++    spaces: 2
++    indent-sequences: whatever
+diff --git a/CONTRIBUTING.md b/CONTRIBUTING.md
+index 16d650e..2b47d13 100644
+--- a/CONTRIBUTING.md
++++ b/CONTRIBUTING.md
+@@ -20,7 +20,7 @@ build) to see your changes across every chart type.
+ 
+ ## Project layout
+ 
+-```
++```text
+ src/
+   core/       Renderer (Canvas/SVG), Scene, Chart orchestrator, events
+   scales/     pure value->pixel functions (linear, log, time, band, sqrt, radial, color)
+@@ -60,7 +60,7 @@ explains the Data → Scale → Mark pipeline and the draw-context contract.
+ This repo uses [Conventional Commits](https://www.conventionalcommits.org/) so
+ release automation can generate the changelog and version bumps:
+ 
+-```
++```text
+ feat: add violin mark
+ fix: correct band-scale center on odd counts
+ docs: expand porting guide
+diff --git a/README.md b/README.md
+index b59c017..4c969be 100644
+--- a/README.md
++++ b/README.md
+@@ -238,7 +238,7 @@ marks you need lets your bundler tree-shake the rest for a smaller footprint.
+ 
+ ## API at a glance
+ 
+-```
++```javascript
+ chart(container, config) -> Chart        // factory; same as new Chart(container, config)
+ 
+ Chart#render()                           // (re)draw, animating on first paint

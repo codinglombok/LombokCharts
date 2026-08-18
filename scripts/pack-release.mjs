@@ -3,7 +3,7 @@
 // http://www.apache.org/licenses/LICENSE-2.0).
 // pack-release.mjs — assemble downloadable release archives (zip + tgz) for
 // SourceForge / GitHub Releases: dist + src + license + readme + manifests.
-import { execSync } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -20,6 +20,6 @@ for (const item of ['dist', 'src', 'docs', 'LICENSE', 'NOTICE', 'README.md', 'CH
 }
 
 const outDir = path.join(root, '.release');
-execSync(`cd ${outDir} && zip -rq ${name}.zip ${name}`, { stdio: 'inherit' });
-execSync(`cd ${outDir} && tar -czf ${name}.tgz ${name}`, { stdio: 'inherit' });
+execFileSync('zip', ['-rq', `${name}.zip`, name], { cwd: outDir, stdio: 'inherit' });
+execFileSync('tar', ['-czf', `${name}.tgz`, name], { cwd: outDir, stdio: 'inherit' });
 console.log(`Release archives: .release/${name}.zip and .release/${name}.tgz`);
