@@ -10,8 +10,8 @@ to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Bug Fixes
 
 * add pull-requests write permission for super-linter ([ebb144a](https://github.com/codinglombok/LombokCharts/commit/ebb144af5c7feb507ae64b119abcaee4a5575d84))
+* add pull-requests write permission for super-linter ([ebb144a](https://github.com/codinglombok/LombokCharts/commit/ebb144af5c7feb507ae64b119abcaee4a5575d84))
 * exclude auto-generated CHANGELOG from lint, add PR write permission ([79165ba](https://github.com/codinglombok/LombokCharts/commit/79165ba360b1f9c0cb43b6d5e26faaf3dc0e83ca))
-* force-add dist in auto-commit step ([8f63e8e](https://github.com/codinglombok/LombokCharts/commit/8f63e8e327ae6ae5a839d04b8d010de5e32ff56c))
 * resolve CodeQL High/Medium findings and add workflow permissions ([a1283af](https://github.com/codinglombok/LombokCharts/commit/a1283afeffe8e41a6e3cd26cb3da6f8340764833))
 
 ## [0.1.1](https://github.com/codinglombok/LombokCharts/compare/lombok-charts-v0.1.0...lombok-charts-v0.1.1) (2026-07-14)
