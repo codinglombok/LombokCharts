@@ -12,8 +12,13 @@ permissions:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write                          # ← tambah ini
     steps:
       - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.head_ref || github.ref }}   # ← tambah ini
+          token: ${{ secrets.GITHUB_TOKEN }}           # ← tambah ini
       - uses: actions/setup-node@v7
         with:
           node-version: '22'
@@ -26,6 +31,18 @@ jobs:
         run: npm test
       - name: Build
         run: npm run build
+
+      # ↓↓↓ TAMBAH STEP BARU INI ↓↓↓
+      - name: Auto-commit dist on release-please branch
+        if: >-
+          github.event_name == 'pull_request' &&
+          startsWith(github.head_ref, 'release-please-')
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add dist/
+          git diff --cached --quiet || (git commit -m "chore: rebuild dist" && git push)
+      # ↑↑↑ END STEP BARU ↑↑↑
 
       - name: Verify committed dist is up to date
         run: |
