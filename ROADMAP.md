@@ -18,7 +18,7 @@ crosshair, theming + LombokCSS token bridge, 5 build targets (~18 KB gzip), 19 t
 smoke, docs, examples (incl. 1M/5M stress page), Apache-2.0, CI/release-please/Pages, 4 templates.
 
 **Known gaps:** not validated in a real browser at scale; minimal a11y; thin test coverage;
-API not frozen; WebGL is a stub; no published benchmarks; not yet on npm.
+API not frozen; WebGL is a stub; no published benchmarks.
 
 ---
 
@@ -28,9 +28,9 @@ You cannot claim anything until it's proven in real browsers and installable.
 
 - Set up **Playwright** with visual-regression baselines generated in a pinned CI container (Chromium/Firefox/WebKit); snapshot every mark in light + dark + each LombokCSS style.
 - Manually verify + fix every visual defect the snapshots surface (label collisions, axis density, legend fit, DPR crispness, RTL).
-- **Publish to npm** via the existing release-please workflow (provenance) and confirm the jsDelivr/unpkg CDN URLs resolve; switch template/example CDN references to the published package.
+- ~~**Publish to npm** via the existing release-please workflow (provenance) and confirm the jsDelivr/unpkg CDN URLs resolve; switch template/example CDN references to the published package.~~ ✅ Done (v0.1.2 on npm, jsDelivr + unpkg live, release-please + provenance active).
 - Wire an interactive example harness (a real `dev` server page) so contributors see changes live.
-- **Exit criteria:** all marks render pixel-checked across 3 engines; `npm i lombok-charts` works; CDN live; visual CI green.
+- **Exit criteria:** all marks render pixel-checked across 3 engines; ~~`npm i lombok-charts` works; CDN live;~~ visual CI green.
 
 ## 0.3 — Robustness & developer experience — **M**
 
