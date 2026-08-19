@@ -1,30 +1,32 @@
 # LombokCharts
 
----
+<p align="center">
+  <a href="https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml"><img src="https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml"><img src="https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml/badge.svg" alt="Super-Linter"></a>
+  <a href="https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml"><img src="https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml/badge.svg" alt="Pages"></a>
+  <a href="https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml"><img src="https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml/badge.svg" alt="CodeQL"></a>
+</p>
 
-### GitHub
+<p align="center">
+  <a href="https://www.npmjs.com/package/lombok-charts"><img src="https://img.shields.io/npm/v/lombok-charts.svg?logo=npm&logoColor=white" alt="npm version"></a>
+  <a href="https://www.npmjs.com/package/lombok-charts"><img src="https://img.shields.io/npm/dm/lombok-charts.svg?logo=npm&logoColor=white" alt="npm downloads"></a>
+  <a href="https://www.jsdelivr.com/package/npm/lombok-charts"><img src="https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg?logo=jsdelivr&logoColor=white" alt="jsDelivr hits"></a>
+  <a href="https://sourceforge.net/projects/lombokcharts/"><img src="https://img.shields.io/sourceforge/dt/lombokcharts.svg?logo=sourceforge&logoColor=white" alt="SourceForge downloads"></a>
+</p>
 
-[![CI](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml)
-[![Super-Linter](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml)
-[![Deploy docs](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+<p align="center">
+  <a href="https://github.com/codinglombok/LombokCharts/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/lombok-charts.svg" alt="license"></a>
+  <a href="#"><img src="https://img.shields.io/badge/dependencies-0-brightgreen.svg" alt="zero dependencies"></a>
+  <a href="#bundle-size"><img src="https://img.shields.io/badge/gzip-19%20KB-success.svg" alt="gzip size"></a>
+  <a href="#"><img src="https://img.shields.io/badge/node-%3E%3D18-339933.svg?logo=node.js&logoColor=white" alt="node version"></a>
+  <a href="#"><img src="https://img.shields.io/badge/renderers-Canvas%20%7C%20SVG-blue.svg" alt="renderers"></a>
+</p>
 
----
-
-### npm
-
-[![npm version](https://img.shields.io/npm/v/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
-[![npm downloads](https://img.shields.io/npm/dm/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
-[![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg)](https://www.jsdelivr.com/package/npm/lombok-charts)
-[![gzip size](https://img.shields.io/badge/gzip-19%20KB-success.svg)](#)
-
----
-
-### SourceForge
-
-[![Download LombokCharts](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
-[![Download LombokCharts](https://img.shields.io/sourceforge/dm/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
-[![Download LombokCharts](https://img.shields.io/sourceforge/dt/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+<p align="center">
+  <a href="https://github.com/codinglombok/LombokCharts/commits/main"><img src="https://img.shields.io/github/last-commit/codinglombok/LombokCharts.svg" alt="last commit"></a>
+  <a href="https://github.com/codinglombok/LombokCharts/issues"><img src="https://img.shields.io/github/issues/codinglombok/LombokCharts.svg" alt="issues"></a>
+  <a href="https://github.com/codinglombok/LombokCharts"><img src="https://img.shields.io/github/stars/codinglombok/LombokCharts.svg?style=social" alt="stars"></a>
+</p>
 
 ---
 
@@ -32,8 +34,6 @@ A zero-dependency charting library for the browser. It pairs a small grammar-of-
 core (Data → Scale → Mark) with pluggable Canvas and SVG renderers, LTTB decimation, and a
 real-time streaming layer — so the same API draws a five-point bar chart or a five-million-point
 line without changing shape.
-
-![LombokCharts - Zero Dependency Charting Library](https://img.shields.io/badge/LombokCharts-Zero%20Dependency-brightgreen?style=for-the-badge)
 
 - **Zero runtime dependencies.** Native Canvas2D / SVG / `ResizeObserver` / `requestAnimationFrame` / typed arrays only.
 - **Two renderers, one API.** Canvas by default (fast path for huge series), SVG when you want crisp vector output or DOM-inspectable nodes.
