@@ -2933,7 +2933,7 @@ var LombokCharts = (() => {
   function chart(el, config) {
     return new Chart(el, config);
   }
-  var version = "0.1.1";
+  var version = "0.1.2";
   var lombok_charts_default = { Chart, chart, registerMark, version };
   return __toCommonJS(lombok_charts_exports);
 })();
