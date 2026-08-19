@@ -1,36 +1,36 @@
 # LombokCharts
 
-<p align="center">
-  <a href="https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml"><img src="https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
-  <a href="https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml"><img src="https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml/badge.svg" alt="Super-Linter"></a>
-  <a href="https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml"><img src="https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml/badge.svg" alt="Pages"></a>
-  <a href="https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml"><img src="https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml/badge.svg" alt="CodeQL"></a>
-</p>
+---
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/lombok-charts"><img src="https://img.shields.io/npm/v/lombok-charts.svg?logo=npm&logoColor=white" alt="npm version"></a>
-  <a href="https://www.npmjs.com/package/lombok-charts"><img src="https://img.shields.io/npm/dm/lombok-charts.svg?logo=npm&logoColor=white" alt="npm downloads"></a>
-  <a href="https://www.jsdelivr.com/package/npm/lombok-charts"><img src="https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg?logo=jsdelivr&logoColor=white" alt="jsDelivr hits"></a>
-  <a href="https://sourceforge.net/projects/lombokcharts/"><img src="https://img.shields.io/sourceforge/dt/lombokcharts.svg?label=SourceForge&logo=sourceforge&logoColor=white" alt="SourceForge downloads"></a>
-</p>
+### GitHub
 
-<p align="center">
-  <a href="https://github.com/codinglombok/LombokCharts/blob/main/LICENSE"><img src="https://img.shields.io/npm/l/lombok-charts.svg" alt="license"></a>
-  <a href="#"><img src="https://img.shields.io/badge/dependencies-0-brightgreen.svg" alt="zero dependencies"></a>
-  <a href="#bundle-size"><img src="https://img.shields.io/badge/gzip-19%20KB-success.svg" alt="gzip size"></a>
-  <a href="#"><img src="https://img.shields.io/badge/node-%3E%3D18-339933.svg?logo=node.js&logoColor=white" alt="node version"></a>
-  <a href="#"><img src="https://img.shields.io/badge/renderers-Canvas%20%7C%20SVG-blue.svg" alt="renderers"></a>
-</p>
+[![CI](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml)
+[![Super-Linter](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml)
+[![Pages](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml)
+[![CodeQL](https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml)
+[![license](https://img.shields.io/npm/l/lombok-charts.svg)](LICENSE)
+[![last commit](https://img.shields.io/github/last-commit/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/commits/main)
+[![issues](https://img.shields.io/github/issues/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/issues)
+[![stars](https://img.shields.io/github/stars/codinglombok/LombokCharts.svg?style=social)](https://github.com/codinglombok/LombokCharts)
 
-<p align="center">
-  <a href="https://github.com/codinglombok/LombokCharts/commits/main"><img src="https://img.shields.io/github/last-commit/codinglombok/LombokCharts.svg" alt="last commit"></a>
-  <a href="https://github.com/codinglombok/LombokCharts/issues"><img src="https://img.shields.io/github/issues/codinglombok/LombokCharts.svg" alt="issues"></a>
-  <a href="https://github.com/codinglombok/LombokCharts"><img src="https://img.shields.io/github/stars/codinglombok/LombokCharts.svg?style=social" alt="stars"></a>
-</p>
+---
 
-<p align="center">
-  <a href="https://sourceforge.net/projects/lombokcharts/files/latest/download"><img src="https://a.fsdn.com/con/app/sf-download-button" alt="Download LombokCharts"></a>
-</p>
+### npm
+
+[![npm version](https://img.shields.io/npm/v/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
+[![npm downloads](https://img.shields.io/npm/dm/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
+[![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg)](https://www.jsdelivr.com/package/npm/lombok-charts)
+[![gzip size](https://img.shields.io/badge/gzip-19%20KB-success.svg)](#bundle-size)
+[![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](#)
+[![node](https://img.shields.io/badge/node-%3E%3D18-339933.svg?logo=node.js&logoColor=white)](#)
+
+---
+
+### SourceForge
+
+[![Download LombokCharts](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![SourceForge downloads](https://img.shields.io/sourceforge/dm/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![SourceForge total](https://img.shields.io/sourceforge/dt/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
 
 ---
 
