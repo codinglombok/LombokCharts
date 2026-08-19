@@ -11,7 +11,7 @@
   <a href="https://www.npmjs.com/package/lombok-charts"><img src="https://img.shields.io/npm/v/lombok-charts.svg?logo=npm&logoColor=white" alt="npm version"></a>
   <a href="https://www.npmjs.com/package/lombok-charts"><img src="https://img.shields.io/npm/dm/lombok-charts.svg?logo=npm&logoColor=white" alt="npm downloads"></a>
   <a href="https://www.jsdelivr.com/package/npm/lombok-charts"><img src="https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg?logo=jsdelivr&logoColor=white" alt="jsDelivr hits"></a>
-  <a href="https://sourceforge.net/projects/lombokcharts/"><img src="https://img.shields.io/sourceforge/dt/lombokcharts.svg?logo=sourceforge&logoColor=white" alt="SourceForge downloads"></a>
+  <a href="https://sourceforge.net/projects/lombokcharts/"><img src="https://img.shields.io/sourceforge/dt/lombokcharts.svg?label=SourceForge&logo=sourceforge&logoColor=white" alt="SourceForge downloads"></a>
 </p>
 
 <p align="center">
@@ -26,6 +26,10 @@
   <a href="https://github.com/codinglombok/LombokCharts/commits/main"><img src="https://img.shields.io/github/last-commit/codinglombok/LombokCharts.svg" alt="last commit"></a>
   <a href="https://github.com/codinglombok/LombokCharts/issues"><img src="https://img.shields.io/github/issues/codinglombok/LombokCharts.svg" alt="issues"></a>
   <a href="https://github.com/codinglombok/LombokCharts"><img src="https://img.shields.io/github/stars/codinglombok/LombokCharts.svg?style=social" alt="stars"></a>
+</p>
+
+<p align="center">
+  <a href="https://sourceforge.net/projects/lombokcharts/files/latest/download"><img src="https://a.fsdn.com/con/app/sf-download-button" alt="Download LombokCharts"></a>
 </p>
 
 ---
