@@ -2,35 +2,61 @@
 
 ---
 
-### GitHub
+## GitHub
 
 [![CI](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml)
 [![Super-Linter](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml)
-[![Pages](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml)
 [![CodeQL](https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml)
-[![license](https://img.shields.io/npm/l/lombok-charts.svg)](LICENSE)
-[![last commit](https://img.shields.io/github/last-commit/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/commits/main)
-[![issues](https://img.shields.io/github/issues/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/issues)
-[![stars](https://img.shields.io/github/stars/codinglombok/LombokCharts.svg?style=social)](https://github.com/codinglombok/LombokCharts)
+[![Pages](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 
 ---
 
-### npm
+## npm
 
 [![npm version](https://img.shields.io/npm/v/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
 [![npm downloads](https://img.shields.io/npm/dm/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
 [![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg)](https://www.jsdelivr.com/package/npm/lombok-charts)
-[![gzip size](https://img.shields.io/badge/gzip-19%20KB-success.svg)](#bundle-size)
-[![dependencies](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](#)
-[![node](https://img.shields.io/badge/node-%3E%3D18-339933.svg?logo=node.js&logoColor=white)](#)
+![gzip size](https://img.shields.io/badge/gzip-19%20KB-success.svg)
 
 ---
 
-### SourceForge
+## Quality
+
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES2021-F7DF1E.svg?logo=javascript&logoColor=black)](#)
+[![Node](https://img.shields.io/badge/Node-%E2%89%A518-339933.svg?logo=node.js&logoColor=white)](#)
+[![Tests](https://img.shields.io/badge/tests-19%20pass-brightgreen.svg)](#)
+[![Zero deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](#)
+[![Renderers](https://img.shields.io/badge/renderers-Canvas%20%2B%20SVG-blue.svg)](#)
+[![CJS + ESM](https://img.shields.io/badge/output-CJS%20%2B%20ESM%20%2B%20UMD-blue.svg)](#)
+
+---
+
+## SourceForge
 
 [![Download LombokCharts](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
 [![SourceForge downloads](https://img.shields.io/sourceforge/dm/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![SourceForge weekly](https://img.shields.io/sourceforge/dw/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![SourceForge daily](https://img.shields.io/sourceforge/dd/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
 [![SourceForge total](https://img.shields.io/sourceforge/dt/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+
+---
+
+## Packagist
+
+[![Packagist version](https://img.shields.io/packagist/v/codinglombok/lombok-charts.svg)](https://packagist.org/packages/codinglombok/lombok-charts)
+[![Packagist downloads](https://img.shields.io/packagist/dt/codinglombok/lombok-charts.svg)](https://packagist.org/packages/codinglombok/lombok-charts)
+[![Packagist license](https://img.shields.io/packagist/l/codinglombok/lombok-charts.svg)](https://packagist.org/packages/codinglombok/lombok-charts)
+
+---
+
+## Community
+
+[![GitHub issues](https://img.shields.io/github/issues/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/pulls)
+[![GitHub last commit](https://img.shields.io/github/last-commit/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/commits/main)
+[![GitHub stars](https://img.shields.io/github/stars/codinglombok/LombokCharts.svg?style=social)](https://github.com/codinglombok/LombokCharts)
+[![GitHub forks](https://img.shields.io/github/forks/codinglombok/LombokCharts.svg?style=social)](https://github.com/codinglombok/LombokCharts/fork)
 
 ---
 
