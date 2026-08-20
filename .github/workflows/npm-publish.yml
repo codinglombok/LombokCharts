@@ -1,4 +1,13 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# LombokCharts — Publish to npmjs.org
+# Triggered on GitHub Release publish or manual dispatch.
+# Quality gate: lint + typecheck + test + build.
+#
+# Does NOT replace: publish-packages.yml (GitHub Packages — all 5 registries),
+#                   publish.yml (manual fallback), release-please.yml
+# ──────────────────────────────────────────────────────────────────────────────
 name: Publish to npm
+
 on:
   release:
     types: [published]
@@ -18,11 +27,18 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
           cache: 'npm'
       - run: npm ci || npm install
+
       - name: Quality gate before publish
-        run: npm test && npm run build
+        run: |
+          npm run lint
+          npm run typecheck
+          npm test
+          npm run build
+
       - name: Sync version from release tag (v1.2.3 -> 1.2.3)
         if: github.event_name == 'release'
         run: npm version ${GITHUB_REF_NAME#v} --no-git-tag-version
+
       - run: npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
