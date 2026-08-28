@@ -54,9 +54,11 @@
   },
   "homepage": "https://github.com/codinglombok/LombokCharts#readme",
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@playwright/test": "1.56.0",
     "esbuild": "0.25.0",
-    "eslint": "^8.57.0",
+    "eslint": "^10.9.0",
+    "globals": "^17.11.0",
     "marked": "^18.0.5"
   },
   "allowScripts": {
