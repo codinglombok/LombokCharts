@@ -20,7 +20,7 @@ export class Legend {
   setTheme(theme) { this.theme = theme; this.el.style.color = theme.colors.text; }
   /** @param {{label:string,color:string,visible:boolean}[]} entries */
   render(entries) {
-    this.el.innerHTML = '';
+    this.el.innerHTML = ''; // eslint-disable-line no-inner-html/no-inner-html -- clearing container before DOM rebuild
     this.items = entries.map((e, i) => {
       const item = document.createElement('button');
       item.type = 'button';

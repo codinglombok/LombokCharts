@@ -10,8 +10,7 @@ on:
         type: boolean
         default: false
 
-permissions:
-  contents: write
+permissions: {}
 
 concurrency:                                  # NEW: cancel superseded runs on same branch
   group: visual-${{ github.ref }}
@@ -20,6 +19,8 @@ concurrency:                                  # NEW: cancel superseded runs on s
 jobs:
   visual:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: mcr.microsoft.com/playwright:v1.56.0-noble
     env:

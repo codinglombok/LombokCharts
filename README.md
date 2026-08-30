@@ -1,62 +1,88 @@
 # LombokCharts
 
+[![LombokCharts Preview](assets/social-preview.png)](https://codinglombok.github.io/LombokCharts/)
+
 ---
 
 ## GitHub
 
 [![CI](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/ci.yml)
-[![Super-Linter](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/linter.yml)
 [![CodeQL](https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/codeql.yml)
+[![Visual](https://github.com/codinglombok/LombokCharts/actions/workflows/visual.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/visual.yml)
 [![Pages](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml/badge.svg)](https://github.com/codinglombok/LombokCharts/actions/workflows/pages.yml)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg?style=flat-square)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/codinglombok/LombokCharts?style=flat-square&logo=github&label=release)](https://github.com/codinglombok/LombokCharts/releases/latest)
+[![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/codinglombok/LombokCharts/total?style=flat-square&logo=github&label=downloads)](https://github.com/codinglombok/LombokCharts/releases)
+[![GitHub Downloads (latest release)](https://img.shields.io/github/downloads/codinglombok/LombokCharts/latest/total?style=flat-square&logo=github&label=latest%20release)](https://github.com/codinglombok/LombokCharts/releases/latest)
+[![GitHub repo size](https://img.shields.io/github/repo-size/codinglombok/LombokCharts?style=flat-square&logo=github)](https://github.com/codinglombok/LombokCharts)
 
 ---
 
 ## npm
 
-[![npm version](https://img.shields.io/npm/v/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
-[![npm downloads](https://img.shields.io/npm/dm/lombok-charts.svg)](https://www.npmjs.com/package/lombok-charts)
-[![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg)](https://www.jsdelivr.com/package/npm/lombok-charts)
-![gzip size](https://img.shields.io/badge/gzip-19%20KB-success.svg)
-
----
-
-## Quality
-
-[![JavaScript](https://img.shields.io/badge/JavaScript-ES2021-F7DF1E.svg?logo=javascript&logoColor=black)](#)
-[![Node](https://img.shields.io/badge/Node-%E2%89%A518-339933.svg?logo=node.js&logoColor=white)](#)
-[![Tests](https://img.shields.io/badge/tests-19%20pass-brightgreen.svg)](#)
-[![Zero deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg)](#)
-[![Renderers](https://img.shields.io/badge/renderers-Canvas%20%2B%20SVG-blue.svg)](#)
-[![CJS + ESM](https://img.shields.io/badge/output-CJS%20%2B%20ESM%20%2B%20UMD-blue.svg)](#)
+[![npm version](https://img.shields.io/npm/v/lombok-charts.svg?style=flat-square&logo=npm)](https://www.npmjs.com/package/lombok-charts)
+[![npm downloads](https://img.shields.io/npm/dm/lombok-charts.svg?style=flat-square&logo=npm)](https://www.npmjs.com/package/lombok-charts)
+[![npm total](https://img.shields.io/npm/dt/lombok-charts.svg?style=flat-square&logo=npm&label=total)](https://www.npmjs.com/package/lombok-charts)
+[![jsDelivr hits](https://img.shields.io/jsdelivr/npm/hm/lombok-charts.svg?style=flat-square&logo=jsdelivr)](https://www.jsdelivr.com/package/npm/lombok-charts)
 
 ---
 
 ## SourceForge
 
 [![Download LombokCharts](https://a.fsdn.com/con/app/sf-download-button)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
-[![SourceForge downloads](https://img.shields.io/sourceforge/dm/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
-[![SourceForge weekly](https://img.shields.io/sourceforge/dw/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
-[![SourceForge daily](https://img.shields.io/sourceforge/dd/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
-[![SourceForge total](https://img.shields.io/sourceforge/dt/lombokcharts.svg)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![SourceForge downloads](https://img.shields.io/sourceforge/dm/lombokcharts.svg?style=flat-square)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![SourceForge weekly](https://img.shields.io/sourceforge/dw/lombokcharts.svg?style=flat-square)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![SourceForge daily](https://img.shields.io/sourceforge/dd/lombokcharts.svg?style=flat-square)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
+[![SourceForge total](https://img.shields.io/sourceforge/dt/lombokcharts.svg?style=flat-square)](https://sourceforge.net/projects/lombokcharts/files/latest/download)
 
 ---
 
 ## Packagist
 
-[![Packagist version](https://img.shields.io/packagist/v/codinglombok/lombok-charts.svg)](https://packagist.org/packages/codinglombok/lombok-charts)
-[![Packagist downloads](https://img.shields.io/packagist/dt/codinglombok/lombok-charts.svg)](https://packagist.org/packages/codinglombok/lombok-charts)
-[![Packagist license](https://img.shields.io/packagist/l/codinglombok/lombok-charts.svg)](https://packagist.org/packages/codinglombok/lombok-charts)
+[![Packagist version](https://img.shields.io/packagist/v/codinglombok/lombok-charts.svg?style=flat-square&logo=packagist)](https://packagist.org/packages/codinglombok/lombok-charts)
+[![Packagist downloads](https://img.shields.io/packagist/dt/codinglombok/lombok-charts.svg?style=flat-square&logo=packagist)](https://packagist.org/packages/codinglombok/lombok-charts)
+[![Packagist license](https://img.shields.io/packagist/l/codinglombok/lombok-charts.svg?style=flat-square&logo=packagist)](https://packagist.org/packages/codinglombok/lombok-charts)
+
+---
+
+## Quality
+
+[![JavaScript](https://img.shields.io/badge/JavaScript-ES2021-F7DF1E.svg?style=flat-square&logo=javascript&logoColor=black)](#)
+[![Node](https://img.shields.io/badge/Node-%E2%89%A518-339933.svg?style=flat-square&logo=node.js&logoColor=white)](#)
+[![Zero deps](https://img.shields.io/badge/dependencies-0-brightgreen.svg?style=flat-square)](#)
+[![Renderers](https://img.shields.io/badge/renderers-Canvas%20%2B%20SVG-blue.svg?style=flat-square)](#)
+[![CJS + ESM](https://img.shields.io/badge/output-CJS%20%2B%20ESM%20%2B%20UMD-blue.svg?style=flat-square)](#)
 
 ---
 
 ## Community
 
-[![GitHub issues](https://img.shields.io/github/issues/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/issues)
-[![GitHub pull requests](https://img.shields.io/github/issues-pr/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/pulls)
-[![GitHub last commit](https://img.shields.io/github/last-commit/codinglombok/LombokCharts.svg)](https://github.com/codinglombok/LombokCharts/commits/main)
-[![GitHub stars](https://img.shields.io/github/stars/codinglombok/LombokCharts.svg?style=social)](https://github.com/codinglombok/LombokCharts)
-[![GitHub forks](https://img.shields.io/github/forks/codinglombok/LombokCharts.svg?style=social)](https://github.com/codinglombok/LombokCharts/fork)
+[![GitHub stars](https://img.shields.io/github/stars/codinglombok/LombokCharts.svg?style=flat-square&logo=github)](https://github.com/codinglombok/LombokCharts)
+[![GitHub forks](https://img.shields.io/github/forks/codinglombok/LombokCharts.svg?style=flat-square&logo=github)](https://github.com/codinglombok/LombokCharts/fork)
+[![GitHub watchers](https://img.shields.io/github/watchers/codinglombok/LombokCharts.svg?style=flat-square&logo=github)](https://github.com/codinglombok/LombokCharts/watchers)
+[![GitHub contributors](https://img.shields.io/github/contributors/codinglombok/LombokCharts.svg?style=flat-square&logo=github)](https://github.com/codinglombok/LombokCharts/graphs/contributors)
+[![GitHub issues](https://img.shields.io/github/issues/codinglombok/LombokCharts.svg?style=flat-square&logo=github)](https://github.com/codinglombok/LombokCharts/issues)
+[![GitHub pull requests](https://img.shields.io/github/issues-pr/codinglombok/LombokCharts.svg?style=flat-square&logo=github)](https://github.com/codinglombok/LombokCharts/pulls)
+[![GitHub last commit](https://img.shields.io/github/last-commit/codinglombok/LombokCharts.svg?style=flat-square&logo=github)](https://github.com/codinglombok/LombokCharts/commits/main)
+
+```bash
+git clone https://github.com/codinglombok/LombokCharts.git
+```
+
+---
+
+## Lombok Ecosystem
+
+| Project | Description |
+|---|---|
+| [![LombokClarion](https://img.shields.io/badge/LombokClarion-PHP%20Full%20Stack-blue?style=flat-square&logo=php&logoColor=white)](https://github.com/codinglombok/LombokClarion) | PHP 8.3+ full-stack framework — 31 packages, Apache-2.0 |
+| [![LombokCSS](https://img.shields.io/badge/LombokCSS-Token--First%20CSS-blue?style=flat-square&logo=css3&logoColor=white)](https://github.com/codinglombok/LombokCSS) | Token-first CSS framework — npm + RubyGem + jsDelivr |
+| [![LombokCharts](https://img.shields.io/badge/LombokCharts-Charting%20Library-blue?style=flat-square&logo=javascript&logoColor=white)](https://github.com/codinglombok/LombokCharts) | Zero-dependency charting — Canvas/SVG, LTTB, streaming |
+| [![LombokQRCode](https://img.shields.io/badge/LombokQRCode-QR%20%2B%20Code128-blue?style=flat-square&logo=typescript&logoColor=white)](https://github.com/codinglombok/LombokQRCode) | Pure-JS QR code + Code128 barcode toolkit |
+| [![LombokTableSheet](https://img.shields.io/badge/LombokTableSheet-Spreadsheet%20Engine-blue?style=flat-square&logo=typescript&logoColor=white)](https://github.com/codinglombok/LombokTableSheet) | Spreadsheet engine — formulas, i18n, ANOVA, plugins |
+| [![LombokAnimate](https://img.shields.io/badge/LombokAnimate-Web%20Animations-blue?style=flat-square&logo=javascript&logoColor=white)](https://github.com/codinglombok/LombokAnimate) | Modular web animation library — scroll, parallax, morph |
+| [![LombokECC](https://img.shields.io/badge/LombokECC-Reed--Solomon-blue?style=flat-square&logo=typescript&logoColor=white)](https://github.com/codinglombok/LombokECC) | Reed-Solomon (255,239) — TS + PHP + Python + Go + Rust + C++ |
+| [![LombokPDF](https://img.shields.io/badge/LombokPDF-PDF%20Generator-blue?style=flat-square&logo=adobeacrobatreader&logoColor=white)](https://github.com/codinglombok/LombokPDF) | PDF generation and manipulation toolkit |
 
 ---
 
@@ -70,11 +96,7 @@ line without changing shape.
 - **Scales from tiny to massive.** Typed-array pipeline plus Largest-Triangle-Three-Buckets (LTTB) decimation keeps million-point series interactive.
 - **Real-time built in.** `appendData`, async iterators, `EventSource`, or `WebSocket`, with a ring buffer for constant-memory sliding windows.
 - **Tree-shakeable.** Register only the marks you use and the rest is dropped by your bundler.
-- **~18 KB gzipped** for the full build with every mark registered; far less for a custom subset.
-
-> **Current version: 0.1.2** — early but functional. All tests pass, published on npm and jsDelivr.
-
-[![LombokCharts Preview](assets/social-preview.png)](https://codinglombok.github.io/LombokCharts/)
+- **~19 KB gzipped** for the full build with every mark registered; far less for a custom subset.
 
 |                                                                                                                                                  |                                                                                                                                               |
 | ------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -239,8 +261,8 @@ toggle LTTB, and switch Canvas vs SVG.
 
 | Build     | File                            | Raw    | Gzipped |
 | --------- | ------------------------------- | ------ | ------- |
-| ESM (min) | `dist/lombok-charts.esm.min.js` | ~56 KB | ~18 KB  |
-| UMD (min) | `dist/lombok-charts.umd.min.js` | ~56 KB | ~18 KB  |
+| ESM (min) | `dist/lombok-charts.esm.min.js` | ~56 KB | ~19 KB  |
+| UMD (min) | `dist/lombok-charts.umd.min.js` | ~57 KB | ~19 KB  |
 
 These cover the **full** library with all 13 marks registered. Importing `Chart` plus only the
 marks you need lets your bundler tree-shake the rest for a smaller footprint.

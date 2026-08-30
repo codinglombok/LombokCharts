@@ -1,0 +1,113 @@
+name: Bundle size
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'build.js'
+      - 'package.json'
+      - 'package-lock.json'
+
+permissions: {}
+
+jobs:
+  size:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ github.base_ref }}
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
+      - name: Measure base
+        id: base
+        run: |
+          esm=$(wc -c < dist/lombok-charts.esm.min.js)
+          umd=$(wc -c < dist/lombok-charts.umd.min.js)
+          esm_gz=$(gzip -c dist/lombok-charts.esm.min.js | wc -c)
+          umd_gz=$(gzip -c dist/lombok-charts.umd.min.js | wc -c)
+          echo "esm=$esm" >> "$GITHUB_OUTPUT"
+          echo "umd=$umd" >> "$GITHUB_OUTPUT"
+          echo "esm_gz=$esm_gz" >> "$GITHUB_OUTPUT"
+          echo "umd_gz=$umd_gz" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v7
+      - run: npm ci || npm install
+      - run: npm run build
+      - name: Measure PR
+        id: pr
+        run: |
+          esm=$(wc -c < dist/lombok-charts.esm.min.js)
+          umd=$(wc -c < dist/lombok-charts.umd.min.js)
+          esm_gz=$(gzip -c dist/lombok-charts.esm.min.js | wc -c)
+          umd_gz=$(gzip -c dist/lombok-charts.umd.min.js | wc -c)
+          echo "esm=$esm" >> "$GITHUB_OUTPUT"
+          echo "umd=$umd" >> "$GITHUB_OUTPUT"
+          echo "esm_gz=$esm_gz" >> "$GITHUB_OUTPUT"
+          echo "umd_gz=$umd_gz" >> "$GITHUB_OUTPUT"
+
+      - name: Compare and comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const base = {
+              esm: +`${{ steps.base.outputs.esm }}`,
+              umd: +`${{ steps.base.outputs.umd }}`,
+              esm_gz: +`${{ steps.base.outputs.esm_gz }}`,
+              umd_gz: +`${{ steps.base.outputs.umd_gz }}`,
+            };
+            const pr = {
+              esm: +`${{ steps.pr.outputs.esm }}`,
+              umd: +`${{ steps.pr.outputs.umd }}`,
+              esm_gz: +`${{ steps.pr.outputs.esm_gz }}`,
+              umd_gz: +`${{ steps.pr.outputs.umd_gz }}`,
+            };
+            const kb = b => (b / 1024).toFixed(1);
+            const diff = (a, b) => {
+              const d = a - b;
+              if (d === 0) return '±0';
+              const sign = d > 0 ? '+' : '';
+              return `${sign}${(d / 1024).toFixed(1)} KB`;
+            };
+            const icon = d => d > 5120 ? '🔴' : d > 1024 ? '🟡' : d <= 0 ? '🟢' : '⚪';
+
+            const body = `### 📦 Bundle size report
+            | file | base | PR | diff (raw) | diff (gzip) |
+            |---|---|---|---|---|
+            | esm.min.js | ${kb(base.esm)} KB | ${kb(pr.esm)} KB | ${icon(pr.esm-base.esm)} ${diff(pr.esm, base.esm)} | ${diff(pr.esm_gz, base.esm_gz)} |
+            | umd.min.js | ${kb(base.umd)} KB | ${kb(pr.umd)} KB | ${icon(pr.umd-base.umd)} ${diff(pr.umd, base.umd)} | ${diff(pr.umd_gz, base.umd_gz)} |
+
+            <sub>⚪ ≤1 KB · 🟡 >1 KB · 🔴 >5 KB · 🟢 smaller</sub>`;
+
+            // Update or create comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner, repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+            const existing = comments.find(c =>
+              c.user.type === 'Bot' && c.body.includes('Bundle size report'));
+            if (existing) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                comment_id: existing.id, body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner, repo: context.repo.repo,
+                issue_number: context.issue.number, body,
+              });
+            }
+
+            // Fail if gzip grew more than 10 KB
+            const maxGrow = 10 * 1024;
+            if (pr.esm_gz - base.esm_gz > maxGrow || pr.umd_gz - base.umd_gz > maxGrow) {
+              core.setFailed(`Bundle gzip grew by more than 10 KB — review before merging.`);
+            }

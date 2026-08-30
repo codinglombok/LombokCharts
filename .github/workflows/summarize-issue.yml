@@ -4,14 +4,15 @@ on:
   issues:
     types: [opened]
 
-permissions:
-  contents: read
-  issues: write
-  models: read   # unlocks GitHub Models for the built-in GITHUB_TOKEN
+permissions: {}
 
 jobs:
   summarize:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+      models: read
     steps:
       - name: Summarize the issue with GitHub Models
         id: inference

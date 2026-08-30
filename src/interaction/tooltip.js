@@ -35,7 +35,7 @@ export class Tooltip {
     this.el.style.boxShadow = '0 2px 12px rgba(0,0,0,.25)';
   }
   show(x, y, html) {
-    this.el.innerHTML = html;
+    this.el.innerHTML = html; // eslint-disable-line no-inner-html/no-inner-html -- sanitized via escapeHtml()
     this.el.style.left = x + 'px';
     this.el.style.top = y + 'px';
     this.el.style.opacity = '1';

@@ -3,12 +3,13 @@ name: Capture screenshots
 on:
   workflow_dispatch:
 
-permissions:
-  contents: write
+permissions: {}
 
 jobs:
   screenshots:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     container:
       image: mcr.microsoft.com/playwright:v1.56.0-noble
       options: --ipc=host
