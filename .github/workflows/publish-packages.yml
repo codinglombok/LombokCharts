@@ -1,0 +1,240 @@
+# ──────────────────────────────────────────────────────────────────────────────
+# LombokCharts — Publish to GitHub Packages (5 registries)
+# Called from release-please.yml when a release is created.
+# ──────────────────────────────────────────────────────────────────────────────
+name: Publish to GitHub Packages
+
+on:
+  workflow_call:
+
+permissions: {}
+
+jobs:
+  # ── 1. npm (GitHub Packages Registry) ────────────────────────────────────
+  publish-npm:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
+      - name: Scope package for GPR
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          npm pkg set name="@codinglombok/lombok-charts"
+          npm pkg set version="$VERSION"
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── 2. Container (ghcr.io) ───────────────────────────────────────────────
+  publish-container:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
+      - name: Generate Dockerfile
+        run: |
+          cat > Dockerfile <<'EOF'
+          FROM nginx:alpine
+          COPY dist/ /usr/share/nginx/html/dist/
+          COPY examples/ /usr/share/nginx/html/examples/
+          COPY README.md /usr/share/nginx/html/
+          COPY LICENSE /usr/share/nginx/html/
+          EXPOSE 80
+          EOF
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          IMAGE="ghcr.io/codinglombok/lombok-charts"
+          docker build -t "$IMAGE:$VERSION" -t "$IMAGE:latest" .
+          docker push "$IMAGE:$VERSION"
+          docker push "$IMAGE:latest"
+
+  # ── 3. Maven (webjar) ───────────────────────────────────────────────────
+  publish-maven:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Build webjar and publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          GROUP="com.github.codinglombok"
+          ARTIFACT="lombok-charts"
+
+          mkdir -p src/main/resources/META-INF/resources/webjars/$ARTIFACT/$VERSION
+          cp dist/* src/main/resources/META-INF/resources/webjars/$ARTIFACT/$VERSION/
+
+          cat > pom.xml <<EOF
+          <project>
+            <modelVersion>4.0.0</modelVersion>
+            <groupId>$GROUP</groupId>
+            <artifactId>$ARTIFACT</artifactId>
+            <version>$VERSION</version>
+            <packaging>jar</packaging>
+            <distributionManagement>
+              <repository>
+                <id>github</id>
+                <url>https://maven.pkg.github.com/codinglombok/LombokCharts</url>
+              </repository>
+            </distributionManagement>
+          </project>
+          EOF
+
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>\${env.GITHUB_ACTOR}</username>
+                <password>\${env.GITHUB_TOKEN}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+          mvn deploy -B
+
+  # ── 4. NuGet ─────────────────────────────────────────────────────────────
+  publish-nuget:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.x'
+      - name: Build and push NuGet
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+
+          mkdir -p content/dist
+          cp dist/* content/dist/
+
+          cat > codinglombok.LombokCharts.nuspec <<EOF
+          <?xml version="1.0"?>
+          <package>
+            <metadata>
+              <id>codinglombok.LombokCharts</id>
+              <version>$VERSION</version>
+              <authors>codinglombok</authors>
+              <description>Zero-dependency charting library — Canvas/SVG, LTTB, streaming</description>
+              <license type="expression">Apache-2.0</license>
+              <projectUrl>https://github.com/codinglombok/LombokCharts</projectUrl>
+              <repository type="git" url="https://github.com/codinglombok/LombokCharts.git" />
+            </metadata>
+            <files>
+              <file src="content/dist/**" target="content/dist" />
+              <file src="README.md" target="" />
+              <file src="LICENSE" target="" />
+            </files>
+          </package>
+          EOF
+
+          nuget pack codinglombok.LombokCharts.nuspec
+          dotnet nuget push "codinglombok.LombokCharts.$VERSION.nupkg" \
+            --source "https://nuget.pkg.github.com/codinglombok/index.json" \
+            --api-key "$GITHUB_TOKEN"
+
+  # ── 5. RubyGems (GitHub Packages) ───────────────────────────────────────
+  publish-rubygems:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+      - name: Build and push gem
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+
+          mkdir -p lib/lombok-charts
+          cp dist/* lib/lombok-charts/
+
+          cat > lib/lombok-charts.rb <<'RUBY'
+          module LombokCharts
+            VERSION = File.read(File.join(__dir__, '..', 'package.json'))[/"version":\s*"([^"]+)"/, 1]
+          end
+          RUBY
+
+          cat > lombok-charts.gemspec <<EOF
+          Gem::Specification.new do |s|
+            s.name        = 'lombok-charts'
+            s.version     = '$VERSION'
+            s.summary     = 'Zero-dependency charting library'
+            s.description = 'Canvas/SVG chart library with LTTB decimation and real-time streaming'
+            s.authors     = ['codinglombok']
+            s.homepage    = 'https://github.com/codinglombok/LombokCharts'
+            s.license     = 'Apache-2.0'
+            s.files       = Dir['lib/**/*'] + ['README.md', 'LICENSE']
+          end
+          EOF
+
+          mkdir -p ~/.gem
+          cat > ~/.gem/credentials <<CRED
+          ---
+          :github: Bearer $GITHUB_TOKEN
+          CRED
+          chmod 0600 ~/.gem/credentials
+
+          gem build lombok-charts.gemspec
+          gem push --key github --host https://rubygems.pkg.github.com/codinglombok \
+            lombok-charts-$VERSION.gem

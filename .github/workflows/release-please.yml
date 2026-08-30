@@ -9,6 +9,8 @@ permissions: {}
 jobs:
   release-please:
     runs-on: ubuntu-latest
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
     permissions:
       contents: write
       pull-requests: write
@@ -86,3 +88,9 @@ jobs:
           curl -sf -XPOST -H 'content-type:application/json' \
             "https://packagist.org/api/update-package?username=${PACKAGIST_USER}&apiToken=${PACKAGIST_TOKEN}" \
             -d '{"repository":{"url":"https://github.com/codinglombok/LombokCharts"}}'
+
+  # ---- GitHub Packages (5 registries) ----
+  github-packages:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.release_created }}
+    uses: ./.github/workflows/publish-packages.yml
