@@ -394,11 +394,9 @@ var LombokCharts = (() => {
     beginIncremental() {
       this._buf = [];
     }
-    // eslint-disable-next-line no-inner-html/no-inner-html -- intentional: SVG rendered from internal string buffer, no user input
     endFrame() {
       this.svg.innerHTML = this._buf.join("");
     }
-    // eslint-disable-next-line no-inner-html/no-inner-html -- intentional: clearing SVG canvas
     clear() {
       this._buf = [];
       this.svg.innerHTML = "";
