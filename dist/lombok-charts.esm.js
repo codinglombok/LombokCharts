@@ -1,4 +1,4 @@
-/* LombokCharts v0.1.3 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */
+/* LombokCharts v0.1.4 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */
 
 // src/core/Renderer.js
 var Renderer = class {
