@@ -1,4 +1,4 @@
-/* LombokCharts v0.1.4 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */
+/* LombokCharts v0.1.5 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */
 var LombokCharts = (() => {
   var __defProp = Object.defineProperty;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
