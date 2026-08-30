@@ -1,4 +1,4 @@
-/* LombokCharts v0.1.3 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */
+/* LombokCharts v0.1.4 | Apache-2.0 | https://github.com/codinglombok/LombokCharts */
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
 var __getOwnPropNames = Object.getOwnPropertyNames;
@@ -394,11 +394,9 @@ var SvgRenderer = class extends Renderer {
   beginIncremental() {
     this._buf = [];
   }
-  // eslint-disable-next-line no-inner-html/no-inner-html -- intentional: SVG rendered from internal string buffer, no user input
   endFrame() {
     this.svg.innerHTML = this._buf.join("");
   }
-  // eslint-disable-next-line no-inner-html/no-inner-html -- intentional: clearing SVG canvas
   clear() {
     this._buf = [];
     this.svg.innerHTML = "";

@@ -4,6 +4,13 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4](https://github.com/codinglombok/LombokCharts/compare/lombok-charts-v0.1.3...lombok-charts-v0.1.4) (2026-08-30)
+
+
+### Bug Fixes
+
+* **ci:** remove invalid eslint-disable rules + fix UMD export check in compat.yml ([0bca190](https://github.com/codinglombok/LombokCharts/commit/0bca190f876081ada8a740811fa8d634e9ec06f1))
+
 ## [0.1.3](https://github.com/codinglombok/LombokCharts/compare/lombok-charts-v0.1.2...lombok-charts-v0.1.3) (2026-08-28)
 
 
