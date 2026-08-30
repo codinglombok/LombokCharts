@@ -1,32 +1,45 @@
 # ──────────────────────────────────────────────────────────────────────────────
-# LombokCharts — Publish to ALL 5 GitHub Packages Registries
-# Triggered on tag push (v*).
-# Publishes:
-#   1. npm          → npm.pkg.github.com
-#   2. Container    → ghcr.io
-#   3. Maven        → maven.pkg.github.com (webjar)
-#   4. NuGet        → nuget.pkg.github.com
-#   5. RubyGems     → rubygems.pkg.github.com
-#
-# Does NOT replace: npm-publish.yml (npmjs.org)
+# LombokCharts — Publish to GitHub Packages (5 registries)
+# Called from release-please.yml when a release is created.
 # ──────────────────────────────────────────────────────────────────────────────
-name: Publish GitHub Packages (All Registries)
+name: Publish to GitHub Packages
 
 on:
-  push:
-    tags:
-      - 'v*'
+  workflow_call:
+
+permissions: {}
 
 jobs:
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 0. Shared build artifact
-  # ═══════════════════════════════════════════════════════════════════════════
-  build:
+  # ── 1. npm (GitHub Packages Registry) ────────────────────────────────────
+  publish-npm:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    outputs:
-      version: ${{ steps.ver.outputs.version }}
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          registry-url: 'https://npm.pkg.github.com'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
+      - name: Scope package for GPR
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          npm pkg set name="@codinglombok/lombok-charts"
+          npm pkg set version="$VERSION"
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # ── 2. Container (ghcr.io) ───────────────────────────────────────────────
+  publish-container:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v7
       - uses: actions/setup-node@v7
@@ -34,197 +47,67 @@ jobs:
           node-version: '22'
           cache: 'npm'
       - run: npm ci || npm install
-
-      - name: Sync version from tag (v1.2.3 → 1.2.3)
-        run: npm version "${GITHUB_REF_NAME#v}" --no-git-tag-version
-
-      - run: npm test
       - run: npm run build
-
-      - id: ver
-        run: |
-          VERSION=$(node -p "require('./package.json').version")
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
-
-      - uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: |
-            dist/
-            package.json
-            README.md
-            LICENSE
-          retention-days: 1
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 1. npm → GitHub Packages
-  # ═══════════════════════════════════════════════════════════════════════════
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/download-artifact@v4
-        with: { name: dist }
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: '22'
-          registry-url: 'https://npm.pkg.github.com'
-          scope: '@codinglombok'
-
-      - name: Scope package for GPR
-        run: |
-          node -e "
-            const fs = require('fs');
-            const pkg = JSON.parse(fs.readFileSync('package.json','utf8'));
-            pkg.name = '@codinglombok/lombok-charts';
-            pkg.publishConfig = { registry: 'https://npm.pkg.github.com' };
-            fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
-          "
-
-      - name: Publish (skip if version exists)
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          npm publish 2>&1 | tee /tmp/npm.log; rc=${PIPESTATUS[0]}
-          if [ $rc -ne 0 ]; then
-            if grep -qi "cannot publish over the previously published" /tmp/npm.log; then
-              echo "⚠️  Version already exists on GPR npm — skipping"
-            else
-              cat /tmp/npm.log
-              exit $rc
-            fi
-          fi
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 2. Container → ghcr.io
-  # ═══════════════════════════════════════════════════════════════════════════
-  publish-container:
-    needs: build
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-    env:
-      IMAGE: ghcr.io/${{ github.repository_owner }}/lombok-charts
-    steps:
-      - uses: actions/checkout@v7
-
-      - uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist-built
-
       - name: Generate Dockerfile
         run: |
-          cat > Dockerfile << 'DKEOF'
-          FROM node:22-alpine AS build
-          WORKDIR /app
-          COPY package*.json ./
-          COPY src ./src
-          COPY build.js ./
-          RUN npm ci && npm run build
-
-          FROM node:22-alpine
-          WORKDIR /app
-          COPY --from=build /app/dist ./dist
-          COPY --from=build /app/package.json ./
-          RUN mkdir -p node_modules/lombok-charts && \
-              cp -r dist node_modules/lombok-charts/ && \
-              cp package.json node_modules/lombok-charts/
-          ENV NODE_ENV=production
-          CMD ["node", "-e", "console.log('LombokCharts v' + require('./package.json').version + ' — import from dist/')"]
-          DKEOF
-
-      - uses: docker/login-action@v3
+          cat > Dockerfile <<'EOF'
+          FROM nginx:alpine
+          COPY dist/ /usr/share/nginx/html/dist/
+          COPY examples/ /usr/share/nginx/html/examples/
+          COPY README.md /usr/share/nginx/html/
+          COPY LICENSE /usr/share/nginx/html/
+          EXPOSE 80
+          EOF
+      - name: Login to ghcr.io
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          IMAGE="ghcr.io/codinglombok/lombok-charts"
+          docker build -t "$IMAGE:$VERSION" -t "$IMAGE:latest" .
+          docker push "$IMAGE:$VERSION"
+          docker push "$IMAGE:latest"
 
-      - uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: true
-          tags: |
-            ${{ env.IMAGE }}:${{ needs.build.outputs.version }}
-            ${{ env.IMAGE }}:latest
-          labels: |
-            org.opencontainers.image.source=${{ github.server_url }}/${{ github.repository }}
-            org.opencontainers.image.description=LombokCharts — zero-dependency charting library
-            org.opencontainers.image.licenses=Apache-2.0
-
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 3. Maven → GitHub Packages (webjar)
-  # ═══════════════════════════════════════════════════════════════════════════
+  # ── 3. Maven (webjar) ───────────────────────────────────────────────────
   publish-maven:
-    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      - uses: actions/download-artifact@v4
-        with: { name: dist }
-
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
       - uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
+          distribution: temurin
           java-version: '17'
-
-      - name: Maven settings
-        run: |
-          mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << 'XML'
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0">
-            <servers>
-              <server>
-                <id>github</id>
-                <username>${env.GITHUB_ACTOR}</username>
-                <password>${env.GITHUB_TOKEN}</password>
-              </server>
-            </servers>
-          </settings>
-          XML
-
-      - name: Build webjar & deploy
+      - name: Build webjar and publish
         env:
-          GITHUB_ACTOR: ${{ github.actor }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${{ needs.build.outputs.version }}"
-          WJ="src/main/resources/META-INF/resources/webjars/lombok-charts/${VERSION}"
+          VERSION=$(node -p "require('./package.json').version")
+          GROUP="com.github.codinglombok"
+          ARTIFACT="lombok-charts"
 
-          mkdir -p "${WJ}"
-          cp -r dist/* "${WJ}/"
-          cp README.md LICENSE "${WJ}/"
+          mkdir -p src/main/resources/META-INF/resources/webjars/$ARTIFACT/$VERSION
+          cp dist/* src/main/resources/META-INF/resources/webjars/$ARTIFACT/$VERSION/
 
-          cat > pom.xml << POMEOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <project xmlns="http://maven.apache.org/POM/4.0.0"
-                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                   http://maven.apache.org/xsd/maven-4.0.0.xsd"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+          cat > pom.xml <<EOF
+          <project>
             <modelVersion>4.0.0</modelVersion>
-            <groupId>com.github.codinglombok</groupId>
-            <artifactId>lombok-charts</artifactId>
-            <version>${VERSION}</version>
+            <groupId>$GROUP</groupId>
+            <artifactId>$ARTIFACT</artifactId>
+            <version>$VERSION</version>
             <packaging>jar</packaging>
-            <name>LombokCharts</name>
-            <description>Zero-dependency charting library — grammar-of-graphics pipeline, Canvas/SVG renderers, LTTB decimation, real-time streaming</description>
-            <url>https://github.com/codinglombok/LombokCharts</url>
-            <licenses>
-              <license>
-                <name>Apache-2.0</name>
-                <url>https://www.apache.org/licenses/LICENSE-2.0</url>
-              </license>
-            </licenses>
-            <scm>
-              <url>https://github.com/codinglombok/LombokCharts</url>
-            </scm>
             <distributionManagement>
               <repository>
                 <id>github</id>
@@ -232,55 +115,62 @@ jobs:
               </repository>
             </distributionManagement>
           </project>
-          POMEOF
+          EOF
 
-          mvn deploy -B -DskipTests 2>&1 | tee /tmp/mvn.log; rc=${PIPESTATUS[0]}
-          if [ $rc -ne 0 ]; then
-            if grep -q "status code: 409" /tmp/mvn.log; then
-              echo "⚠️  Version already exists on GPR Maven — skipping"
-            else
-              exit $rc
-            fi
-          fi
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml <<EOF
+          <settings>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>\${env.GITHUB_ACTOR}</username>
+                <password>\${env.GITHUB_TOKEN}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
 
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 4. NuGet → GitHub Packages
-  # ═══════════════════════════════════════════════════════════════════════════
+          mvn deploy -B
+
+  # ── 4. NuGet ─────────────────────────────────────────────────────────────
   publish-nuget:
-    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      - uses: actions/download-artifact@v4
-        with: { name: dist }
-
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: '8.x'
-
-      - name: Pack & push
+      - name: Build and push NuGet
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${{ needs.build.outputs.version }}"
+          VERSION=$(node -p "require('./package.json').version")
 
           mkdir -p nuget-pkg/content/dist
-          cp -r dist/* nuget-pkg/content/dist/
+          cp dist/* nuget-pkg/content/dist/
           cp README.md LICENSE nuget-pkg/
 
-          cat > nuget-pkg/LombokCharts.csproj << CSPROJ
+          cat > nuget-pkg/LombokCharts.csproj <<EOF
           <Project Sdk="Microsoft.NET.Sdk">
             <PropertyGroup>
               <TargetFramework>netstandard2.0</TargetFramework>
               <PackageId>codinglombok.LombokCharts</PackageId>
-              <Version>${VERSION}</Version>
+              <Version>$VERSION</Version>
               <Authors>codinglombok</Authors>
-              <Description>Zero-dependency charting library — grammar-of-graphics pipeline, Canvas/SVG renderers, LTTB decimation, real-time streaming</Description>
+              <Description>Zero-dependency charting library — Canvas/SVG, LTTB, streaming</Description>
               <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
               <PackageProjectUrl>https://github.com/codinglombok/LombokCharts</PackageProjectUrl>
               <RepositoryUrl>https://github.com/codinglombok/LombokCharts</RepositoryUrl>
               <RepositoryType>git</RepositoryType>
-              <PackageTags>chart graph visualization canvas svg streaming</PackageTags>
               <PackageReadmeFile>README.md</PackageReadmeFile>
               <IncludeBuildOutput>false</IncludeBuildOutput>
               <NoBuild>true</NoBuild>
@@ -292,110 +182,75 @@ jobs:
               <None Include="LICENSE" Pack="true" PackagePath="/" />
             </ItemGroup>
           </Project>
-          CSPROJ
+          EOF
 
           cd nuget-pkg
-          dotnet pack -o ../nupkg --no-build -p:NoBuild=true 2>/dev/null || \
-            dotnet pack -o ../nupkg 2>/dev/null || true
+          dotnet pack -o ../nupkg
           cd ..
-
-          if ! ls nupkg/*.nupkg 2>/dev/null; then
-            mkdir -p nupkg
-            cd nuget-pkg && zip -r ../nupkg/codinglombok.LombokCharts.${VERSION}.nupkg . -x '.*' && cd ..
-          fi
 
           dotnet nuget add source \
             --username codinglombok \
-            --password ${{ secrets.GITHUB_TOKEN }} \
+            --password "$GITHUB_TOKEN" \
             --store-password-in-clear-text \
             --name github \
             "https://nuget.pkg.github.com/codinglombok/index.json"
 
           dotnet nuget push "nupkg/*.nupkg" \
-            --api-key ${{ secrets.GITHUB_TOKEN }} \
+            --api-key "$GITHUB_TOKEN" \
             --source github --skip-duplicate
 
-  # ═══════════════════════════════════════════════════════════════════════════
-  # 5. RubyGems → GitHub Packages
-  # ═══════════════════════════════════════════════════════════════════════════
+  # ── 5. RubyGems (GitHub Packages) ───────────────────────────────────────
   publish-rubygems:
-    needs: build
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
     steps:
-      - uses: actions/download-artifact@v4
-        with: { name: dist }
-
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22'
+          cache: 'npm'
+      - run: npm ci || npm install
+      - run: npm run build
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2'
-
-      - name: Build & push gem
+          ruby-version: '3.3'
+      - name: Build and push gem
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          VERSION="${{ needs.build.outputs.version }}"
+          VERSION=$(node -p "require('./package.json').version")
 
-          mkdir -p gem-pkg/lib/lombokcharts/dist
-          cp -r dist/* gem-pkg/lib/lombokcharts/dist/
-          cp LICENSE README.md gem-pkg/
+          mkdir -p lib/lombok-charts
+          cp dist/* lib/lombok-charts/
 
-          cat > gem-pkg/lib/lombokcharts/version.rb << RB
+          cat > lib/lombok-charts.rb <<'RUBY'
           module LombokCharts
-            VERSION = "${VERSION}"
+            VERSION = File.read(File.join(__dir__, '..', 'package.json'))[/"version":\s*"([^"]+)"/, 1]
           end
-          RB
+          RUBY
 
-          cat > gem-pkg/lib/lombokcharts.rb << 'RB'
-          require_relative "lombokcharts/version"
-
-          module LombokCharts
-            def self.dist_path
-              File.join(File.dirname(__FILE__), "lombokcharts", "dist")
-            end
-            def self.esm_path  = File.join(dist_path, "lombok-charts.esm.js")
-            def self.umd_path  = File.join(dist_path, "lombok-charts.umd.js")
-          end
-          RB
-
-          cat > gem-pkg/lombokcharts.gemspec << GEMSPEC
-          require_relative "lib/lombokcharts/version"
-
+          cat > lombok-charts.gemspec <<EOF
           Gem::Specification.new do |s|
-            s.name        = "lombokcharts"
-            s.version     = LombokCharts::VERSION
-            s.summary     = "Zero-dependency charting library"
-            s.description = "Grammar-of-graphics pipeline, Canvas/SVG renderers, LTTB decimation, and real-time streaming"
-            s.authors     = ["codinglombok"]
-            s.homepage    = "https://github.com/codinglombok/LombokCharts"
-            s.license     = "Apache-2.0"
-            s.files       = Dir["lib/**/*", "LICENSE", "README.md"]
-            s.require_paths = ["lib"]
-            s.metadata    = {
-              "source_code_uri" => "https://github.com/codinglombok/LombokCharts",
-              "github_repo"     => "ssh://github.com/codinglombok/LombokCharts"
-            }
-            s.required_ruby_version = ">= 2.7.0"
+            s.name        = 'lombok-charts'
+            s.version     = '$VERSION'
+            s.summary     = 'Zero-dependency charting library'
+            s.description = 'Canvas/SVG chart library with LTTB decimation and real-time streaming'
+            s.authors     = ['codinglombok']
+            s.homepage    = 'https://github.com/codinglombok/LombokCharts'
+            s.license     = 'Apache-2.0'
+            s.files       = Dir['lib/**/*'] + ['README.md', 'LICENSE']
           end
-          GEMSPEC
-
-          cd gem-pkg
-          gem build lombokcharts.gemspec
+          EOF
 
           mkdir -p ~/.gem
-          echo "---"                                > ~/.gem/credentials
-          echo ":github: Bearer ${GITHUB_TOKEN}"   >> ~/.gem/credentials
+          cat > ~/.gem/credentials <<CRED
+          ---
+          :github: Bearer $GITHUB_TOKEN
+          CRED
           chmod 0600 ~/.gem/credentials
 
-          gem push --key github \
-            --host https://rubygems.pkg.github.com/codinglombok \
-            "lombokcharts-${VERSION}.gem" 2>&1 | tee /tmp/gem.log; rc=${PIPESTATUS[0]}
-          if [ $rc -ne 0 ]; then
-            if grep -q "already been pushed" /tmp/gem.log; then
-              echo "⚠️  Version already exists on GPR RubyGems — skipping"
-            else
-              exit $rc
-            fi
-          fi
+          gem build lombok-charts.gemspec
+          gem push --key github --host https://rubygems.pkg.github.com/codinglombok \
+            lombok-charts-$VERSION.gem
