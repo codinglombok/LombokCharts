@@ -4,6 +4,13 @@ All notable changes to this project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5](https://github.com/codinglombok/LombokCharts/compare/lombok-charts-v0.1.4...lombok-charts-v0.1.5) (2026-08-30)
+
+
+### Bug Fixes
+
+* **ci:** add packages:write permission to github-packages caller job ([5422979](https://github.com/codinglombok/LombokCharts/commit/542297984dabc5183d1748df59faca5712bb6881))
+
 ## [0.1.4](https://github.com/codinglombok/LombokCharts/compare/lombok-charts-v0.1.3...lombok-charts-v0.1.4) (2026-08-30)
 
 
